@@ -20,6 +20,8 @@ export const executeScripts = (
 ): ScriptExecutionResult => {
   const { globalGlobals, windowGlobals } = getGlobals(width, height)
   setGlobals(window, globalGlobals, windowGlobals)
+  let firstError: Error | null = null
+  let firstCodeFrame = ''
   // Execute each script with the happy-dom window and document as context
   for (const scriptContent of scripts) {
     try {
@@ -31,9 +33,12 @@ export const executeScripts = (
       const fn = new Function('window', 'document', 'console', scriptContent + suffix)
       fn(window, document, console)
     } catch (error) {
-      const codeFrame = getErrorCodeFrame(scriptContent, error)
-      return { codeFrame, error: error as Error }
+      // Record the first error but continue executing remaining scripts
+      if (firstError === null) {
+        firstCodeFrame = getErrorCodeFrame(scriptContent, error)
+        firstError = error as Error
+      }
     }
   }
-  return { codeFrame: '', error: null }
+  return { codeFrame: firstCodeFrame, error: firstError }
 }
