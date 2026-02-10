@@ -12,7 +12,6 @@ export interface PreviewState {
   readonly parsedDom: readonly VirtualDomNode[]
   readonly parsedNodesChildNodeCount: number
   readonly platform: number
-  readonly sandboxRpc: Rpc
   readonly scripts: readonly string[]
   readonly uid: number
   readonly uri: string

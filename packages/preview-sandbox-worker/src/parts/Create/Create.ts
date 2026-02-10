@@ -1,5 +1,4 @@
 import type { PreviewState } from '../PreviewState/PreviewState.ts'
-import { createSandboxRpc } from '../CreateSandboxRpc/CreateSandboxRpc.ts'
 import { set } from '../PreviewStates/PreviewStates.ts'
 
 export const create = async (
@@ -23,7 +22,6 @@ export const create = async (
     parsedDom: [],
     parsedNodesChildNodeCount: 0,
     platform,
-    sandboxRpc,
     scripts: [],
     uid,
     uri,
