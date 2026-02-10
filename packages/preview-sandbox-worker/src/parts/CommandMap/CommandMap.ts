@@ -8,6 +8,7 @@ import { handleFileEdited } from '../HandleFileEdited/HandleFileEdited.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import * as HandleKeydown from '../HandleKeydown/HandleKeydown.ts'
 import * as HandleKeyup from '../HandleKeyup/HandleKeyup.ts'
+import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
 import * as HandleMousedown from '../HandleMousedown/HandleMousedown.ts'
 import * as HandleMousemove from '../HandleMousemove/HandleMousemove.ts'
 import * as HandleMouseup from '../HandleMouseup/HandleMouseup.ts'
@@ -31,6 +32,7 @@ export const commandMap = {
   'Preview.handleInput': wrapCommand(HandleInput.handleInput),
   'Preview.handleKeyDown': wrapCommand(HandleKeydown.handleKeydown),
   'Preview.handleKeyUp': wrapCommand(HandleKeyup.handleKeyup),
+  'Preview.handleMessagePort': handleMessagePort,
   'Preview.handleMousedown': wrapCommand(HandleMousedown.handleMousedown),
   'Preview.handleMousemove': wrapCommand(HandleMousemove.handleMousemove),
   'Preview.handleMouseup': wrapCommand(HandleMouseup.handleMouseup),
