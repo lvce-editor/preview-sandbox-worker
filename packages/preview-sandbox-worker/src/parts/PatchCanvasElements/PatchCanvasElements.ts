@@ -24,7 +24,7 @@ export const patchCanvasElements = async (document: Document, uid: number): Prom
     element.width = width
     // @ts-ignore
     element.height = height
-    const { canvasId, offscreenCanvas } = await getOffscreenCanvas(width, height)
+    const { canvasId, offscreenCanvas } = await getOffscreenCanvas(uid, width, height)
     const dataId = String(canvasId)
     // @ts-ignore
     element.__canvasId = canvasId
