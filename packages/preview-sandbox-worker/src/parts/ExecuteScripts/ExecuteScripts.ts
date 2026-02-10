@@ -3,13 +3,19 @@ import * as Alert from '../Alert/Alert.ts'
 import { getTopLevelFunctionNames } from '../GetTopLevelFunctionNames/GetTopLevelFunctionNames.ts'
 import { createLocalStorage } from '../LocalStorage/LocalStorage.ts'
 
-export const executeScripts = (window: any, document: any, scripts: readonly string[]): void => {
+export const executeScripts = (window: any, document: any, scripts: readonly string[], width: number = 0, height: number = 0): void => {
   window.alert = Alert.alert
   // @ts-ignore
   globalThis.alert = Alert.alert
   const localStorage = createLocalStorage()
   // @ts-ignore
   globalThis.localStorage = localStorage
+  window.innerWidth = width
+  window.innerHeight = height
+  // @ts-ignore
+  globalThis.innerWidth = width
+  // @ts-ignore
+  globalThis.innerHeight = height
   // Execute each script with the happy-dom window and document as context
   for (const scriptContent of scripts) {
     try {

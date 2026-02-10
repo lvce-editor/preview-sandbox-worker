@@ -65,7 +65,7 @@ afterEach(() => {
   CanvasState.clear()
 })
 
-test.skip('patchCanvasElements should do nothing when no canvas elements exist', async () => {
+test('patchCanvasElements should do nothing when no canvas elements exist', async () => {
   const window = new Window({ url: 'https://localhost:3000' })
   const { document } = window
   document.documentElement.innerHTML = '<body><div>hello</div></body>'
@@ -73,7 +73,7 @@ test.skip('patchCanvasElements should do nothing when no canvas elements exist',
   expect(CanvasState.get(1)).toBeUndefined()
 })
 
-test.skip('patchCanvasElements should create OffscreenCanvas for canvas element', async () => {
+test('patchCanvasElements should create OffscreenCanvas for canvas element', async () => {
   const window = new Window({ url: 'https://localhost:3000' })
   const { document } = window
   document.documentElement.innerHTML = '<body><canvas id="game" width="320" height="480"></canvas></body>'
@@ -90,7 +90,7 @@ test.skip('patchCanvasElements should create OffscreenCanvas for canvas element'
   expect(state?.instances[0].offscreenCanvas).toBe(mockOffscreenCanvas)
 })
 
-test.skip('patchCanvasElements should make getContext return a real 2d context', async () => {
+test('patchCanvasElements should make getContext return a real 2d context', async () => {
   const window = new Window({ url: 'https://localhost:3000' })
   const { document } = window
   document.documentElement.innerHTML = '<body><canvas id="game" width="320" height="480"></canvas></body>'
@@ -111,7 +111,7 @@ test.skip('patchCanvasElements should make getContext return a real 2d context',
   expect(typeof ctx.fillText).toBe('function')
 })
 
-test.skip('patchCanvasElements should return undefined for non-2d context', async () => {
+test('patchCanvasElements should return undefined for non-2d context', async () => {
   const window = new Window({ url: 'https://localhost:3000' })
   const { document } = window
   document.documentElement.innerHTML = '<body><canvas id="game" width="320" height="480"></canvas></body>'
@@ -127,7 +127,7 @@ test.skip('patchCanvasElements should return undefined for non-2d context', asyn
   expect(ctx).toBeUndefined()
 })
 
-test.skip('patchCanvasElements should handle multiple canvas elements', async () => {
+test('patchCanvasElements should handle multiple canvas elements', async () => {
   const window = new Window({ url: 'https://localhost:3000' })
   const { document } = window
   document.documentElement.innerHTML = '<body><canvas width="100" height="100"></canvas><canvas width="200" height="200"></canvas></body>'
@@ -148,7 +148,7 @@ test.skip('patchCanvasElements should handle multiple canvas elements', async ()
   expect(state?.instances[1].offscreenCanvas).toBe(mockOffscreenCanvas2)
 })
 
-test.skip('patchCanvasElements should set __canvasId on canvas elements', async () => {
+test('patchCanvasElements should set __canvasId on canvas elements', async () => {
   const window = new Window({ url: 'https://localhost:3000' })
   const { document } = window
   document.documentElement.innerHTML = '<body><canvas width="100" height="100"></canvas></body>'
@@ -163,7 +163,7 @@ test.skip('patchCanvasElements should set __canvasId on canvas elements', async 
   expect(canvas.__canvasId).toBeDefined()
   expect(typeof canvas.__canvasId).toBe('number')
 })
-test.skip('patchCanvasElements should allow width/height property changes', async () => {
+test('patchCanvasElements should allow width/height property changes', async () => {
   const window = new Window({ url: 'https://localhost:3000' })
   const { document } = window
   document.documentElement.innerHTML = '<body><canvas width="100" height="100"></canvas></body>'
@@ -198,7 +198,7 @@ test.skip('patchCanvasElements callback should be called on dimension changes', 
   const { document } = window
   document.documentElement.innerHTML = '<body><canvas width="100" height="100"></canvas></body>'
   const mockOffscreenCanvas = new MockOffscreenCanvas(100, 100)
-  const changes: Array<{ height: number; width: number }> = []
+  const changes: Array<{ width: number; height: number }> = []
 
   using _mockRpc = RendererWorker.registerMockRpc({
     'OffscreenCanvas.createForPreview': (id: number) => {
@@ -231,7 +231,7 @@ test.skip('patchCanvasElements callback should be called on dimension changes', 
   expect(changes[changes.length - 1]).toEqual({ height: 150, width: 200 })
 })
 
-test.skip('patchCanvasElements should set data-id attribute on canvas elements', async () => {
+test('patchCanvasElements should set data-id attribute on canvas elements', async () => {
   const window = new Window({ url: 'https://localhost:3000' })
   const { document } = window
   document.documentElement.innerHTML = '<body><canvas width="100" height="100"></canvas></body>'
@@ -254,7 +254,7 @@ test.skip('patchCanvasElements callback should include cssRule parameter on dime
   const { document } = window
   document.documentElement.innerHTML = '<body><canvas width="100" height="100"></canvas></body>'
   const mockOffscreenCanvas = new MockOffscreenCanvas(100, 100)
-  const changes: Array<{ height: number; width: number; cssRule?: string }> = []
+  const changes: Array<{ width: number; height: number; cssRule?: string }> = []
 
   using _mockRpc = RendererWorker.registerMockRpc({
     'OffscreenCanvas.createForPreview': (id: number) => {
