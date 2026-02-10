@@ -1,8 +1,6 @@
 import type { PreviewState } from '../PreviewState/PreviewState.ts'
 import * as DispatchMousemoveEvent from '../DispatchMousemoveEvent/DispatchMousemoveEvent.ts'
-import * as GetParsedNodesChildNodeCount from '../GetParsedNodesChildNodeCount/GetParsedNodesChildNodeCount.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
-import * as SerializeHappyDom from '../SerializeHappyDom/SerializeHappyDom.ts'
 
 const handleMousemoveLocal = (uid: number, hdId: string, clientX: number, clientY: number,
   x: number, y: number
