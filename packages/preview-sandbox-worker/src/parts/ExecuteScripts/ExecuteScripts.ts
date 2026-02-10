@@ -27,7 +27,7 @@ export const executeScripts = (window: any, document: any, scripts: readonly str
       const fn = new Function('window', 'document', 'console', scriptContent + suffix)
       fn(window, document, console)
     } catch (error) {
-      console.warn('[preview-worker] Script execution error:', error)
+      console.warn('[preview-sandbox-worker] Script execution error:', error)
     }
   }
 }

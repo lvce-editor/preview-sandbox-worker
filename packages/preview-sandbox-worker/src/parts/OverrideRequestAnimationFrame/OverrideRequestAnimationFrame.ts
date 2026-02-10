@@ -14,7 +14,7 @@ export const overrideRequestAnimationFrame = (window: any, uid: number): void =>
       try {
         callback(timestamp)
       } catch (error) {
-        console.warn('[preview-worker] requestAnimationFrame callback error:', error)
+        console.warn('[preview-sandbox-worker] requestAnimationFrame callback error:', error)
       }
     }
   }

@@ -1,5 +1,5 @@
 {
-  "name": "@lvce-editor/preview-worker-memory",
+  "name": "@lvce-editor/preview-sandbox-worker-memory",
   "version": "0.0.0-dev",
   "type": "module",
   "scripts": {

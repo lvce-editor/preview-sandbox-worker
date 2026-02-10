@@ -11,7 +11,7 @@ import { root } from './root.js'
  * @type {import('rollup').RollupOptions}
  */
 const options = {
-  input: join(root, 'packages/preview-worker/src/previewWorkerMain.ts'),
+  input: join(root, 'packages/preview-sandbox-worker/src/previewWorkerMain.ts'),
   preserveEntrySignatures: 'strict',
   treeshake: {
     propertyReadSideEffects: false,

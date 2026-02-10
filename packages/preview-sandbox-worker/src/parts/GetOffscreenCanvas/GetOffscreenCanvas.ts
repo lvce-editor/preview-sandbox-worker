@@ -23,7 +23,7 @@ export const executeCallback = (id: number, ...args: OffscreenCanvasResultRaw): 
     callback(args)
     delete callBacks[id]
   } else {
-    console.warn(`[preview-worker] No callback found for id ${id}`)
+    console.warn(`[preview-sandbox-worker] No callback found for id ${id}`)
   }
 }
 

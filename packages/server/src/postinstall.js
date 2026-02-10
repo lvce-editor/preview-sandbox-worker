@@ -31,8 +31,8 @@ const previewWorkerPath = join(root, '.tmp/dist/dist/previewWorkerMain.js')
 const remoteUrl = getRemoteUrl(previewWorkerPath)
 if (!content.includes('// const previewWorkerUrl = ')) {
   await cp(rendererWorkerMainPath, rendererWorkerMainPath + '.original')
-  const occurrence = `const previewWorkerUrl = \`\${assetDir}/packages/preview-worker/dist/previewWorkerMain.js\``
-  const replacement = `// const previewWorkerUrl = \`\${assetDir}/packages/preview-worker/dist/previewWorkerMain.js\`
+  const occurrence = `const previewWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewWorkerMain.js\``
+  const replacement = `// const previewWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewWorkerMain.js\`
 const previewWorkerUrl = \`${remoteUrl}\``
 
   const newContent = content.replace(occurrence, replacement)
