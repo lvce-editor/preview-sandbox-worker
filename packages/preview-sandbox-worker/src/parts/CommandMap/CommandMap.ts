@@ -1,5 +1,5 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
-import * as PreviewSandBox from '../Create/Create.ts'
+import * as SandBox from '../Create/Create.ts'
 import { executeCallback } from '../GetOffscreenCanvas/GetOffscreenCanvas.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
@@ -13,18 +13,17 @@ import * as LoadContent from '../LoadContent/LoadContent.ts'
 import { resize } from '../Resize/Resize.ts'
 
 export const commandMap = {
-  'PreviewSandBox.create': PreviewSandBox.create,
-  'PreviewSandBox.executeCallback': executeCallback,
-  'PreviewSandBox.handleClick': HandleClick.handleClick,
-  'PreviewSandBox.handleInput': HandleInput.handleInput,
-  'PreviewSandBox.handleKeyDown': HandleKeydown.handleKeydown,
-  'PreviewSandBox.handleKeyUp': HandleKeyup.handleKeyup,
-  'PreviewSandBox.handleMessagePort': handleMessagePort,
-  'PreviewSandBox.handleMousedown': HandleMousedown.handleMousedown,
-  'PreviewSandBox.handleMousemove': HandleMousemove.handleMousemove,
-  'PreviewSandBox.handleMouseup': HandleMouseup.handleMouseup,
-  'PreviewSandBox.loadContent': LoadContent.loadContent,
-  'PreviewSandBox.resize': resize,
-  'PreviewSandBox.terminate': terminate,
+  'SandBox.create': SandBox.create,
+  'SandBox.executeCallback': executeCallback,
+  'SandBox.handleClick': HandleClick.handleClick,
+  'SandBox.handleInput': HandleInput.handleInput,
+  'SandBox.handleKeyDown': HandleKeydown.handleKeydown,
+  'SandBox.handleKeyUp': HandleKeyup.handleKeyup,
   'SandBox.handleMessagePort': handleMessagePort,
+  'SandBox.handleMousedown': HandleMousedown.handleMousedown,
+  'SandBox.handleMousemove': HandleMousemove.handleMousemove,
+  'SandBox.handleMouseup': HandleMouseup.handleMouseup,
+  'SandBox.loadContent': LoadContent.loadContent,
+  'SandBox.resize': resize,
+  'SandBox.terminate': terminate,
 }
