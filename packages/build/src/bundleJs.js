@@ -12,6 +12,12 @@ import { root } from './root.js'
  */
 const options = {
   input: join(root, 'packages/preview-sandbox-worker/src/previewSandBoxWorkerMain.ts'),
+  onwarn(warning, warn) {
+    if (warning.code === 'THIS_IS_UNDEFINED' && warning.id && warning.id.includes('happy-dom-without-node')) {
+      return
+    }
+    warn(warning)
+  },
   preserveEntrySignatures: 'strict',
   treeshake: {
     propertyReadSideEffects: false,
