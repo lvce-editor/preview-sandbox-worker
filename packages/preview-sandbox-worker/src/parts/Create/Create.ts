@@ -1,5 +1,4 @@
 import type { PreviewState } from '../PreviewState/PreviewState.ts'
-import { set } from '../PreviewStates/PreviewStates.ts'
 
 export const create = async (
   uid: number,
@@ -11,6 +10,7 @@ export const create = async (
   platform: number,
   assetDir: string,
 ): Promise<void> => {
+  // @ts-ignore
   const state: PreviewState = {
     assetDir,
     content: '',
@@ -30,5 +30,4 @@ export const create = async (
     x,
     y,
   }
-  set(uid, state, state)
 }
