@@ -232,3 +232,24 @@ test('executeScripts with dispatchClickEvent should execute onclick handler and 
   // Verify textContent was updated by the onclick handler
   expect(button.textContent).toBe('2')
 })
+
+test('executeScripts should set window.innerWidth and window.innerHeight', () => {
+  const html = '<html><body><div id="result"></div></body></html>'
+  const scripts = ['document.getElementById("result").textContent = window.innerWidth + "x" + window.innerHeight']
+  const { document: doc } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts, 800, 600)
+  expect(doc.querySelector('#result').textContent).toBe('800x600')
+})
+
+test('executeScripts should set globalThis.innerWidth and globalThis.innerHeight', () => {
+  const html = '<html><body><div id="result"></div></body></html>'
+  const scripts = ['document.getElementById("result").textContent = globalThis.innerWidth + "x" + globalThis.innerHeight']
+  const { document: doc } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts, 1024, 768)
+  expect(doc.querySelector('#result').textContent).toBe('1024x768')
+})
+
+test('executeScripts should have default innerWidth and innerHeight of 0', () => {
+  const html = '<html><body><div id="result"></div></body></html>'
+  const scripts = ['document.getElementById("result").textContent = window.innerWidth + "x" + window.innerHeight']
+  const { document: doc } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
+  expect(doc.querySelector('#result').textContent).toBe('0x0')
+})

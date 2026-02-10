@@ -56,7 +56,7 @@ await bundleJs()
 
 const version = await getVersion()
 
-const packageJson = await readJson(join(root, 'packages', 'preview-worker', 'package.json'))
+const packageJson = await readJson(join(root, 'packages', 'preview-sandbox-worker', 'package.json'))
 
 delete packageJson.scripts
 delete packageJson.devDependencies
@@ -66,7 +66,7 @@ delete packageJson.xo
 delete packageJson.directories
 delete packageJson.nodemonConfig
 packageJson.version = version
-packageJson.main = 'dist/previewWorkerMain.js'
+packageJson.main = 'dist/previewSandBoxWorkerMain.js'
 
 await writeJson(join(dist, 'package.json'), packageJson)
 

@@ -1,5 +1,5 @@
 {
-  "name": "@lvce-editor/preview-worker-server",
+  "name": "@lvce-editor/preview-sandbox-worker-server",
   "version": "0.0.0-dev",
   "main": "index.js",
   "type": "module",

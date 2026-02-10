@@ -3,7 +3,7 @@
   "include": [],
   "references": [
     {
-      "path": "./packages/preview-worker"
+      "path": "./packages/preview-sandbox-worker"
     },
     {
       "path": "./packages/build"

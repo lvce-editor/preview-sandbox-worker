@@ -6,7 +6,7 @@ const main = async () => {
     `bash`,
     [
       '-c',
-      `./packages/build/node_modules/.bin/esbuild --format=esm --bundle --external:node:buffer --external:electron --external:ws --external:node:worker_threads --watch packages/preview-worker/src/previewWorkerMain.ts --outfile=.tmp/dist/dist/previewWorkerMain.js`,
+      `./packages/build/node_modules/.bin/esbuild --format=esm --bundle --external:node:buffer --external:electron --external:ws --external:node:worker_threads --watch packages/preview-sandbox-worker/src/previewSandBoxWorkerMain.ts --outfile=.tmp/dist/dist/previewSandBoxWorkerMain.js`,
     ],
     {
       cwd: root,
