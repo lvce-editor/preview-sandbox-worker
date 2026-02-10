@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
+import type { Document } from 'happy-dom-without-node'
 import * as CanvasState from '../CanvasState/CanvasState.ts'
 import { getOffscreenCanvas } from '../GetOffscreenCanvas/GetOffscreenCanvas.ts'
 import { toNumber } from '../ToNumber/ToNumber.ts'
@@ -7,7 +9,7 @@ interface CanvasCanvasDimensions {
   readonly width: number
 }
 
-export const patchCanvasElements = async (document: any, uid: number): Promise<void> => {
+export const patchCanvasElements = async (document: Document, uid: number): Promise<void> => {
   const canvasElements = document.querySelectorAll('canvas')
   if (canvasElements.length === 0) {
     return
@@ -18,14 +20,19 @@ export const patchCanvasElements = async (document: any, uid: number): Promise<v
     const element = canvasElements[i]
     const width = toNumber(element.getAttribute('width') || 300)
     const height = toNumber(element.getAttribute('height') || 300)
+    // @ts-ignore
     element.width = width
+    // @ts-ignore
     element.height = height
     const { canvasId, offscreenCanvas } = await getOffscreenCanvas(uid, width, height)
     const dataId = String(canvasId)
+    // @ts-ignore
     element.__canvasId = canvasId
+    // @ts-ignore
     element.__offscreenCanvas = offscreenCanvas
     element.dataset.id = dataId
     const context = offscreenCanvas.getContext('2d')
+    // @ts-ignore
     element.getContext = (contextType: string): any => {
       if (contextType === '2d') {
         return context
@@ -44,6 +51,7 @@ export const patchCanvasElements = async (document: any, uid: number): Promise<v
       get: () => widthValue,
       set: (newWidth: number | string) => {
         widthValue = toNumber(newWidth)
+        // @ts-ignore
         element.__offscreenCanvas.width = widthValue
       },
     })
@@ -56,6 +64,7 @@ export const patchCanvasElements = async (document: any, uid: number): Promise<v
       get: () => heightValue,
       set: (newHeight: number | string) => {
         heightValue = toNumber(newHeight)
+        // @ts-ignore
         element.__offscreenCanvas.height = heightValue
       },
     })

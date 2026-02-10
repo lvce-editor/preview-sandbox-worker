@@ -1,8 +1,9 @@
+import type { Document } from 'happy-dom-without-node'
 import { Window } from 'happy-dom-without-node'
 
 export interface CreateWindowResult {
-  readonly document: any
-  readonly window: any
+  readonly document: Document
+  readonly window: Window
 }
 
 export const createWindow = (rawHtml: string): CreateWindowResult => {

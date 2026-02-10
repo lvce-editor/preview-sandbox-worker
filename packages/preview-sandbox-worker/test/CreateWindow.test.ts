@@ -13,6 +13,7 @@ test('createWindow should parse HTML into document', () => {
   const { document } = createWindow(html)
   const element = document.querySelector('#test')
   expect(element).toBeDefined()
+  // @ts-ignore
   expect(element.textContent).toBe('content')
 })
 
