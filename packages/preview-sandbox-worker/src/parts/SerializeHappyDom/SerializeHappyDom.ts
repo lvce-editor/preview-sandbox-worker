@@ -127,7 +127,7 @@ const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly 
 }
 
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-export const serialize = (document: Document, elementMap: Map<string, any>): SerializeResult => {
+export const serialize = (document: Document, elementMap: Map<string, any> = new Map()): SerializeResult => {
   const dom: VirtualDomNode[] = []
   const css: string[] = []
   const context: SerializeContext = { elementMap, nextId: 0 }
