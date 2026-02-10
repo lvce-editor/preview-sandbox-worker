@@ -1,7 +1,7 @@
 import * as DispatchMouseupEvent from '../DispatchMouseupEvent/DispatchMouseupEvent.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
 
-const handleMouseupLocal = (uid: number, hdId: string): any => {
+const handleMouseupLocal = (uid: number, hdId: string, clientX: number, clientY: number): any => {
   const happyDomInstance = HappyDomState.get(uid)
   if (!happyDomInstance) {
     return
@@ -11,7 +11,7 @@ const handleMouseupLocal = (uid: number, hdId: string): any => {
     return
   }
 
-  DispatchMouseupEvent.dispatchMouseupEvent(element, happyDomInstance.window)
+  DispatchMouseupEvent.dispatchMouseupEvent(element, happyDomInstance.window, clientX, clientY)
 
   const elementMap = new Map<string, any>()
 
@@ -22,6 +22,6 @@ const handleMouseupLocal = (uid: number, hdId: string): any => {
   })
 }
 
-export const handleMouseup = (uid: number, hdId: string): any => {
-  return handleMouseupLocal(uid, hdId)
+export const handleMouseup = (uid: number, hdId: string, clientX: number, clientY: number): any => {
+  return handleMouseupLocal(uid, hdId, clientX, clientY)
 }
