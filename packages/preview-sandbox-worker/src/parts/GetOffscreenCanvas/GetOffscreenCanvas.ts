@@ -33,6 +33,7 @@ interface OffscreenCanvasResult {
 }
 
 export const getOffscreenCanvas = async (width: number, height: number): Promise<OffscreenCanvasResult> => {
+  // TODO ask preview worker
   const { id, promise } = registerCallback()
   await RendererWorker.invoke('OffscreenCanvas.createForPreview', id, width, height)
   const [offscreenCanvas, canvasId] = await promise
