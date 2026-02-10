@@ -63,6 +63,7 @@ export const getErrorCodeFrame = (scriptContent: string, error: any, contextLine
     // Add a caret pointing to the error column on the error line
     if (isErrorLine && column > 0) {
       const caretPosition = column - 1
+      // @ts-ignore
       const spacing = ' '.repeat(numberWidth + 3 + caretPosition) // account for prefix "  " and " | "
       codeFrame += `   ${' '.repeat(numberWidth)} | ${' '.repeat(caretPosition)}^\n`
     }
