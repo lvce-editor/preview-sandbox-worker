@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-implied-eval */
 import * as Alert from '../Alert/Alert.ts'
+import { getErrorCodeFrame } from '../GetErrorCodeFrame/GetErrorCodeFrame.ts'
 import { getTopLevelFunctionNames } from '../GetTopLevelFunctionNames/GetTopLevelFunctionNames.ts'
 import { createLocalStorage } from '../LocalStorage/LocalStorage.ts'
 
@@ -27,7 +28,8 @@ export const executeScripts = (window: any, document: any, scripts: readonly str
       const fn = new Function('window', 'document', 'console', scriptContent + suffix)
       fn(window, document, console)
     } catch (error) {
-      console.warn('[preview-sandbox-worker] Script execution error:', error)
+      const codeFrame = getErrorCodeFrame(scriptContent, error)
+      console.warn('[preview-sandbox-worker] Script execution error:', error, codeFrame)
     }
   }
 }
