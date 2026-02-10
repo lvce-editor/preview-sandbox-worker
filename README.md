@@ -1,4 +1,4 @@
-# Preview Worker
+# Preview SandBox Worker
 
 WebWorker for the Preview functionality in Lvce Editor.
 
