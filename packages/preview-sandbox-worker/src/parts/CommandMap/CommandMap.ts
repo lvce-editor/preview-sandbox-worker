@@ -1,5 +1,4 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
-import * as SandBox from '../Create/Create.ts'
 import { executeCallback } from '../GetOffscreenCanvas/GetOffscreenCanvas.ts'
 import { getSerializedDom } from '../GetSerializedDom/GetSerializedDom.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
@@ -14,7 +13,6 @@ import * as LoadContent from '../LoadContent/LoadContent.ts'
 import { resize } from '../Resize/Resize.ts'
 
 export const commandMap = {
-  'SandBox.create': SandBox.create,
   'SandBox.executeCallback': executeCallback,
   'SandBox.getSerializedDom': getSerializedDom,
   'SandBox.handleClick': HandleClick.handleClick,
