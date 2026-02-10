@@ -1,46 +1,27 @@
-import type { PreviewState } from '../PreviewState/PreviewState.ts'
 import * as DispatchMouseupEvent from '../DispatchMouseupEvent/DispatchMouseupEvent.ts'
-import * as GetParsedNodesChildNodeCount from '../GetParsedNodesChildNodeCount/GetParsedNodesChildNodeCount.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
-import * as SerializeHappyDom from '../SerializeHappyDom/SerializeHappyDom.ts'
 
-const handleMouseupLocal = (state: PreviewState, hdId: string): PreviewState => {
-  const happyDomInstance = HappyDomState.get(state.uid)
+const handleMouseupLocal = (uid: number, hdId: string): any => {
+  const happyDomInstance = HappyDomState.get(uid)
   if (!happyDomInstance) {
-    return state
+    return
   }
   const element = happyDomInstance.elementMap.get(hdId)
   if (!element) {
-    return state
+    return
   }
 
   DispatchMouseupEvent.dispatchMouseupEvent(element, happyDomInstance.window)
 
   const elementMap = new Map<string, any>()
-  const serialized = SerializeHappyDom.serialize(happyDomInstance.document, elementMap)
 
-  HappyDomState.set(state.uid, {
+  HappyDomState.set(uid, {
     document: happyDomInstance.document,
     elementMap,
     window: happyDomInstance.window,
   })
-
-  const parsedDom = serialized.dom
-  const { css } = serialized
-  const parsedNodesChildNodeCount = GetParsedNodesChildNodeCount.getParsedNodesChildNodeCount(parsedDom)
-
-  return {
-    ...state,
-    css,
-    parsedDom,
-    parsedNodesChildNodeCount,
-  }
 }
 
-export const handleMouseup = (state: PreviewState, hdId: string): PreviewState | Promise<PreviewState> => {
-  if (!hdId) {
-    return state
-  }
-
-  return handleMouseupLocal(state, hdId)
+export const handleMouseup = (uid: number, hdId: string): any => {
+  return handleMouseupLocal(uid, hdId)
 }
