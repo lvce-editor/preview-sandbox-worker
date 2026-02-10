@@ -14,7 +14,10 @@ export const loadContent = async (
   // the EditorWorker / ListenerType are not available (e.g. unit tests).
 
   // Read and parse file contents if we have a URI
-  const { errorMessage } = await updateContent(uid, width, height, content, scripts)
+  const { codeFrame, error, errorMessage } = await updateContent(uid, width, height, content, scripts)
+  if (error) {
+    console.warn(`preview error: ${error} ${codeFrame}`)
+  }
 
   return {
     errorMessage,

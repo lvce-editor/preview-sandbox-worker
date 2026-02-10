@@ -7,8 +7,8 @@ import { getTopLevelFunctionNames } from '../GetTopLevelFunctionNames/GetTopLeve
 import { setGlobals } from '../SetGlobals/SetGlobals.ts'
 
 export interface ScriptExecutionResult {
-  codeFrame: string
-  error: Error | null
+  readonly codeFrame: string
+  readonly error: Error | null
 }
 
 export const executeScripts = (

@@ -12,11 +12,13 @@ export const updateContent = async (
   scripts: readonly string[],
 ): Promise<{
   errorMessage: string
+  codeFrame: any
+  error: any
 }> => {
   try {
     const { document: happyDomDocument, window: happyDomWindow } = createWindow(content)
     await PatchCanvasElements.patchCanvasElements(happyDomDocument, uid)
-    ExecuteScripts.executeScripts(happyDomWindow, happyDomDocument, scripts, width, height)
+    const { codeFrame, error } = ExecuteScripts.executeScripts(happyDomWindow, happyDomDocument, scripts, width, height)
     const elementMap = new Map<string, any>()
     HappyDomState.set(uid, {
       document: happyDomDocument,
@@ -26,12 +28,16 @@ export const updateContent = async (
     observe(uid, happyDomDocument, happyDomWindow)
 
     return {
+      codeFrame,
+      error,
       errorMessage: '',
     }
   } catch (error) {
     // If file reading or parsing fails, return empty content and parsedDom with error message
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return {
+      codeFrame: '',
+      error,
       errorMessage,
     }
   }
