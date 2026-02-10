@@ -29,7 +29,7 @@ const y = undefined
 const z = y[0]`
   const error = new Error('Cannot read properties')
   error.stack = `Error: Cannot read properties
-    at eval (eval at executeScripts (previewSandBoxWorkerMain.js:1:1), <anonymous>:3:13)`
+    at eval (eval at executeScripts (previewSandBoxWorkerMain.js:1:1), <anonymous>:5:13)`
 
   const result = getErrorCodeFrame(scriptContent, error)
   expect(result).toContain('const y = undefined')
@@ -48,7 +48,7 @@ line 6
 line 7`
   const error = new Error('error at line 5')
   error.stack = `Error: error
-    at eval (<anonymous>:5:5)`
+    at eval (<anonymous>:7:5)`
 
   const result = getErrorCodeFrame(scriptContent, error)
   expect(result).toContain('line 3')
@@ -65,7 +65,7 @@ test('getErrorCodeFrame should handle error on first line', () => {
 const y = 2`
   const error = new Error('Cannot read properties')
   error.stack = `Error: Cannot read properties
-    at eval (<anonymous>:1:24)`
+    at eval (<anonymous>:3:24)`
 
   const result = getErrorCodeFrame(scriptContent, error)
   expect(result).toContain('const x = undefined[0]')
@@ -78,7 +78,7 @@ const y = 2
 const z = undefined[0]`
   const error = new Error('Cannot read properties')
   error.stack = `Error: Cannot read properties
-    at eval (<anonymous>:3:28)`
+    at eval (<anonymous>:5:28)`
 
   const result = getErrorCodeFrame(scriptContent, error)
   expect(result).toContain('const z = undefined[0]')
@@ -92,7 +92,7 @@ test('getErrorCodeFrame should format line numbers with proper padding', () => {
     .join('\n')
   const error = new Error('error')
   error.stack = `Error: error
-    at eval (<anonymous>:10:5)`
+    at eval (<anonymous>:12:5)`
 
   const result = getErrorCodeFrame(scriptContent, error)
   // Line 10 should be padded to match the width of line 15 (2 digits)
@@ -115,7 +115,7 @@ test('getErrorCodeFrame should position caret correctly', () => {
 const value = map[0]`
   const error = new Error('Cannot read properties')
   error.stack = `Error: Cannot read properties
-    at eval (<anonymous>:2:18)`
+    at eval (<anonymous>:4:18)`
 
   const result = getErrorCodeFrame(scriptContent, error)
   // Line 2 is "const value = map[0]"
@@ -138,7 +138,7 @@ line 6
 line 7`
   const error = new Error('error')
   error.stack = `Error: error
-    at eval (<anonymous>:4:5)`
+    at eval (<anonymous>:6:5)`
 
   const result = getErrorCodeFrame(scriptContent, error, 1)
   expect(result).toContain('line 3')
