@@ -18,7 +18,6 @@ export const updateContent = async (
   content: string,
   scripts: readonly string[]
 ): Promise<{
-  content: string
   errorMessage: string
 }> => {
   try {
@@ -43,14 +42,12 @@ export const updateContent = async (
 
 
     return {
-      content,
       errorMessage: '',
     }
   } catch (error) {
     // If file reading or parsing fails, return empty content and parsedDom with error message
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return {
-      content: '',
       errorMessage,
     }
   }
