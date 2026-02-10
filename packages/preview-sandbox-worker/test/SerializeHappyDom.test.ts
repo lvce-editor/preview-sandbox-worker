@@ -27,7 +27,11 @@ test('serialize should serialize a single div', () => {
 test('serialize should serialize nested elements', () => {
   const doc = createDocument('<body><div><span>text</span></div></body>')
   const result = SerializeHappyDom.serialize(doc)
-  expect(result.dom).toEqual([{ childCount: 1, 'data-id': '0', type: VirtualDomElements.Div }, { childCount: 1, 'data-id': '1', type: VirtualDomElements.Span }, text('text')])
+  expect(result.dom).toEqual([
+    { childCount: 1, 'data-id': '0', type: VirtualDomElements.Div },
+    { childCount: 1, 'data-id': '1', type: VirtualDomElements.Span },
+    text('text'),
+  ])
 })
 
 test('serialize should serialize multiple sibling elements', () => {
