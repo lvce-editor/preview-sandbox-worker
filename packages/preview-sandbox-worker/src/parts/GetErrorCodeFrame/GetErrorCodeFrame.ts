@@ -22,7 +22,7 @@ export const getErrorCodeFrame = (scriptContent: string, error: any, contextLine
 
   // Line numbers in stack traces are 1-based
   // Offset by -4 to account for the anonymous function wrapper
-  const errorLineIndex = line - 1 - 4
+  const errorLineIndex = line - 1 - 2
 
   if (errorLineIndex < 0 || errorLineIndex >= lines.length) {
     return ''
