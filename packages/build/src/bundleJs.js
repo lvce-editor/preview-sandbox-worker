@@ -14,7 +14,7 @@ const patchHappyDom = () => {
       if (id.includes('whatwg-url') && code.includes('globalObject.eval')) {
         return code.replace(
           /try \{\s*ctorRegistry\["%AsyncIteratorPrototype%"\] = Object\.getPrototypeOf\(\s*Object\.getPrototypeOf\(\s*globalObject\.eval\("\(async function\* \(\) \{\}\)"\)\.prototype\s*\)\s*\);\s*\} catch \{\s*ctorRegistry\["%AsyncIteratorPrototype%"\] = AsyncIteratorPrototype;\s*\}/,
-          'ctorRegistry["%AsyncIteratorPrototype%"] = AsyncIteratorPrototype;'
+          'ctorRegistry["%AsyncIteratorPrototype%"] = AsyncIteratorPrototype;',
         )
       }
       return null
