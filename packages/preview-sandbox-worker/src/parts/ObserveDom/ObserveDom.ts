@@ -31,7 +31,7 @@ const handleMutations = async (uid: number): Promise<void> => {
 
   // TODO notify
   try {
-    await PreviewWorker.invoke('Preview.rerender', uid)
+    await PreviewWorker.invoke('Preview.triggerRerender', uid)
   } catch {
     // ignore
   }
