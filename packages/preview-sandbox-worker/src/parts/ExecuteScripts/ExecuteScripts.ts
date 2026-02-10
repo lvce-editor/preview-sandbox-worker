@@ -11,7 +11,13 @@ export interface ScriptExecutionResult {
   error: Error | null
 }
 
-export const executeScripts = (window: Window, document: Document, scripts: readonly string[], width: number = 0, height: number = 0): ScriptExecutionResult => {
+export const executeScripts = (
+  window: Window,
+  document: Document,
+  scripts: readonly string[],
+  width: number = 0,
+  height: number = 0,
+): ScriptExecutionResult => {
   const { globalGlobals, windowGlobals } = getGlobals(width, height)
   setGlobals(window, globalGlobals, windowGlobals)
   // Execute each script with the happy-dom window and document as context
