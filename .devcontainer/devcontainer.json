@@ -1,0 +1,13 @@
+{
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+    }
+  },
+  "features": {},
+  "forwardPorts": [3000],
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24",
+  "postCreateCommand": "npm ci && cd packages/e2e && sudo npx playwright install-deps",
+  "postStartCommand": "npm run dev",
+  "remoteUser": "node"
+}
