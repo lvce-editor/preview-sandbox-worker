@@ -1,0 +1,60 @@
+{
+  "name": "@lvce-editor/preview-worker",
+  "version": "0.0.0-dev",
+  "description": "Preview Worker",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lvce-editor/preview-worker.git"
+  },
+  "license": "MIT",
+  "author": "Lvce Editor",
+  "type": "module",
+  "main": "src/previewWorkerMain.ts",
+  "scripts": {
+    "test": "node --unhandled-rejections=warn --experimental-vm-modules ./node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
+    "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ./node_modules/jest/bin/jest.js --watch"
+  },
+  "jest": {
+    "injectGlobals": false,
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "useESM": true
+        }
+      ]
+    },
+    "testMatch": [
+      "**/test/**"
+    ],
+    "collectCoverage": true,
+    "coverageThreshold": {
+      "global": {
+        "branches": 4,
+        "functions": 30,
+        "lines": 30
+      }
+    }
+  },
+  "dependencies": {
+    "@lvce-editor/virtual-dom-worker": "^8.2.0",
+    "happy-dom-without-node": "^14.12.3"
+  },
+  "devDependencies": {
+    "@jest/globals": "^30.2.0",
+    "@lvce-editor/assert": "^1.5.1",
+    "@lvce-editor/constants": "^3.7.0",
+    "@lvce-editor/rpc": "^5.5.0",
+    "@lvce-editor/rpc-registry": "^8.6.0",
+    "@lvce-editor/verror": "^1.7.0",
+    "@lvce-editor/viewlet-registry": "^3.0.0",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6"
+  }
+}

@@ -1,0 +1,16 @@
+export const HandleClickAt = 1
+export const HandleContextMenu = 2
+export const HandleFocus = 3
+export const HandleInput = 4
+export const HandleMouseOut = 5
+export const HandleMouseOutAt = 6
+export const HandleMouseOver = 7
+export const HandleMouseOverAt = 8
+export const HandleWheel = 9
+export const HandleClickAction = 10
+export const HandleClick = 11
+export const HandleKeydown = 12
+export const HandleKeyup = 13
+export const HandleMousedown = 14
+export const HandleMousemove = 15
+export const HandleMouseup = 16
