@@ -12,7 +12,6 @@ export interface Globals {
     alert: typeof Alert.alert
     innerHeight: number
     innerWidth: number
-    localStorage: ReturnType<typeof createLocalStorage>
   }
 }
 
@@ -29,7 +28,6 @@ export const getGlobals = (width: number, height: number): Globals => {
       alert: Alert.alert,
       innerHeight: height,
       innerWidth: width,
-      localStorage,
     },
   }
 }

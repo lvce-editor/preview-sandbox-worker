@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import type { Window } from 'happy-dom-without-node'
 import type { Globals } from '../GetGlobals/GetGlobals.ts'
 
