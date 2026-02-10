@@ -1,48 +1,38 @@
 import type { PreviewState } from '../PreviewState/PreviewState.ts'
 import * as DispatchMousedownEvent from '../DispatchMousedownEvent/DispatchMousedownEvent.ts'
-import * as GetParsedNodesChildNodeCount from '../GetParsedNodesChildNodeCount/GetParsedNodesChildNodeCount.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
-import * as SerializeHappyDom from '../SerializeHappyDom/SerializeHappyDom.ts'
 
-const handleMousedownLocal = (state: PreviewState, hdId: string, clientX: number, clientY: number): PreviewState => {
-  const happyDomInstance = HappyDomState.get(state.uid)
+const handleMousedownLocal = (uid: number, hdId: string, clientX: number, clientY: number,
+  x: number, y: number
+
+): any => {
+  const happyDomInstance = HappyDomState.get(uid)
   if (!happyDomInstance) {
-    return state
+    return
   }
   const element = happyDomInstance.elementMap.get(hdId)
   if (!element) {
-    return state
+    return
   }
 
-  const adjustedClientX = clientX - state.x
-  const adjustedClientY = clientY - state.y
+  const adjustedClientX = clientX - x
+  const adjustedClientY = clientY - y
   DispatchMousedownEvent.dispatchMousedownEvent(element, happyDomInstance.window, adjustedClientX, adjustedClientY)
 
   const elementMap = new Map<string, any>()
-  const serialized = SerializeHappyDom.serialize(happyDomInstance.document, elementMap)
 
-  HappyDomState.set(state.uid, {
+  HappyDomState.set(uid, {
     document: happyDomInstance.document,
     elementMap,
     window: happyDomInstance.window,
   })
 
-  const parsedDom = serialized.dom
-  const { css } = serialized
-  const parsedNodesChildNodeCount = GetParsedNodesChildNodeCount.getParsedNodesChildNodeCount(parsedDom)
-
-  return {
-    ...state,
-    css,
-    parsedDom,
-    parsedNodesChildNodeCount,
-  }
 }
 
-export const handleMousedown = (state: PreviewState, hdId: string, clientX: number, clientY: number): PreviewState | Promise<PreviewState> => {
-  if (!hdId) {
-    return state
-  }
+export const handleMousedown = (uid: number, hdId: string, clientX: number, clientY: number,
+  x: number, y: number
 
-  return handleMousedownLocal(state, hdId, clientX, clientY)
+): PreviewState | Promise<PreviewState> => {
+
+  return handleMousedownLocal(uid, hdId, clientX, clientY, x, y)
 }
