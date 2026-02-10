@@ -1,4 +1,3 @@
-import type { PreviewState } from '../PreviewState/PreviewState.ts'
 import * as DispatchMouseupEvent from '../DispatchMouseupEvent/DispatchMouseupEvent.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
 
