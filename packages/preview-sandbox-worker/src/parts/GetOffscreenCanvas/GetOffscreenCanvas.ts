@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+
+import { PreviewWorker } from '@lvce-editor/rpc-registry'
 
 const callBacks = Object.create(null)
 
@@ -32,10 +33,10 @@ interface OffscreenCanvasResult {
   readonly offscreenCanvas: OffscreenCanvas
 }
 
-export const getOffscreenCanvas = async (width: number, height: number): Promise<OffscreenCanvasResult> => {
+export const getOffscreenCanvas = async (uid: number, width: number, height: number): Promise<OffscreenCanvasResult> => {
   // TODO ask preview worker
   const { id, promise } = registerCallback()
-  await RendererWorker.invoke('OffscreenCanvas.createForPreview', id, width, height)
+  await PreviewWorker.invoke('Preview.createOffscreenCanvas', uid, id, width, height)
   const [offscreenCanvas, canvasId] = await promise
   return { canvasId, offscreenCanvas }
 }
