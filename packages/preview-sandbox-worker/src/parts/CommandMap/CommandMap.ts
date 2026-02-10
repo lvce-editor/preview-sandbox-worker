@@ -10,7 +10,6 @@ import * as HandleMousedown from '../HandleMousedown/HandleMousedown.ts'
 import * as HandleMousemove from '../HandleMousemove/HandleMousemove.ts'
 import * as HandleMouseup from '../HandleMouseup/HandleMouseup.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
-import { rerender } from '../Rerender/Rerender.ts'
 import { resize } from '../Resize/Resize.ts'
 
 export const commandMap = {
