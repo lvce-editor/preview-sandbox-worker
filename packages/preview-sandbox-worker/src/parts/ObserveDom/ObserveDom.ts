@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import type { Document, MutationObserver, Window } from 'happy-dom-without-node'
+import { PreviewWorker } from '@lvce-editor/rpc-registry'
 import * as GetParsedNodesChildNodeCount from '../GetParsedNodesChildNodeCount/GetParsedNodesChildNodeCount.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
 import * as SerializeHappyDom from '../SerializeHappyDom/SerializeHappyDom.ts'
 
-const observers: Map<number, any> = new Map()
+const observers: Map<number, MutationObserver> = new Map()
 
 const handleMutations = async (uid: number): Promise<void> => {
   const happyDomInstance = HappyDomState.get(uid)
@@ -27,21 +29,15 @@ const handleMutations = async (uid: number): Promise<void> => {
   // @ts-ignore
   const parsedNodesChildNodeCount = GetParsedNodesChildNodeCount.getParsedNodesChildNodeCount(parsedDom)
 
-  // const updatedState = {
-  //   css,
-  //   parsedDom,
-  //   parsedNodesChildNodeCount,
-  // }
-
   // TODO notify
   try {
-    await RendererWorker.invoke('Preview.rerender', uid)
+    await PreviewWorker.invoke('Preview.rerender', uid)
   } catch {
     // ignore
   }
 }
 
-export const observe = (uid: number, document: any, window: any): void => {
+export const observe = (uid: number, document: Document, window: Window): void => {
   const existingObserver = observers.get(uid)
   if (existingObserver) {
     existingObserver.disconnect()
