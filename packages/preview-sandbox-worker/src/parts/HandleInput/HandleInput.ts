@@ -21,7 +21,6 @@ const handleInputLocal = (uid: number, hdId: string, value: string): any => {
     elementMap,
     window: happyDomInstance.window,
   })
-
 }
 
 export const handleInput = (uid: number, hdId: string, value: string): PreviewState | Promise<PreviewState> => {

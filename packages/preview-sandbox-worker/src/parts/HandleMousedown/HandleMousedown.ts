@@ -2,10 +2,7 @@ import type { PreviewState } from '../PreviewState/PreviewState.ts'
 import * as DispatchMousedownEvent from '../DispatchMousedownEvent/DispatchMousedownEvent.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
 
-const handleMousedownLocal = (uid: number, hdId: string, clientX: number, clientY: number,
-  x: number, y: number
-
-): any => {
+const handleMousedownLocal = (uid: number, hdId: string, clientX: number, clientY: number, x: number, y: number): any => {
   const happyDomInstance = HappyDomState.get(uid)
   if (!happyDomInstance) {
     return
@@ -26,13 +23,15 @@ const handleMousedownLocal = (uid: number, hdId: string, clientX: number, client
     elementMap,
     window: happyDomInstance.window,
   })
-
 }
 
-export const handleMousedown = (uid: number, hdId: string, clientX: number, clientY: number,
-  x: number, y: number
-
+export const handleMousedown = (
+  uid: number,
+  hdId: string,
+  clientX: number,
+  clientY: number,
+  x: number,
+  y: number,
 ): PreviewState | Promise<PreviewState> => {
-
   return handleMousedownLocal(uid, hdId, clientX, clientY, x, y)
 }

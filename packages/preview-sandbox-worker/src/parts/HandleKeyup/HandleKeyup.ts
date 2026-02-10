@@ -21,8 +21,6 @@ const handleKeyupLocal = (uid: number, hdId: string, key: string, code: string):
     elementMap,
     window: happyDomInstance.window,
   })
-
-
 }
 
 export const handleKeyup = (uid: number, hdId: string, key: string, code: string): PreviewState | Promise<PreviewState> => {

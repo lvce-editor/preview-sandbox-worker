@@ -21,9 +21,6 @@ const handleClickLocal = (uid: number, hdId: string): any => {
     elementMap,
     window: happyDomInstance.window,
   })
-
-
-
 }
 
 export const handleClick = (uid: number, hdId: string): PreviewState | Promise<PreviewState> => {

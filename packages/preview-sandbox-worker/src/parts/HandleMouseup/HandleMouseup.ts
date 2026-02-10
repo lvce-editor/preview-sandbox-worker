@@ -20,10 +20,8 @@ const handleMouseupLocal = (uid: number, hdId: string): any => {
     elementMap,
     window: happyDomInstance.window,
   })
-
 }
 
 export const handleMouseup = (uid: number, hdId: string): any => {
-
   return handleMouseupLocal(uid, hdId)
 }
