@@ -35,4 +35,5 @@ export const commandMap = {
   'PreviewSandBox.rerender': wrapCommand(rerender),
   'PreviewSandBox.resize': wrapCommand(resize),
   'PreviewSandBox.terminate': terminate,
+  'SandBox.handleMessagePort': handleMessagePort,
 }
