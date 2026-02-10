@@ -4,21 +4,6 @@ import * as GetParsedNodesChildNodeCount from '../GetParsedNodesChildNodeCount/G
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
 import * as SerializeHappyDom from '../SerializeHappyDom/SerializeHappyDom.ts'
 
-const handleKeyupSandbox = async (state: PreviewState, hdId: string, key: string, code: string): Promise<PreviewState> => {
-  const { sandboxRpc, uid } = state
-  await sandboxRpc.invoke('SandBox.handleKeyUp', uid, hdId, key, code)
-  const serialized = await sandboxRpc.invoke('SandBox.getSerializedDom', uid)
-  const parsedDom = serialized.dom
-  const { css } = serialized
-  const parsedNodesChildNodeCount = GetParsedNodesChildNodeCount.getParsedNodesChildNodeCount(parsedDom)
-  return {
-    ...state,
-    css,
-    parsedDom,
-    parsedNodesChildNodeCount,
-  }
-}
-
 const handleKeyupLocal = (state: PreviewState, hdId: string, key: string, code: string): PreviewState => {
   const happyDomInstance = HappyDomState.get(state.uid)
   if (!happyDomInstance) {
@@ -53,8 +38,5 @@ const handleKeyupLocal = (state: PreviewState, hdId: string, key: string, code: 
 }
 
 export const handleKeyup = (state: PreviewState, hdId: string, key: string, code: string): PreviewState | Promise<PreviewState> => {
-  if (state.useSandboxWorker) {
-    return handleKeyupSandbox(state, hdId, key, code)
-  }
   return handleKeyupLocal(state, hdId, key, code)
 }

@@ -26,6 +26,7 @@ const setupHappyDomWithObserver = (uid: number, html: string, scripts: readonly 
   SerializeHappyDom.serialize(document, elementMap)
   HappyDomState.set(uid, { document, elementMap, window })
 
+  // @ts-ignore
   const state = {
     ...createDefaultState(),
     uid,
