@@ -20,7 +20,7 @@ export interface SerializeResult {
 }
 
 interface SerializeContext {
-  readonly elementMap: Map<string, any> | undefined
+  readonly elementMap: Map<string, any>
   nextId: number
 }
 
@@ -108,11 +108,9 @@ const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly 
   }
 
   // Assign element tracking ID for interactivity
-  if (context.elementMap) {
-    const hdId = String(context.nextId++)
-    newNode['data-id'] = hdId
-    context.elementMap.set(hdId, node)
-  }
+  const hdId = String(context.nextId++)
+  newNode['data-id'] = hdId
+  context.elementMap.set(hdId, node)
 
   // Reserve position in dom array for this node
   ;(dom as VirtualDomNode[]).push(newNode)
@@ -129,7 +127,7 @@ const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly 
 }
 
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-export const serialize = (document: Document, elementMap?: Map<string, any>): SerializeResult => {
+export const serialize = (document: Document, elementMap: Map<string, any> = new Map()): SerializeResult => {
   const dom: VirtualDomNode[] = []
   const css: string[] = []
   const context: SerializeContext = { elementMap, nextId: 0 }
@@ -144,16 +142,6 @@ export const serialize = (document: Document, elementMap?: Map<string, any>): Se
   const { childNodes } = root
   for (let i = 0; i < childNodes.length; i++) {
     rootChildCount += serializeNode(childNodes[i], dom, css, context)
-  }
-
-  try {
-    Object.defineProperty(dom, 'rootChildCount', {
-      configurable: true,
-      enumerable: false,
-      value: rootChildCount,
-    })
-  } catch {
-    ;(dom as any).rootChildCount = rootChildCount
   }
 
   return { css, dom }
