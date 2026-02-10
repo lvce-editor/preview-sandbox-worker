@@ -13,9 +13,6 @@ export const updateContent = async (
 ): Promise<{
   errorMessage: string
 }> => {
-
-
-
   try {
     const { document: happyDomDocument, window: happyDomWindow } = createWindow(content)
     await PatchCanvasElements.patchCanvasElements(happyDomDocument, uid)
