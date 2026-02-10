@@ -1,4 +1,6 @@
 export interface ExecuteScriptsResult {
-  readonly document: any
-  readonly window: any
+  codeFrame: string
+  document: any
+  error: Error | null
+  window: any
 }

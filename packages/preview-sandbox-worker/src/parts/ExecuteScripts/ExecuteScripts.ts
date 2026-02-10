@@ -1,21 +1,27 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 /* eslint-disable @typescript-eslint/no-implied-eval */
-import * as Alert from '../Alert/Alert.ts'
+import type { Document, Window } from 'happy-dom-without-node'
+import { getErrorCodeFrame } from '../GetErrorCodeFrame/GetErrorCodeFrame.ts'
+import { getGlobals } from '../GetGlobals/GetGlobals.ts'
 import { getTopLevelFunctionNames } from '../GetTopLevelFunctionNames/GetTopLevelFunctionNames.ts'
-import { createLocalStorage } from '../LocalStorage/LocalStorage.ts'
+import { setGlobals } from '../SetGlobals/SetGlobals.ts'
 
-export const executeScripts = (window: any, document: any, scripts: readonly string[], width: number = 0, height: number = 0): void => {
-  window.alert = Alert.alert
-  // @ts-ignore
-  globalThis.alert = Alert.alert
-  const localStorage = createLocalStorage()
-  // @ts-ignore
-  globalThis.localStorage = localStorage
-  window.innerWidth = width
-  window.innerHeight = height
-  // @ts-ignore
-  globalThis.innerWidth = width
-  // @ts-ignore
-  globalThis.innerHeight = height
+export interface ScriptExecutionResult {
+  readonly codeFrame: string
+  readonly error: Error | null
+}
+
+export const executeScripts = (
+  window: Window,
+  document: Document,
+  scripts: readonly string[],
+  width: number = 0,
+  height: number = 0,
+): ScriptExecutionResult => {
+  const { globalGlobals, windowGlobals } = getGlobals(width, height)
+  setGlobals(window, globalGlobals, windowGlobals)
+  let firstError: Error | null = null
+  let firstCodeFrame = ''
   // Execute each script with the happy-dom window and document as context
   for (const scriptContent of scripts) {
     try {
@@ -27,7 +33,12 @@ export const executeScripts = (window: any, document: any, scripts: readonly str
       const fn = new Function('window', 'document', 'console', scriptContent + suffix)
       fn(window, document, console)
     } catch (error) {
-      console.warn('[preview-sandbox-worker] Script execution error:', error)
+      // Record the first error but continue executing remaining scripts
+      if (firstError === null) {
+        firstCodeFrame = getErrorCodeFrame(scriptContent, error)
+        firstError = error as Error
+      }
     }
   }
+  return { codeFrame: firstCodeFrame, error: firstError }
 }

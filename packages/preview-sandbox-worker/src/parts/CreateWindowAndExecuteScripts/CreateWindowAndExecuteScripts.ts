@@ -9,6 +9,6 @@ export const createWindowAndExecuteScripts = (
   height: number = 0,
 ): ExecuteScriptsResult => {
   const { document, window } = createWindow(rawHtml)
-  executeScripts(window, document, scripts, width, height)
-  return { document, window }
+  const { codeFrame, error } = executeScripts(window, document, scripts, width, height)
+  return { codeFrame, document, error, window }
 }
