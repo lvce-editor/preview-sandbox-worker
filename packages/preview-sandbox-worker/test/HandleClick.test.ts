@@ -20,7 +20,6 @@ const createState = (uid: number, overrides: Partial<PreviewState> = {}): Previe
   scripts: [],
   uid,
   uri: '',
-  useSandboxWorker: false,
   warningCount: 0,
   ...overrides,
 })
