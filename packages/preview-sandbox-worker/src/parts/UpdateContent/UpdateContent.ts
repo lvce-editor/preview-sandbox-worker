@@ -1,4 +1,3 @@
-
 import { createWindow } from '../CreateWindow/CreateWindow.ts'
 import * as ExecuteScripts from '../ExecuteScripts/ExecuteScripts.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
@@ -7,9 +6,10 @@ import * as PatchCanvasElements from '../PatchCanvasElements/PatchCanvasElements
 
 export const updateContent = async (
   uid: number,
-  width: number, height: number,
+  width: number,
+  height: number,
   content: string,
-  scripts: readonly string[]
+  scripts: readonly string[],
 ): Promise<{
   errorMessage: string
 }> => {
@@ -24,7 +24,6 @@ export const updateContent = async (
       window: happyDomWindow,
     })
     observe(uid, happyDomDocument, happyDomWindow)
-
 
     return {
       errorMessage: '',

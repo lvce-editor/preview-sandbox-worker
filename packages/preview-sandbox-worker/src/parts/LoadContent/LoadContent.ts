@@ -2,9 +2,10 @@ import { updateContent } from '../UpdateContent/UpdateContent.ts'
 
 export const loadContent = async (
   uid: number,
-  width: number, height: number,
+  width: number,
+  height: number,
   content: string,
-  scripts: readonly string[]
+  scripts: readonly string[],
 ): Promise<{
   errorMessage: string
 }> => {
@@ -13,14 +14,7 @@ export const loadContent = async (
   // the EditorWorker / ListenerType are not available (e.g. unit tests).
 
   // Read and parse file contents if we have a URI
-  const { errorMessage } = await updateContent(
-    uid,
-    width, height,
-    content,
-    scripts
-
-  )
-
+  const { errorMessage } = await updateContent(uid, width, height, content, scripts)
 
   return {
     errorMessage,
