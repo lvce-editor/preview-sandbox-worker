@@ -4,21 +4,6 @@ import * as GetParsedNodesChildNodeCount from '../GetParsedNodesChildNodeCount/G
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
 import * as SerializeHappyDom from '../SerializeHappyDom/SerializeHappyDom.ts'
 
-const handleMouseupSandbox = async (state: PreviewState, hdId: string): Promise<PreviewState> => {
-  const { sandboxRpc, uid } = state
-  await sandboxRpc.invoke('SandBox.handleMouseup', uid, hdId)
-  const serialized = await sandboxRpc.invoke('SandBox.getSerializedDom', uid)
-  const parsedDom = serialized.dom
-  const { css } = serialized
-  const parsedNodesChildNodeCount = GetParsedNodesChildNodeCount.getParsedNodesChildNodeCount(parsedDom)
-  return {
-    ...state,
-    css,
-    parsedDom,
-    parsedNodesChildNodeCount,
-  }
-}
-
 const handleMouseupLocal = (state: PreviewState, hdId: string): PreviewState => {
   const happyDomInstance = HappyDomState.get(state.uid)
   if (!happyDomInstance) {
@@ -56,8 +41,6 @@ export const handleMouseup = (state: PreviewState, hdId: string): PreviewState |
   if (!hdId) {
     return state
   }
-  if (state.useSandboxWorker) {
-    return handleMouseupSandbox(state, hdId)
-  }
+
   return handleMouseupLocal(state, hdId)
 }

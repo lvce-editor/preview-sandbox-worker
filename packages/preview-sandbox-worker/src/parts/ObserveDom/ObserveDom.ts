@@ -2,7 +2,6 @@
 import { RendererWorker } from '@lvce-editor/rpc-registry'
 import * as GetParsedNodesChildNodeCount from '../GetParsedNodesChildNodeCount/GetParsedNodesChildNodeCount.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
-import * as PreviewStates from '../PreviewStates/PreviewStates.ts'
 import * as SerializeHappyDom from '../SerializeHappyDom/SerializeHappyDom.ts'
 
 const observers: Map<number, any> = new Map()
@@ -22,19 +21,19 @@ const handleMutations = async (uid: number): Promise<void> => {
     window: happyDomInstance.window,
   })
 
-  const { newState: state, oldState } = PreviewStates.get(uid)
   const parsedDom = serialized.dom
+  // @ts-ignore
   const { css } = serialized
+  // @ts-ignore
   const parsedNodesChildNodeCount = GetParsedNodesChildNodeCount.getParsedNodesChildNodeCount(parsedDom)
 
-  const updatedState = {
-    ...state,
-    css,
-    parsedDom,
-    parsedNodesChildNodeCount,
-  }
+  // const updatedState = {
+  //   css,
+  //   parsedDom,
+  //   parsedNodesChildNodeCount,
+  // }
 
-  PreviewStates.set(uid, oldState, updatedState)
+  // TODO notify
   try {
     await RendererWorker.invoke('Preview.rerender', uid)
   } catch {

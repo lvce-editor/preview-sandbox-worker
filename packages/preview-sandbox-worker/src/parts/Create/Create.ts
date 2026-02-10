@@ -1,6 +1,4 @@
 import type { PreviewState } from '../PreviewState/PreviewState.ts'
-import { createSandboxRpc } from '../CreateSandboxRpc/CreateSandboxRpc.ts'
-import { set } from '../PreviewStates/PreviewStates.ts'
 
 export const create = async (
   uid: number,
@@ -12,7 +10,7 @@ export const create = async (
   platform: number,
   assetDir: string,
 ): Promise<void> => {
-  const sandboxRpc = await createSandboxRpc()
+  // @ts-ignore
   const state: PreviewState = {
     assetDir,
     content: '',
@@ -24,15 +22,12 @@ export const create = async (
     parsedDom: [],
     parsedNodesChildNodeCount: 0,
     platform,
-    sandboxRpc,
     scripts: [],
     uid,
     uri,
-    useSandboxWorker: false,
     warningCount: 0,
     width,
     x,
     y,
   }
-  set(uid, state, state)
 }
