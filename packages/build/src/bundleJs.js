@@ -11,13 +11,13 @@ import { root } from './root.js'
  * @type {import('rollup').RollupOptions}
  */
 const options = {
-  input: join(root, 'packages/preview-sandbox-worker/src/previewWorkerMain.ts'),
+  input: join(root, 'packages/preview-sandbox-worker/src/previewSandBoxWorkerMain.ts'),
   preserveEntrySignatures: 'strict',
   treeshake: {
     propertyReadSideEffects: false,
   },
   output: {
-    file: join(root, '.tmp/dist/dist/previewWorkerMain.js'),
+    file: join(root, '.tmp/dist/dist/previewSandBoxWorkerMain.js'),
     format: 'es',
     freeze: false,
     generatedCode: {

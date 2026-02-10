@@ -66,7 +66,7 @@ delete packageJson.xo
 delete packageJson.directories
 delete packageJson.nodemonConfig
 packageJson.version = version
-packageJson.main = 'dist/previewWorkerMain.js'
+packageJson.main = 'dist/previewSandBoxWorkerMain.js'
 
 await writeJson(join(dist, 'package.json'), packageJson)
 

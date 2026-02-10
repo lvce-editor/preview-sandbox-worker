@@ -26,13 +26,13 @@ const rendererWorkerMainPath = join(serverStaticPath, commitHash, 'packages', 'r
 
 const content = await readFile(rendererWorkerMainPath, 'utf-8')
 
-const previewWorkerPath = join(root, '.tmp/dist/dist/previewWorkerMain.js')
+const previewWorkerPath = join(root, '.tmp/dist/dist/previewSandBoxWorkerMain.js')
 
 const remoteUrl = getRemoteUrl(previewWorkerPath)
 if (!content.includes('// const previewWorkerUrl = ')) {
   await cp(rendererWorkerMainPath, rendererWorkerMainPath + '.original')
-  const occurrence = `const previewWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewWorkerMain.js\``
-  const replacement = `// const previewWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewWorkerMain.js\`
+  const occurrence = `const previewWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js\``
+  const replacement = `// const previewWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js\`
 const previewWorkerUrl = \`${remoteUrl}\``
 
   const newContent = content.replace(occurrence, replacement)

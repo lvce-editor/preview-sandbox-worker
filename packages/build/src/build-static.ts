@@ -24,12 +24,12 @@ export const getRemoteUrl = (path: string): string => {
 }
 
 const content = await readFile(rendererWorkerPath, 'utf8')
-const workerPath = join(root, '.tmp/dist/dist/previewWorkerMain.js')
+const workerPath = join(root, '.tmp/dist/dist/previewSandBoxWorkerMain.js')
 const remoteUrl = getRemoteUrl(workerPath)
 
-const occurrence = `// const previewWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewWorkerMain.js\`
+const occurrence = `// const previewWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js\`
 const previewWorkerUrl = \`${remoteUrl}\``
-const replacement = `const previewWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewWorkerMain.js\``
+const replacement = `const previewWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js\``
 if (!content.includes(occurrence)) {
   throw new Error('occurrence not found')
 }
