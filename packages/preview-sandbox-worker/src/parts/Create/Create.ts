@@ -12,7 +12,6 @@ export const create = async (
   platform: number,
   assetDir: string,
 ): Promise<void> => {
-  const sandboxRpc = await createSandboxRpc()
   const state: PreviewState = {
     assetDir,
     content: '',
