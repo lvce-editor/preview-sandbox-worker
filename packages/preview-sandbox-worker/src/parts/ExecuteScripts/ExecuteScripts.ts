@@ -6,7 +6,12 @@ import { getGlobals } from '../GetGlobals/GetGlobals.ts'
 import { getTopLevelFunctionNames } from '../GetTopLevelFunctionNames/GetTopLevelFunctionNames.ts'
 import { setGlobals } from '../SetGlobals/SetGlobals.ts'
 
-export const executeScripts = (window: Window, document: Document, scripts: readonly string[], width: number = 0, height: number = 0): void => {
+export interface ScriptExecutionResult {
+  codeFrame: string
+  error: Error | null
+}
+
+export const executeScripts = (window: Window, document: Document, scripts: readonly string[], width: number = 0, height: number = 0): ScriptExecutionResult => {
   const { globalGlobals, windowGlobals } = getGlobals(width, height)
   setGlobals(window, globalGlobals, windowGlobals)
   // Execute each script with the happy-dom window and document as context
@@ -21,7 +26,8 @@ export const executeScripts = (window: Window, document: Document, scripts: read
       fn(window, document, console)
     } catch (error) {
       const codeFrame = getErrorCodeFrame(scriptContent, error)
-      console.warn('[preview-sandbox-worker] Script execution error:', error, codeFrame)
+      return { codeFrame, error: error as Error }
     }
   }
+  return { codeFrame: '', error: null }
 }
