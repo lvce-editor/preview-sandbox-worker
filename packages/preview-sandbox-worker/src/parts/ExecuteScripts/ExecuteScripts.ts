@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 /* eslint-disable @typescript-eslint/no-implied-eval */
+import type { Document, Window } from 'happy-dom-without-node'
 import * as Alert from '../Alert/Alert.ts'
 import { getErrorCodeFrame } from '../GetErrorCodeFrame/GetErrorCodeFrame.ts'
 import { getTopLevelFunctionNames } from '../GetTopLevelFunctionNames/GetTopLevelFunctionNames.ts'
 import { createLocalStorage } from '../LocalStorage/LocalStorage.ts'
 
-export const executeScripts = (window: any, document: any, scripts: readonly string[], width: number = 0, height: number = 0): void => {
+export const executeScripts = (window: Window, document: Document, scripts: readonly string[], width: number = 0, height: number = 0): void => {
+  // @ts-ignore
   window.alert = Alert.alert
   // @ts-ignore
   globalThis.alert = Alert.alert
