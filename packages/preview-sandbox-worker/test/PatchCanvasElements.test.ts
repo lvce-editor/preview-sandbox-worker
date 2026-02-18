@@ -277,8 +277,10 @@ test.skip('patchCanvasElements callback should include cssRule parameter on dime
   await new Promise((resolve) => setTimeout(resolve, 50))
 
   // The callback should have been called with a CSS rule
+  const lastChange = changes.at(-1)
   expect(changes.length).toBeGreaterThan(0)
-  expect(changes.at(-1).cssRule).toBeDefined()
-  expect(changes.at(-1).cssRule).toContain(`[data-id="${dataUid}"]`)
-  expect(changes.at(-1).cssRule).toContain('width: 200px')
+  expect(lastChange).toBeDefined()
+  expect(lastChange?.cssRule).toBeDefined()
+  expect(lastChange?.cssRule).toContain(`[data-id="${dataUid}"]`)
+  expect(lastChange?.cssRule).toContain('width: 200px')
 })
