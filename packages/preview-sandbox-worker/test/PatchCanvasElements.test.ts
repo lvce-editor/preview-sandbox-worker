@@ -228,7 +228,7 @@ test.skip('patchCanvasElements callback should be called on dimension changes', 
   // Callback should have been called at least once
   expect(changes.length).toBeGreaterThan(0)
   // Last change should be width=200, height=150
-  expect(changes[changes.length - 1]).toEqual({ height: 150, width: 200 })
+  expect(changes.at(-1)).toEqual({ height: 150, width: 200 })
 })
 
 test.skip('patchCanvasElements should set data-id attribute on canvas elements', async () => {
@@ -277,8 +277,10 @@ test.skip('patchCanvasElements callback should include cssRule parameter on dime
   await new Promise((resolve) => setTimeout(resolve, 50))
 
   // The callback should have been called with a CSS rule
+  const lastChange = changes.at(-1)
   expect(changes.length).toBeGreaterThan(0)
-  expect(changes[changes.length - 1].cssRule).toBeDefined()
-  expect(changes[changes.length - 1].cssRule).toContain(`[data-id="${dataUid}"]`)
-  expect(changes[changes.length - 1].cssRule).toContain('width: 200px')
+  expect(lastChange).toBeDefined()
+  expect(lastChange?.cssRule).toBeDefined()
+  expect(lastChange?.cssRule).toContain(`[data-id="${dataUid}"]`)
+  expect(lastChange?.cssRule).toContain('width: 200px')
 })
