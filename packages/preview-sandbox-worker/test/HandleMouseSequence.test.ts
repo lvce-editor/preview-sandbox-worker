@@ -11,7 +11,7 @@ afterEach(() => {
   HappyDomState.clear()
 })
 
-test('mouse down/move/up should not break follow-up click dispatch', () => {
+test('mouse down/move/up should not break follow-up click dispatch', async () => {
   const uid = 1
   const window = new Window({ url: 'https://localhost:3000' })
   const { document } = window
@@ -43,10 +43,10 @@ test('mouse down/move/up should not break follow-up click dispatch', () => {
     clicked = true
   })
 
-  HandleMousedown.handleMousedown(uid, hdId, 10, 10)
-  HandleMousemove.handleMousemove(uid, hdId, 11, 11, 0, 0)
-  HandleMouseup.handleMouseup(uid, hdId, 11, 11)
-  HandleClick.handleClick(uid, hdId, 11, 11)
+  await HandleMousedown.handleMousedown(uid, hdId, 10, 10)
+  await HandleMousemove.handleMousemove(uid, hdId, 11, 11, 0, 0)
+  await HandleMouseup.handleMouseup(uid, hdId, 11, 11)
+  await HandleClick.handleClick(uid, hdId, 11, 11)
 
   expect(clicked).toBe(true)
 })
