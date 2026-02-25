@@ -4,7 +4,7 @@ export const name = 'preview.mutation-observer'
 
 export const skip = 1
 
-export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Command, expect, FileSystem, Locator, Preview, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -37,7 +37,7 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await expect(contentDiv).toHaveText('Original content')
 
   // act
-  await Command.execute('Preview.handleClick', '1')
+  await Preview.handleClick('1')
   await new Promise((resolve) => setTimeout(resolve, 100))
 
   // assert
