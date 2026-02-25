@@ -17,6 +17,9 @@ test('mouse down/move/up should not break follow-up click dispatch', () => {
   const { document } = window
   document.body.innerHTML = '<button id="btn">Click</button>'
   const button = document.querySelector('#btn')
+  if (!button) {
+    throw new Error('expected button element to exist')
+  }
 
   const elementMap = Object.create(null)
   SerializeHappyDom.serialize(document, elementMap)
