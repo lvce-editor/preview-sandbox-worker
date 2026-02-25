@@ -50,7 +50,7 @@
     "@jest/globals": "^30.2.0",
     "@lvce-editor/assert": "^1.5.1",
     "@lvce-editor/constants": "^4.0.0",
-    "@lvce-editor/rpc": "^6.3.0",
+    "@lvce-editor/rpc": "^6.4.0",
     "@lvce-editor/rpc-registry": "^9.1.0",
     "@lvce-editor/verror": "^1.7.0",
     "@lvce-editor/viewlet-registry": "^4.1.0",
