@@ -29,10 +29,10 @@ const handleMutations = async (uid: number): Promise<void> => {
   // @ts-ignore
   const parsedNodesChildNodeCount = GetParsedNodesChildNodeCount.getParsedNodesChildNodeCount(parsedDom)
 
-  // TODO notify
   try {
-    await PreviewWorker.invoke('Preview.triggerRerender', uid)
-  } catch {
+    await PreviewWorker.invoke('Preview.handleMutation', uid)
+  } catch (error) {
+    console.error(error)
     // ignore
   }
 }
