@@ -13,7 +13,6 @@ const handleClickLocal = (uid: number, hdId: string, clientX: number, clientY: n
   }
 
   DispatchClickEvent.dispatchClickEvent(element, happyDomInstance.window, clientX, clientY)
-
   const elementMap = Object.create(null)
 
   HappyDomState.set(uid, {
