@@ -7,7 +7,7 @@ const handleInputLocal = (uid: number, hdId: string, value: string): any => {
   if (!happyDomInstance) {
     return
   }
-  const element = happyDomInstance.elementMap.get(hdId)
+  const element = happyDomInstance.elementMap[hdId]
   if (!element) {
     return
   }
