@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'preview.input-event'
 
-export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Command, expect, FileSystem, Locator, Preview, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -34,7 +34,7 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await expect(output).toHaveText('No input received')
 
   // act
-  await Command.execute('Preview.handleInput', '0', 'a')
+  await Preview.handleInput('0', 'a')
 
   // assert
   await expect(output).toHaveText('input received')

@@ -4,7 +4,7 @@ export const name = 'preview.canvas-resize'
 
 export const skip = 1
 
-export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Command, expect, FileSystem, Locator, Preview, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -71,7 +71,7 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await expect(sizeSpan).toContainText('200x200')
 
   // act
-  await Command.execute('Preview.handleClick', '2')
+  await Preview.handleClick('2')
 
   // assert
   await expect(canvas).toHaveAttribute('width', '400')
