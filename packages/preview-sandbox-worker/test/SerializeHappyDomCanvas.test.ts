@@ -1,3 +1,4 @@
+import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import { expect, test } from '@jest/globals'
 import { VirtualDomElements } from '@lvce-editor/constants'
 import { Window } from 'happy-dom-without-node'
@@ -9,7 +10,7 @@ test('serialize should serialize canvas element with Canvas type when no __canva
   document.documentElement.innerHTML = '<body><canvas id="game" width="320" height="480"></canvas></body>'
   const elementMap = Object.create(null)
   const result = SerializeHappyDom.serialize(document, elementMap)
-  const canvasNode = result.dom.find((node: any) => node.type === VirtualDomElements.Canvas)
+  const canvasNode = result.dom.find((node: VirtualDomNode) => node.type === VirtualDomElements.Canvas)
   expect(canvasNode).toBeDefined()
   expect((canvasNode as any).width).toBe('320')
   expect((canvasNode as any).height).toBe('480')
