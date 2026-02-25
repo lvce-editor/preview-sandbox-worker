@@ -4,7 +4,7 @@ export const name = 'preview.keydown-event'
 
 // export const skip = 1
 
-export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspace }) => {
+export const test: Test = async ({ Command, expect, FileSystem, Locator, Preview, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -38,7 +38,8 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await expect(output).toHaveText('No key pressed')
 
   // act
-  await Command.execute('Preview.handleKeyDown', '0', 'a', 65)
+  // @ts-ignore
+  await Preview.handleKeyDown('0', 'a', 65)
 
   // assert
   await expect(output).toHaveText('Key pressed: a')

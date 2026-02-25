@@ -16,7 +16,7 @@ const handleMousemoveLocal = (uid: number, hdId: string, clientX: number, client
   const adjustedClientY = clientY - y
   DispatchMousemoveEvent.dispatchMousemoveEvent(element, happyDomInstance.window, adjustedClientX, adjustedClientY)
 
-  const elementMap = new Map<string, any>()
+  const elementMap = Object.create(null)
 
   HappyDomState.set(uid, {
     document: happyDomInstance.document,

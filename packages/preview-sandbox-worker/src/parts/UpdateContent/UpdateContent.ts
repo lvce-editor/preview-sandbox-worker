@@ -19,7 +19,7 @@ export const updateContent = async (
     const { document: happyDomDocument, window: happyDomWindow } = createWindow(content)
     await PatchCanvasElements.patchCanvasElements(happyDomDocument, uid)
     const { codeFrame, error } = ExecuteScripts.executeScripts(happyDomWindow, happyDomDocument, scripts, width, height)
-    const elementMap = new Map<string, any>()
+    const elementMap = Object.create(null)
     HappyDomState.set(uid, {
       document: happyDomDocument,
       elementMap,

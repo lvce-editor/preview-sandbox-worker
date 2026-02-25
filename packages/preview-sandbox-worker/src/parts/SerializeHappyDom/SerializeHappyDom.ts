@@ -20,7 +20,7 @@ export interface SerializeResult {
 }
 
 interface SerializeContext {
-  readonly elementMap: Map<string, any>
+  readonly elementMap: Record<string, any>
   nextId: number
 }
 
@@ -77,7 +77,7 @@ const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly 
       uid: node.__canvasId,
     }
     if (context.elementMap) {
-      context.elementMap.set(node.__canvasId + '', node)
+      context.elementMap[node.__canvasId + ''] = node
     }
     ;(dom as VirtualDomNode[]).push(refNode)
     return 1
@@ -110,7 +110,7 @@ const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly 
   // Assign element tracking ID for interactivity
   const hdId = String(context.nextId++)
   newNode['data-id'] = hdId
-  context.elementMap.set(hdId, node)
+  context.elementMap[hdId] = node
 
   // Reserve position in dom array for this node
   ;(dom as VirtualDomNode[]).push(newNode)
@@ -127,7 +127,7 @@ const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly 
 }
 
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-export const serialize = (document: Document, elementMap: Map<string, any> = new Map()): SerializeResult => {
+export const serialize = (document: Document, elementMap: Record<string, any> = Object.create(null)): SerializeResult => {
   const dom: VirtualDomNode[] = []
   const css: string[] = []
   const context: SerializeContext = { elementMap, nextId: 0 }

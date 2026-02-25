@@ -22,7 +22,7 @@ const setupHappyDomWithObserver = (uid: number, html: string, scripts: readonly 
     fn(window, document, console)
   }
 
-  const elementMap = new Map<string, any>()
+  const elementMap = Object.create(null)
   SerializeHappyDom.serialize(document, elementMap)
   HappyDomState.set(uid, { document, elementMap, window })
 

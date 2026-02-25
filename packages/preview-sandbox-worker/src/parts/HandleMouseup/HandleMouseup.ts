@@ -13,7 +13,7 @@ const handleMouseupLocal = (uid: number, hdId: string, clientX: number, clientY:
 
   DispatchMouseupEvent.dispatchMouseupEvent(element, happyDomInstance.window, clientX, clientY)
 
-  const elementMap = new Map<string, any>()
+  const elementMap = Object.create(null)
 
   HappyDomState.set(uid, {
     document: happyDomInstance.document,
