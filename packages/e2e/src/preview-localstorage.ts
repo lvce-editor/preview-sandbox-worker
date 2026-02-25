@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'preview.localstorage'
 
-export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, Workspace }) => {
+export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, Preview, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -62,22 +62,22 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, W
   // Test setting an item
   const setBtn = previewArea.locator('#setBtn')
   await expect(setBtn).toBeVisible()
-  await Command.execute('Preview.handleClick', '1')
+  await Preview.handleClick('1')
   await expect(resultDiv).toContainText('item set')
 
   // Test getting the item back
   const getBtn = previewArea.locator('#getBtn')
   await expect(getBtn).toBeVisible()
-  await Command.execute('Preview.handleClick', '2')
+  await Preview.handleClick('2')
   await expect(resultDiv).toContainText('testValue')
 
   // Test clearing localStorage
   const clearBtn = previewArea.locator('#clearBtn')
   await expect(clearBtn).toBeVisible()
-  await Command.execute('Preview.handleClick', '3')
+  await Preview.handleClick('3')
   await expect(resultDiv).toContainText('cleared')
 
   // Verify it's actually cleared by trying to get the item again
-  await Command.execute('Preview.handleClick', '2')
+  await Preview.handleClick('2')
   await expect(resultDiv).toContainText('not found')
 }

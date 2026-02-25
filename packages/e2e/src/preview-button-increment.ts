@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'preview.button-increment'
 
-export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, Workspace }) => {
+export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, Preview, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -36,7 +36,7 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, W
   await expect(countSpan).toContainText('0')
 
   // act
-  await Command.execute('Preview.handleClick', '2')
+  await Preview.handleClick('2')
 
   // assert
   await expect(countSpan).toContainText('1')
