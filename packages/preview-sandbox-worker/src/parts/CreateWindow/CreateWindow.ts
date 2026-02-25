@@ -6,12 +6,9 @@ export interface CreateWindowResult {
   readonly window: Window
 }
 
-export const createWindow = (rawHtml: string): CreateWindowResult => {
-  const window = new Window({ url: 'https://localhost:3000' })
+export const createWindow = (rawHtml: string, url: string = 'http://localhost:3000'): CreateWindowResult => {
+  const window = new Window({ url })
   const { document } = window
-
-  // Parse the raw HTML into the happy-dom document
   document.documentElement.innerHTML = rawHtml
-
   return { document, window }
 }
