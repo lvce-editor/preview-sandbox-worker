@@ -14,7 +14,7 @@ const handleMutations = async (uid: number): Promise<void> => {
     return
   }
 
-  const elementMap = new Map<string, any>()
+  const elementMap = Object.create(null)
   const serialized = SerializeHappyDom.serialize(happyDomInstance.document, elementMap)
 
   HappyDomState.set(uid, {

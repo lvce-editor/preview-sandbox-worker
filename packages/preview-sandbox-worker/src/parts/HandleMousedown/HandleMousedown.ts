@@ -14,7 +14,7 @@ const handleMousedownLocal = (uid: number, hdId: string, clientX: number, client
 
   DispatchMousedownEvent.dispatchMousedownEvent(element, happyDomInstance.window, clientX, clientY)
 
-  const elementMap = new Map<string, any>()
+  const elementMap = Object.create(null)
 
   HappyDomState.set(uid, {
     document: happyDomInstance.document,

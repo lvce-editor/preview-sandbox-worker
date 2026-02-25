@@ -1,8 +1,10 @@
+import type { Document, Window } from 'happy-dom-without-node'
+
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 interface HappyDomInstance {
-  readonly document: any
-  readonly elementMap: Map<string, any>
-  readonly window: any
+  readonly document: Document
+  readonly elementMap: Record<string, any>
+  readonly window: Window
 }
 
 const states: Map<number, HappyDomInstance> = new Map()
