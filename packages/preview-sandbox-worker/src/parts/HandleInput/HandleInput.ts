@@ -15,7 +15,7 @@ const handleInputLocal = (uid: number, hdId: string, value: string): any => {
   element.value = value
   DispatchInputEvent.dispatchInputEvent(element, happyDomInstance.window)
 
-  const elementMap = new Map<string, any>()
+  const elementMap = Object.create(null)
   HappyDomState.set(uid, {
     document: happyDomInstance.document,
     elementMap,

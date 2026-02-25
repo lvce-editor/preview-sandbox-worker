@@ -14,7 +14,7 @@ const handleKeydownLocal = (uid: number, hdId: string, key: string, code: string
 
   DispatchKeydownEvent.dispatchKeydownEvent(element, happyDomInstance.window, key, code)
 
-  const elementMap = new Map<string, any>()
+  const elementMap = Object.create(null)
 
   HappyDomState.set(uid, {
     document: happyDomInstance.document,
