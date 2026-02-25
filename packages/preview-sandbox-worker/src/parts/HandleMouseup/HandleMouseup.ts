@@ -6,7 +6,7 @@ const handleMouseupLocal = (uid: number, hdId: string, clientX: number, clientY:
   if (!happyDomInstance) {
     return
   }
-  const element = happyDomInstance.elementMap.get(hdId)
+  const element = happyDomInstance.elementMap[hdId]
   if (!element) {
     return
   }

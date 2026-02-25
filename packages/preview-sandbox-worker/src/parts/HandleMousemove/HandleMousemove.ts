@@ -7,7 +7,7 @@ const handleMousemoveLocal = (uid: number, hdId: string, clientX: number, client
   if (!happyDomInstance) {
     return
   }
-  const element = happyDomInstance.elementMap.get(hdId)
+  const element = happyDomInstance.elementMap[hdId]
   if (!element) {
     return
   }

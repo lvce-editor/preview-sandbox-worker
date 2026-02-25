@@ -7,7 +7,7 @@ const handleClickLocal = (uid: number, hdId: string, clientX: number, clientY: n
   if (!happyDomInstance) {
     return
   }
-  const element = happyDomInstance.elementMap.get(hdId)
+  const element = happyDomInstance.elementMap[hdId]
   if (!element) {
     return
   }
