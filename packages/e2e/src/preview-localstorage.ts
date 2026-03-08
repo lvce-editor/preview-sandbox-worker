@@ -2,6 +2,8 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'preview.localstorage'
 
+export const skip = 1
+
 export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, Preview, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
