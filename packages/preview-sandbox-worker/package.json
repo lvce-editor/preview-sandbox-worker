@@ -50,7 +50,7 @@
     "@lvce-editor/rpc-registry": "^9.10.0",
     "@lvce-editor/verror": "^1.7.0",
     "@lvce-editor/viewlet-registry": "^4.1.0",
-    "@lvce-editor/virtual-dom-worker": "^9.2.0",
+    "@lvce-editor/virtual-dom-worker": "^9.3.0",
     "happy-dom-without-node": "^14.12.3",
     "jest": "^30.3.0",
     "ts-jest": "^29.4.6"
