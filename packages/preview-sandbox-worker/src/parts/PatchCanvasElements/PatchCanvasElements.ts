@@ -69,6 +69,55 @@ export const patchCanvasElements = async (document: Document, uid: number): Prom
       },
     })
 
+    Object.defineProperty(element, 'clientWidth', {
+      configurable: true,
+      enumerable: true,
+      get: () => widthValue,
+    })
+
+    Object.defineProperty(element, 'clientHeight', {
+      configurable: true,
+      enumerable: true,
+      get: () => heightValue,
+    })
+
+    Object.defineProperty(element, 'offsetWidth', {
+      configurable: true,
+      enumerable: true,
+      get: () => widthValue,
+    })
+
+    Object.defineProperty(element, 'offsetHeight', {
+      configurable: true,
+      enumerable: true,
+      get: () => heightValue,
+    })
+
+    element.getBoundingClientRect = () => {
+      return {
+        bottom: heightValue,
+        height: heightValue,
+        left: 0,
+        right: widthValue,
+        toJSON: () => {
+          return {
+            bottom: heightValue,
+            height: heightValue,
+            left: 0,
+            right: widthValue,
+            top: 0,
+            width: widthValue,
+            x: 0,
+            y: 0,
+          }
+        },
+        top: 0,
+        width: widthValue,
+        x: 0,
+        y: 0,
+      }
+    }
+
     instances.push({ dataId, dimensions, element, offscreenCanvas })
   }
   CanvasState.set(uid, { animationFrameHandles: [], instances })

@@ -50,3 +50,87 @@ test('mouse down/move/up should not break follow-up click dispatch', async () =>
 
   expect(clicked).toBe(true)
 })
+
+test('click should not clear element targeting for later mouse events', async () => {
+  const uid = 1
+  const window = new Window({ url: 'https://localhost:3000' })
+  const { document } = window
+  document.body.innerHTML = '<button id="btn">Click</button>'
+  const button = document.querySelector('#btn')
+  if (!button) {
+    throw new Error('expected button element to exist')
+  }
+
+  const elementMap = Object.create(null)
+  SerializeHappyDom.serialize(document, elementMap)
+  const hdId = Object.keys(elementMap).find((id) => {
+    return elementMap[id] === button
+  })
+
+  expect(hdId).toBeDefined()
+  if (!hdId) {
+    throw new Error('expected button to have serialized hdId')
+  }
+
+  HappyDomState.set(uid, {
+    document,
+    elementMap,
+    window,
+  })
+
+  const receivedEvents: string[] = []
+  button.addEventListener('click', () => {
+    receivedEvents.push('click')
+  })
+  button.addEventListener('mousemove', () => {
+    receivedEvents.push('mousemove')
+  })
+
+  await HandleClick.handleClick(uid, hdId, 11, 11)
+  await HandleMousemove.handleMousemove(uid, hdId, 12, 12, 0, 0)
+
+  expect(receivedEvents).toEqual(['click', 'mousemove'])
+})
+
+test('click should normalize coordinates using preview offsets', async () => {
+  const uid = 1
+  const window = new Window({ url: 'https://localhost:3000' })
+  const { document } = window
+  document.body.innerHTML = '<button id="btn">Click</button>'
+  const button = document.querySelector('#btn')
+  if (!button) {
+    throw new Error('expected button element to exist')
+  }
+
+  const elementMap = Object.create(null)
+  SerializeHappyDom.serialize(document, elementMap)
+  const hdId = Object.keys(elementMap).find((id) => {
+    return elementMap[id] === button
+  })
+
+  expect(hdId).toBeDefined()
+  if (!hdId) {
+    throw new Error('expected button to have serialized hdId')
+  }
+
+  HappyDomState.set(uid, {
+    document,
+    elementMap,
+    window,
+  })
+
+  let receivedCoordinates: { clientX: number; clientY: number } | undefined
+  button.addEventListener('click', (event) => {
+    receivedCoordinates = {
+      clientX: event.clientX,
+      clientY: event.clientY,
+    }
+  })
+
+  await HandleClick.handleClick(uid, hdId, 31, 45, 20, 30)
+
+  expect(receivedCoordinates).toEqual({
+    clientX: 11,
+    clientY: 15,
+  })
+})
