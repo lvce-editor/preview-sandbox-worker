@@ -39,7 +39,7 @@ test('mouse down/move/up should not break follow-up click dispatch', async () =>
   })
 
   let clicked = false
-    button.addEventListener('click', (_event: any) => {
+  button.addEventListener('click', (_event: any) => {
     clicked = true
   })
 
