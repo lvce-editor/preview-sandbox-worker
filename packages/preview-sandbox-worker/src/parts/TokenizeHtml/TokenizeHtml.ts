@@ -52,7 +52,7 @@ export const tokenizeHtml = (text: string): readonly HtmlToken[] => {
   let index = 0
   let next
   const tokens: HtmlToken[] = []
-  let token = TokenType.None
+  let token: TokenType.HtmlTokenType
   let rawTextTagName = '' // Track which raw-text element we're inside
   while (index < text.length) {
     const part = text.slice(index)
