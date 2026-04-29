@@ -5,11 +5,21 @@ import * as HandlePointerdown from '../src/parts/HandlePointerdown/HandlePointer
 import * as HappyDomState from '../src/parts/HappyDomState/HappyDomState.ts'
 import * as SerializeHappyDom from '../src/parts/SerializeHappyDom/SerializeHappyDom.ts'
 
+interface CoordinatesEvent {
+  readonly clientX: number
+  readonly clientY: number
+  readonly type: string
+}
+
+interface PointerCoordinatesEvent extends CoordinatesEvent {
+  readonly pointerType?: string
+}
+
 afterEach(() => {
   HappyDomState.clear()
 })
 
-const getHdId = (elementMap: Record<string, any>, element: any): string => {
+const getHdId = (elementMap: Readonly<Record<string, unknown>>, element: unknown): string => {
   const hdId = Object.keys(elementMap).find((id) => {
     return elementMap[id] === element
   })
@@ -40,11 +50,13 @@ test('handleMouseleave dispatches mouseleave with normalized coordinates', async
   })
 
   let received: { type: string; clientX: number; clientY: number } | undefined
-  target.addEventListener('mouseleave', (event) => {
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+  target.addEventListener('mouseleave', (event: Event) => {
+    const mouseEvent = event as unknown as CoordinatesEvent
     received = {
-      clientX: event.clientX,
-      clientY: event.clientY,
-      type: event.type,
+      clientX: mouseEvent.clientX,
+      clientY: mouseEvent.clientY,
+      type: mouseEvent.type,
     }
   })
 
@@ -80,10 +92,12 @@ test('handlePointerdown dispatches pointerdown listeners', async () => {
   let pointerType = ''
   let clientX = -1
   let clientY = -1
-  target.addEventListener('pointerdown', (event: any) => {
-    pointerType = event.pointerType || 'mouse'
-    clientX = event.clientX
-    clientY = event.clientY
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+  target.addEventListener('pointerdown', (event: Event) => {
+    const { clientX: nextClientX, clientY: nextClientY, pointerType: nextPointerType } = event as unknown as PointerCoordinatesEvent
+    pointerType = nextPointerType || 'mouse'
+    clientX = nextClientX
+    clientY = nextClientY
   })
 
   await HandlePointerdown.handlePointerdown(uid, hdId, 28, 19, 8, 9)

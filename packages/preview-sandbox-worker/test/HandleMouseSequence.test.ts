@@ -7,6 +7,11 @@ import * as HandleMouseup from '../src/parts/HandleMouseup/HandleMouseup.ts'
 import * as HappyDomState from '../src/parts/HappyDomState/HappyDomState.ts'
 import * as SerializeHappyDom from '../src/parts/SerializeHappyDom/SerializeHappyDom.ts'
 
+interface CoordinatesEvent {
+  readonly clientX: number
+  readonly clientY: number
+}
+
 afterEach(() => {
   HappyDomState.clear()
 })
@@ -120,10 +125,12 @@ test('click should normalize coordinates using preview offsets', async () => {
   })
 
   let receivedCoordinates: { clientX: number; clientY: number } | undefined
-  button.addEventListener('click', (event) => {
+  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+  button.addEventListener('click', (event: Event) => {
+    const mouseEvent = event as unknown as CoordinatesEvent
     receivedCoordinates = {
-      clientX: event.clientX,
-      clientY: event.clientY,
+      clientX: mouseEvent.clientX,
+      clientY: mouseEvent.clientY,
     }
   })
 
