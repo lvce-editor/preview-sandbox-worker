@@ -3,6 +3,7 @@ import * as ExecuteScripts from '../ExecuteScripts/ExecuteScripts.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
 import { observe } from '../ObserveDom/ObserveDom.ts'
 import * as PatchCanvasElements from '../PatchCanvasElements/PatchCanvasElements.ts'
+import * as SerializeHappyDom from '../SerializeHappyDom/SerializeHappyDom.ts'
 
 export const updateContent = async (
   uid: number,
@@ -20,6 +21,7 @@ export const updateContent = async (
     await PatchCanvasElements.patchCanvasElements(happyDomDocument, uid)
     const { codeFrame, error } = ExecuteScripts.executeScripts(happyDomWindow, happyDomDocument, scripts, width, height)
     const elementMap = Object.create(null)
+    SerializeHappyDom.serialize(happyDomDocument, elementMap)
     HappyDomState.set(uid, {
       document: happyDomDocument,
       elementMap,

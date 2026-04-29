@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import { afterEach, beforeAll, expect, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { PreviewWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import { Window } from 'happy-dom-without-node'
 import * as CanvasState from '../src/parts/CanvasState/CanvasState.ts'
 import { executeCallback } from '../src/parts/GetOffscreenCanvas/GetOffscreenCanvas.ts'
@@ -283,4 +283,28 @@ test.skip('patchCanvasElements callback should include cssRule parameter on dime
   expect(lastChange?.cssRule).toBeDefined()
   expect(lastChange?.cssRule).toContain(`[data-id="${dataUid}"]`)
   expect(lastChange?.cssRule).toContain('width: 200px')
+})
+
+test('patchCanvasElements should provide getBoundingClientRect based on canvas dimensions', async () => {
+  const window = new Window({ url: 'https://localhost:3000' })
+  const { document } = window
+  document.documentElement.innerHTML = '<body><canvas id="game" width="320" height="180"></canvas></body>'
+  const mockOffscreenCanvas = new MockOffscreenCanvas(320, 180)
+
+  using _mockRpc = PreviewWorker.registerMockRpc({
+    'Preview.createOffscreenCanvas': (_uid: number, id: number) => {
+      executeCallback(id, mockOffscreenCanvas, 1)
+    },
+  })
+
+  await PatchCanvasElements.patchCanvasElements(document, 1)
+  const canvas = document.querySelector('#game') as any
+  const rect = canvas.getBoundingClientRect()
+
+  expect(rect.left).toBe(0)
+  expect(rect.top).toBe(0)
+  expect(rect.width).toBe(320)
+  expect(rect.height).toBe(180)
+  expect(rect.right).toBe(320)
+  expect(rect.bottom).toBe(180)
 })
