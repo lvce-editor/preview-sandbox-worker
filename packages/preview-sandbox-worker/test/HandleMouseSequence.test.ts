@@ -126,7 +126,7 @@ test('click should normalize coordinates using preview offsets', async () => {
 
   let receivedCoordinates: { clientX: number; clientY: number } | undefined
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-  button.addEventListener('click', (event: Event) => {
+  button.addEventListener('click', (event) => {
     const mouseEvent = event as unknown as CoordinatesEvent
     receivedCoordinates = {
       clientX: mouseEvent.clientX,

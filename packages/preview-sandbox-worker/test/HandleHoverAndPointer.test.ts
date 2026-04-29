@@ -51,7 +51,7 @@ test('handleMouseleave dispatches mouseleave with normalized coordinates', async
 
   let received: { type: string; clientX: number; clientY: number } | undefined
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-  target.addEventListener('mouseleave', (event: Event) => {
+  target.addEventListener('mouseleave', (event) => {
     const mouseEvent = event as unknown as CoordinatesEvent
     received = {
       clientX: mouseEvent.clientX,
@@ -93,7 +93,7 @@ test('handlePointerdown dispatches pointerdown listeners', async () => {
   let clientX = -1
   let clientY = -1
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
-  target.addEventListener('pointerdown', (event: Event) => {
+  target.addEventListener('pointerdown', (event) => {
     const { clientX: nextClientX, clientY: nextClientY, pointerType: nextPointerType } = event as unknown as PointerCoordinatesEvent
     pointerType = nextPointerType || 'mouse'
     clientX = nextClientX
