@@ -23,11 +23,7 @@ const handleMutations = async (uid: number): Promise<void> => {
     window: happyDomInstance.window,
   })
 
-  const parsedDom = serialized.dom
-  // @ts-ignore
-  const { css } = serialized
-  // @ts-ignore
-  const parsedNodesChildNodeCount = GetParsedNodesChildNodeCount.getParsedNodesChildNodeCount(parsedDom)
+  GetParsedNodesChildNodeCount.getParsedNodesChildNodeCount(serialized.dom)
 
   try {
     await PreviewWorker.invoke('Preview.handleMutation', uid)
