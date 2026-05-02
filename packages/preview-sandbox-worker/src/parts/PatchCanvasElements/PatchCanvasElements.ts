@@ -9,6 +9,29 @@ interface CanvasCanvasDimensions {
   readonly width: number
 }
 
+interface CanvasBoundingClientRect {
+  readonly bottom: number
+  readonly height: number
+  readonly left: number
+  readonly right: number
+  readonly toJSON: () => CanvasBoundingClientRectJson
+  readonly top: number
+  readonly width: number
+  readonly x: number
+  readonly y: number
+}
+
+interface CanvasBoundingClientRectJson {
+  readonly bottom: number
+  readonly height: number
+  readonly left: number
+  readonly right: number
+  readonly top: number
+  readonly width: number
+  readonly x: number
+  readonly y: number
+}
+
 export const patchCanvasElements = async (document: Document, uid: number): Promise<void> => {
   const canvasElements = document.querySelectorAll('canvas')
   if (canvasElements.length === 0) {
@@ -68,6 +91,56 @@ export const patchCanvasElements = async (document: Document, uid: number): Prom
         element.__offscreenCanvas.height = heightValue
       },
     })
+
+    Object.defineProperty(element, 'clientWidth', {
+      configurable: true,
+      enumerable: true,
+      get: () => widthValue,
+    })
+
+    Object.defineProperty(element, 'clientHeight', {
+      configurable: true,
+      enumerable: true,
+      get: () => heightValue,
+    })
+
+    Object.defineProperty(element, 'offsetWidth', {
+      configurable: true,
+      enumerable: true,
+      get: () => widthValue,
+    })
+
+    Object.defineProperty(element, 'offsetHeight', {
+      configurable: true,
+      enumerable: true,
+      get: () => heightValue,
+    })
+
+    // @ts-ignore
+    element.getBoundingClientRect = (): CanvasBoundingClientRect => {
+      return {
+        bottom: heightValue,
+        height: heightValue,
+        left: 0,
+        right: widthValue,
+        toJSON: (): CanvasBoundingClientRectJson => {
+          return {
+            bottom: heightValue,
+            height: heightValue,
+            left: 0,
+            right: widthValue,
+            top: 0,
+            width: widthValue,
+            x: 0,
+            y: 0,
+          }
+        },
+        top: 0,
+        width: widthValue,
+        x: 0,
+        y: 0,
+      }
+    }
 
     instances.push({ dataId, dimensions, element, offscreenCanvas })
   }
