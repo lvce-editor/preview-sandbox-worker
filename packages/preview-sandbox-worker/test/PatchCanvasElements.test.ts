@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
-/* eslint-disable jest/no-disabled-tests */
 import { afterEach, beforeAll, expect, test } from '@jest/globals'
 import { PreviewWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import { Window } from 'happy-dom-without-node'
@@ -56,7 +55,7 @@ class MockOffscreenCanvas {
 }
 
 beforeAll(() => {
-  if (typeof globalThis.OffscreenCanvas === 'undefined') {
+  if (!('OffscreenCanvas' in globalThis)) {
     // @ts-ignore
     globalThis.OffscreenCanvas = MockOffscreenCanvas
   }
