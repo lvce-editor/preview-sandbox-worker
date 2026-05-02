@@ -42,7 +42,7 @@ const RE_BLOCK_COMMENT_CONTENT = /^[a-zA-Z\s]+/
 const RE_COMMENT_END = /^-->/
 const RE_TAG_TEXT = /^[^\s>]+/
 const RE_ANY_TEXT = /^[^\n]+/
-const RE_ATTRIBUTE_TEXT = /^[^\n<>/\s]+/
+const RE_ATTRIBUTE_TEXT = /^[^<>/\s]+/
 const RE_BLOCK_COMMENT_START = /^<!--/
 const RE_SELF_CLOSING = /^\/>/
 
@@ -85,7 +85,6 @@ export const tokenizeHtml = (text: string): readonly HtmlToken[] => {
           token = TokenType.OpeningAngleBracket
           state = State.AfterOpeningAngleBracket
         } else {
-          text.slice(index) // ?
           throw new UnexpectedTokenError()
         }
         break
@@ -144,7 +143,6 @@ export const tokenizeHtml = (text: string): readonly HtmlToken[] => {
           token = TokenType.Doctype
           state = State.InsideOpeningTag
         } else {
-          text.slice(index) // ?
           throw new UnexpectedTokenError()
         }
         break
@@ -172,7 +170,6 @@ export const tokenizeHtml = (text: string): readonly HtmlToken[] => {
           token = TokenType.Text
           state = State.TopLevelContent
         } else {
-          text.slice(index) // ?
           throw new UnexpectedTokenError()
         }
         break
@@ -195,7 +192,6 @@ export const tokenizeHtml = (text: string): readonly HtmlToken[] => {
           token = TokenType.EndCommentTag
           state = State.TopLevelContent
         } else {
-          text.slice(index) // ?
           throw new UnexpectedTokenError()
         }
         break
@@ -227,8 +223,6 @@ export const tokenizeHtml = (text: string): readonly HtmlToken[] => {
           token = TokenType.AttributeName
           state = State.AfterAttributeName
         } else {
-          text.slice(index).match(RE_TEXT) // ?
-          text.slice(index) // ?
           throw new UnexpectedTokenError()
         }
         break

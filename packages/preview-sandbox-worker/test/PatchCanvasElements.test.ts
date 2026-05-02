@@ -55,7 +55,7 @@ class MockOffscreenCanvas {
 }
 
 beforeAll(() => {
-  if (globalThis.OffscreenCanvas === undefined) {
+  if (!('OffscreenCanvas' in globalThis)) {
     // @ts-ignore
     globalThis.OffscreenCanvas = MockOffscreenCanvas
   }
