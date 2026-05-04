@@ -29,11 +29,11 @@ const content = await readFile(rendererWorkerMainPath, 'utf-8')
 const previewWorkerPath = join(root, '.tmp/dist/dist/previewSandBoxWorkerMain.js')
 
 const remoteUrl = getRemoteUrl(previewWorkerPath)
-if (!content.includes('// const previewSandboxWorkerUrl = ')) {
+if (!content.includes('// const previewSandBoxWorkerUrl = ')) {
   await cp(rendererWorkerMainPath, rendererWorkerMainPath + '.original')
-  const occurrence = `const previewSandboxWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js\``
-  const replacement = `// const previewSandboxWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js\`
-const previewSandboxWorkerUrl = \`${remoteUrl}\``
+  const occurrence = `const previewSandBoxWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js\``
+  const replacement = `// const previewSandBoxWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js\`
+const previewSandBoxWorkerUrl = \`${remoteUrl}\``
 
   const newContent = content.replace(occurrence, replacement)
   await writeFile(rendererWorkerMainPath, newContent)

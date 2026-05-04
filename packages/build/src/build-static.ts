@@ -28,9 +28,9 @@ const content = await readFile(rendererWorkerPath, 'utf8')
 const workerPath = join(root, '.tmp/dist/dist/previewSandBoxWorkerMain.js')
 const remoteUrl = getRemoteUrl(workerPath)
 
-const occurrence = `// const previewSandboxWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js\`
-const previewSandboxWorkerUrl = \`${remoteUrl}\``
-const replacement = `const previewSandboxWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js\``
+const occurrence = `// const previewSandBoxWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js\`
+const previewSandBoxWorkerUrl = \`${remoteUrl}\``
+const replacement = `const previewSandBoxWorkerUrl = \`\${assetDir}/packages/preview-sandbox-worker/dist/previewSandBoxWorkerMain.js\``
 if (!content.includes(occurrence)) {
   throw new Error('occurrence not found')
 }
