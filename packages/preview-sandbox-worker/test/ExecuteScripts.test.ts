@@ -1,5 +1,7 @@
 import { expect, test } from '@jest/globals'
 import * as ExecuteScripts from '../src/parts/CreateWindowAndExecuteScripts/CreateWindowAndExecuteScripts.ts'
+import { createWindow } from '../src/parts/CreateWindow/CreateWindow.ts'
+import { executeScripts } from '../src/parts/ExecuteScripts/ExecuteScripts.ts'
 import * as DispatchClickEvent from '../src/parts/DispatchClickEvent/DispatchClickEvent.ts'
 
 test('executeScripts should return a document and window', () => {
@@ -252,4 +254,26 @@ test('executeScripts should have default innerWidth and innerHeight of 0', () =>
   const scripts = ['document.getElementById("result").textContent = window.innerWidth + "x" + window.innerHeight']
   const { document: doc } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
   expect(doc.querySelector('#result').textContent).toBe('0x0')
+})
+
+test('executeScripts should expose CanvasRenderingContext2D for canvas scripts', () => {
+  class MockCanvasRenderingContext2D {
+    fillRect(): void {}
+  }
+
+  const html = '<html><body><canvas id="canvas"></canvas><div id="result"></div></body></html>'
+  const { document, window } = createWindow(html)
+  const canvas = document.querySelector('#canvas') as any
+  const context = new MockCanvasRenderingContext2D()
+  canvas.getContext = () => context
+
+  const { error } = executeScripts(window, document, [
+    `
+    const context = document.getElementById("canvas").getContext("2d")
+    document.getElementById("result").textContent = String(context instanceof CanvasRenderingContext2D)
+    `,
+  ])
+
+  expect(error).toBeNull()
+  expect(document.querySelector('#result')?.textContent).toBe('true')
 })
