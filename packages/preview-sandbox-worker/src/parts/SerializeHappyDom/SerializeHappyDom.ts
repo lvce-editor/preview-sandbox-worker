@@ -24,6 +24,16 @@ interface SerializeContext {
   nextId: number
 }
 
+const serializeAttributeName = (attrName: string): string => {
+  if (attrName === 'class') {
+    return 'className'
+  }
+  if (attrName === 'type') {
+    return 'inputType'
+  }
+  return attrName
+}
+
 const applyAllowedAttributes = (targetNode: any, sourceNode: any): void => {
   const { attributes } = sourceNode
   if (!attributes) {
@@ -33,12 +43,7 @@ const applyAllowedAttributes = (targetNode: any, sourceNode: any): void => {
     const attr = attributes[i]
     const attrName = attr.name
     if (IsDefaultAllowedAttribute.isDefaultAllowedAttribute(attrName, [])) {
-      let finalName = attrName
-      if (attrName === 'class') {
-        finalName = 'className'
-      } else if (attrName === 'type') {
-        finalName = 'inputType'
-      }
+      const finalName = serializeAttributeName(attrName)
       targetNode[finalName] = attr.value
     }
   }
