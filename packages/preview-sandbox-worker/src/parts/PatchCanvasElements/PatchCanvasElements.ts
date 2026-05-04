@@ -32,6 +32,10 @@ interface CanvasBoundingClientRectJson {
   readonly y: number
 }
 
+const reflectCanvasDimensionAttribute = (element: Element, name: 'width' | 'height', value: number): void => {
+  element.setAttribute(name, String(value))
+}
+
 export const patchCanvasElements = async (document: Document, uid: number): Promise<void> => {
   const canvasElements = document.querySelectorAll('canvas')
   if (canvasElements.length === 0) {
@@ -74,6 +78,7 @@ export const patchCanvasElements = async (document: Document, uid: number): Prom
       get: () => widthValue,
       set: (newWidth: number | string) => {
         widthValue = toNumber(newWidth)
+        reflectCanvasDimensionAttribute(element, 'width', widthValue)
         // @ts-ignore
         element.__offscreenCanvas.width = widthValue
       },
@@ -87,6 +92,7 @@ export const patchCanvasElements = async (document: Document, uid: number): Prom
       get: () => heightValue,
       set: (newHeight: number | string) => {
         heightValue = toNumber(newHeight)
+        reflectCanvasDimensionAttribute(element, 'height', heightValue)
         // @ts-ignore
         element.__offscreenCanvas.height = heightValue
       },
