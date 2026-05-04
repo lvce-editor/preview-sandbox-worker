@@ -267,7 +267,7 @@ test('executeScripts should expose CanvasRenderingContext2D for canvas scripts',
   const { document, window } = createWindow(html)
   const canvas = document.querySelector('#canvas') as any
   const context = new MockCanvasRenderingContext2D()
-  canvas.getContext = () => context
+  canvas.getContext = (): MockCanvasRenderingContext2D => context
 
   const { error } = executeScripts(window, document, [
     `
