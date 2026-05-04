@@ -24,6 +24,26 @@ interface SerializeContext {
   nextId: number
 }
 
+const applyAllowedAttributes = (targetNode: any, sourceNode: any): void => {
+  const { attributes } = sourceNode
+  if (!attributes) {
+    return
+  }
+  for (let i = 0; i < attributes.length; i++) {
+    const attr = attributes[i]
+    const attrName = attr.name
+    if (IsDefaultAllowedAttribute.isDefaultAllowedAttribute(attrName, [])) {
+      let finalName = attrName
+      if (attrName === 'class') {
+        finalName = 'className'
+      } else if (attrName === 'type') {
+        finalName = 'inputType'
+      }
+      targetNode[finalName] = attr.value
+    }
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly string[], context: SerializeContext): number => {
   const { nodeType } = node
@@ -76,6 +96,7 @@ const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly 
       type: VirtualDomElements.Reference,
       uid: node.__canvasId,
     }
+    applyAllowedAttributes(refNode, node)
     if (context.elementMap) {
       context.elementMap[node.__canvasId + ''] = node
     }
@@ -89,23 +110,7 @@ const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly 
     type: GetVirtualDomTag.getVirtualDomTag(tagName),
   }
 
-  // Copy allowed attributes
-  const { attributes } = node
-  if (attributes) {
-    for (let i = 0; i < attributes.length; i++) {
-      const attr = attributes[i]
-      const attrName = attr.name
-      if (IsDefaultAllowedAttribute.isDefaultAllowedAttribute(attrName, [])) {
-        let finalName = attrName
-        if (attrName === 'class') {
-          finalName = 'className'
-        } else if (attrName === 'type') {
-          finalName = 'inputType'
-        }
-        newNode[finalName] = attr.value
-      }
-    }
-  }
+  applyAllowedAttributes(newNode, node)
 
   // Assign element tracking ID for interactivity
   const hdId = String(context.nextId++)
