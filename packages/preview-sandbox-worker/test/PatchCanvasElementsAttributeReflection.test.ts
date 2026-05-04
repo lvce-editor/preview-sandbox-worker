@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import { expect, test } from '@jest/globals'
 import { PreviewWorker } from '@lvce-editor/rpc-registry'
 import { Window } from 'happy-dom-without-node'

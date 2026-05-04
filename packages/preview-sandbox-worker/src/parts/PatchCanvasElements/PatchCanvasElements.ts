@@ -32,7 +32,7 @@ interface CanvasBoundingClientRectJson {
   readonly y: number
 }
 
-const reflectCanvasDimensionAttribute = (element: Element, name: 'width' | 'height', value: number): void => {
+const reflectCanvasDimensionAttribute = (element: any, name: 'width' | 'height', value: number): void => {
   element.setAttribute(name, String(value))
 }
 
