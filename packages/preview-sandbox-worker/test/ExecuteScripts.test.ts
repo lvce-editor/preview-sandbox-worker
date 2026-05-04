@@ -1,8 +1,8 @@
 import { expect, test } from '@jest/globals'
-import * as ExecuteScripts from '../src/parts/CreateWindowAndExecuteScripts/CreateWindowAndExecuteScripts.ts'
 import { createWindow } from '../src/parts/CreateWindow/CreateWindow.ts'
-import { executeScripts } from '../src/parts/ExecuteScripts/ExecuteScripts.ts'
+import * as ExecuteScripts from '../src/parts/CreateWindowAndExecuteScripts/CreateWindowAndExecuteScripts.ts'
 import * as DispatchClickEvent from '../src/parts/DispatchClickEvent/DispatchClickEvent.ts'
+import { executeScripts } from '../src/parts/ExecuteScripts/ExecuteScripts.ts'
 
 test('executeScripts should return a document and window', () => {
   const result = ExecuteScripts.createWindowAndExecuteScripts('<html><body><div>hello</div></body></html>', [])
@@ -258,7 +258,9 @@ test('executeScripts should have default innerWidth and innerHeight of 0', () =>
 
 test('executeScripts should expose CanvasRenderingContext2D for canvas scripts', () => {
   class MockCanvasRenderingContext2D {
-    fillRect(): void {}
+    fillRect(): void {
+      return
+    }
   }
 
   const html = '<html><body><canvas id="canvas"></canvas><div id="result"></div></body></html>'

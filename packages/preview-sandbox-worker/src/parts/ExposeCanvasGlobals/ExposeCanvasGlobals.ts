@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import type { Document, Window } from 'happy-dom-without-node'
 
 export const exposeCanvasGlobals = (window: Window, document: Document): void => {
