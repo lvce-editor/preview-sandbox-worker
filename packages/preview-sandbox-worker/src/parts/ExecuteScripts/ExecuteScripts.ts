@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 /* eslint-disable @typescript-eslint/no-implied-eval */
 import type { Document, Window } from 'happy-dom-without-node'
+import { exposeCanvasGlobals } from '../ExposeCanvasGlobals/ExposeCanvasGlobals.ts'
 import { getErrorCodeFrame } from '../GetErrorCodeFrame/GetErrorCodeFrame.ts'
 import { getGlobals } from '../GetGlobals/GetGlobals.ts'
 import { getTopLevelFunctionNames } from '../GetTopLevelFunctionNames/GetTopLevelFunctionNames.ts'
@@ -18,6 +19,7 @@ export const executeScripts = (
   width: number = 0,
   height: number = 0,
 ): ScriptExecutionResult => {
+  exposeCanvasGlobals(window, document)
   const { globalGlobals, windowGlobals } = getGlobals(width, height)
   setGlobals(window, globalGlobals, windowGlobals)
   let firstError: Error | null = null
