@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'preview.keydown-event'
 
-export const skip = 1
-
 export const test: Test = async ({ Command, expect, FileSystem, Locator, Preview, Workspace }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
@@ -15,13 +13,23 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Preview
   <title>Keydown Event Test</title>
 </head>
 <body>
-  <input type="text" id="textInput" placeholder="Type here">
-  <p id="output">No key pressed</p>
+  <p id="started">no</p>
+  <p id="jumps">0</p>
 
   <script>
-    document.getElementById('textInput').addEventListener('keydown', function(event) {
-      const key = event.key || event.code;
-      document.getElementById('output').textContent = 'Key pressed: ' + key;
+    let started = false;
+
+    window.addEventListener('keydown', function(event) {
+      if (!started) {
+        started = true;
+        document.getElementById('started').textContent = 'yes';
+        return;
+      }
+
+      if (event.code === 'Space') {
+        const jumps = Number(document.getElementById('jumps').textContent) + 1;
+        document.getElementById('jumps').textContent = String(jumps);
+      }
     });
   </script>
 </body>
@@ -31,16 +39,19 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Preview
   await Command.execute('Layout.showPreview', filePath)
   const previewArea = Locator('.Viewlet.Preview')
   await expect(previewArea).toBeVisible()
-  const input = previewArea.locator('#textInput')
-  const output = previewArea.locator('#output')
-  await expect(input).toBeVisible()
-  await expect(output).toBeVisible()
-  await expect(output).toHaveText('No key pressed')
+  const started = previewArea.locator('#started')
+  const jumps = previewArea.locator('#jumps')
+  await expect(started).toBeVisible()
+  await expect(jumps).toBeVisible()
+  await expect(started).toHaveText('no')
+  await expect(jumps).toHaveText('0')
 
   // act
   // @ts-ignore
-  await Preview.handleKeyDown('0', 'a', 65)
+  await Preview.handleKeyDown('0', 'a', '65')
+  await Preview.handleKeyDown('0', ' ', '32')
 
   // assert
-  await expect(output).toHaveText('Key pressed: a')
+  await expect(started).toHaveText('yes')
+  await expect(jumps).toHaveText('1')
 }
