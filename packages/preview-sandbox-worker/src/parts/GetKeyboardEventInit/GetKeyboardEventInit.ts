@@ -10,6 +10,8 @@ const numericCodeMap: Record<number, string> = {
   9: 'Tab',
 }
 
+// cspell:ignore Spacebar
+
 const invalidCodeValues = new Set(['code', 'event.code', 'e.code', 'key', 'event.key', 'e.key'])
 
 const getNumericCode = (code: string | number): number | undefined => {
@@ -27,10 +29,10 @@ const getCodeFromNumericCode = (numericCode: number): string => {
     return numericCodeMap[numericCode]
   }
   if (numericCode >= 48 && numericCode <= 57) {
-    return `Digit${String.fromCharCode(numericCode)}`
+    return `Digit${String.fromCodePoint(numericCode)}`
   }
   if (numericCode >= 65 && numericCode <= 90) {
-    return `Key${String.fromCharCode(numericCode)}`
+    return `Key${String.fromCodePoint(numericCode)}`
   }
   return String(numericCode)
 }
@@ -45,7 +47,7 @@ const getCodeFromKey = (key: string): string => {
   if (/^[a-z]$/i.test(key)) {
     return `Key${key.toUpperCase()}`
   }
-  if (/^[0-9]$/.test(key)) {
+  if (/^\d$/.test(key)) {
     return `Digit${key}`
   }
   return key
@@ -83,7 +85,7 @@ const getNormalizedKey = (key: string, normalizedCode: string): string => {
   if (/^Key[A-Z]$/.test(normalizedCode)) {
     return normalizedCode.slice(3).toLowerCase()
   }
-  if (/^Digit[0-9]$/.test(normalizedCode)) {
+  if (/^Digit\d$/.test(normalizedCode)) {
     return normalizedCode.slice(5)
   }
   return normalizedCode
@@ -100,10 +102,10 @@ const getLegacyKeyCode = (normalizedCode: string, code: string | number): number
     }
   }
   if (/^Key[A-Z]$/.test(normalizedCode)) {
-    return normalizedCode.charCodeAt(3)
+    return normalizedCode.codePointAt(3) ?? 0
   }
-  if (/^Digit[0-9]$/.test(normalizedCode)) {
-    return normalizedCode.charCodeAt(5)
+  if (/^Digit\d$/.test(normalizedCode)) {
+    return normalizedCode.codePointAt(5) ?? 0
   }
   return 0
 }
