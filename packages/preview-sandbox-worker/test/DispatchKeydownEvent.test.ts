@@ -45,3 +45,34 @@ test('dispatchKeydownEvent keeps legacy numeric fields for compatibility', () =>
   expect(receivedEvent.keyCode).toBe(32)
   expect(receivedEvent.which).toBe(32)
 })
+
+test('dispatchKeydownEvent ignores placeholder code strings', () => {
+  const window = createWindow()
+  const { document } = window
+  let receivedEvent: any
+
+  window.addEventListener('keydown', (event: any) => {
+    receivedEvent = event
+  })
+
+  DispatchKeydownEvent.dispatchKeydownEvent(document, window, ' ', 'event.code')
+
+  expect(receivedEvent.key).toBe(' ')
+  expect(receivedEvent.code).toBe('Space')
+})
+
+test('dispatchKeydownEvent derives code when it is missing', () => {
+  const window = createWindow()
+  const { document } = window
+  let receivedEvent: any
+
+  window.addEventListener('keydown', (event: any) => {
+    receivedEvent = event
+  })
+
+  DispatchKeydownEvent.dispatchKeydownEvent(document, window, 'a', '')
+
+  expect(receivedEvent.key).toBe('a')
+  expect(receivedEvent.code).toBe('KeyA')
+  expect(receivedEvent.keyCode).toBe(65)
+})

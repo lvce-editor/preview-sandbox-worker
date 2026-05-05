@@ -10,6 +10,8 @@ const numericCodeMap: Record<number, string> = {
   40: 'ArrowDown',
 }
 
+const invalidCodeValues = new Set(['code', 'event.code', 'e.code', 'key', 'event.key', 'e.key'])
+
 const getNumericCode = (code: string | number): number | undefined => {
   if (typeof code === 'number' && Number.isFinite(code)) {
     return code
@@ -49,13 +51,21 @@ const getCodeFromKey = (key: string): string => {
   return key
 }
 
+const isInvalidCodeString = (code: string): boolean => {
+  const trimmedCode = code.trim()
+  if (!trimmedCode) {
+    return true
+  }
+  return invalidCodeValues.has(trimmedCode)
+}
+
 const getNormalizedCode = (key: string, code: string | number): string => {
   const numericCode = getNumericCode(code)
   if (numericCode !== undefined) {
     return getCodeFromNumericCode(numericCode)
   }
-  if (typeof code === 'string' && code) {
-    return code
+  if (typeof code === 'string' && !isInvalidCodeString(code)) {
+    return code.trim()
   }
   return getCodeFromKey(key)
 }
