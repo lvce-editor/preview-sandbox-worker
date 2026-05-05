@@ -1,6 +1,8 @@
 import { expect, test } from '@jest/globals'
+import { createWindow } from '../src/parts/CreateWindow/CreateWindow.ts'
 import * as ExecuteScripts from '../src/parts/CreateWindowAndExecuteScripts/CreateWindowAndExecuteScripts.ts'
 import * as DispatchClickEvent from '../src/parts/DispatchClickEvent/DispatchClickEvent.ts'
+import { executeScripts } from '../src/parts/ExecuteScripts/ExecuteScripts.ts'
 
 test('executeScripts should return a document and window', () => {
   const result = ExecuteScripts.createWindowAndExecuteScripts('<html><body><div>hello</div></body></html>', [])
@@ -252,4 +254,39 @@ test('executeScripts should have default innerWidth and innerHeight of 0', () =>
   const scripts = ['document.getElementById("result").textContent = window.innerWidth + "x" + window.innerHeight']
   const { document: doc } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
   expect(doc.querySelector('#result').textContent).toBe('0x0')
+})
+
+test('executeScripts should expose devicePixelRatio on window and globalThis', () => {
+  const html = '<html><body><div id="window-result"></div><div id="global-result"></div></body></html>'
+  const scripts = [
+    'document.getElementById("window-result").textContent = String(window.devicePixelRatio)',
+    'document.getElementById("global-result").textContent = String(globalThis.devicePixelRatio)',
+  ]
+  const { document: doc } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
+  expect(doc.querySelector('#window-result').textContent).toBe('1')
+  expect(doc.querySelector('#global-result').textContent).toBe('1')
+})
+
+test('executeScripts should expose CanvasRenderingContext2D for canvas scripts', () => {
+  class MockCanvasRenderingContext2D {
+    fillRect(): void {
+      return
+    }
+  }
+
+  const html = '<html><body><canvas id="canvas"></canvas><div id="result"></div></body></html>'
+  const { document, window } = createWindow(html)
+  const canvas = document.querySelector('#canvas') as any
+  const context = new MockCanvasRenderingContext2D()
+  canvas.getContext = (): MockCanvasRenderingContext2D => context
+
+  const { error } = executeScripts(window, document, [
+    `
+    const context = document.getElementById("canvas").getContext("2d")
+    document.getElementById("result").textContent = String(context instanceof CanvasRenderingContext2D)
+    `,
+  ])
+
+  expect(error).toBeNull()
+  expect(document.querySelector('#result')?.textContent).toBe('true')
 })
