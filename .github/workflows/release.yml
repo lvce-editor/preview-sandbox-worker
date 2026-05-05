@@ -77,7 +77,7 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: measure
-        working-directory: ./packages/memory
+        working-directory: ./packages/build
         run: npm run measure
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
