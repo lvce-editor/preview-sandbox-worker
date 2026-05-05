@@ -18,9 +18,10 @@ export const executeScripts = (
   scripts: readonly string[],
   width: number = 0,
   height: number = 0,
+  devicePixelRatio: number = 1,
 ): ScriptExecutionResult => {
   exposeCanvasGlobals(window, document)
-  const { globalGlobals, windowGlobals } = getGlobals(width, height)
+  const { globalGlobals, windowGlobals } = getGlobals(width, height, devicePixelRatio)
   setGlobals(window, globalGlobals, windowGlobals)
   let firstError: Error | null = null
   let firstCodeFrame = ''

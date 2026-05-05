@@ -256,6 +256,17 @@ test('executeScripts should have default innerWidth and innerHeight of 0', () =>
   expect(doc.querySelector('#result').textContent).toBe('0x0')
 })
 
+test('executeScripts should expose devicePixelRatio on window and globalThis', () => {
+  const html = '<html><body><div id="window-result"></div><div id="global-result"></div></body></html>'
+  const scripts = [
+    'document.getElementById("window-result").textContent = String(window.devicePixelRatio)',
+    'document.getElementById("global-result").textContent = String(globalThis.devicePixelRatio)',
+  ]
+  const { document: doc } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
+  expect(doc.querySelector('#window-result').textContent).toBe('1')
+  expect(doc.querySelector('#global-result').textContent).toBe('1')
+})
+
 test('executeScripts should expose CanvasRenderingContext2D for canvas scripts', () => {
   class MockCanvasRenderingContext2D {
     fillRect(): void {
