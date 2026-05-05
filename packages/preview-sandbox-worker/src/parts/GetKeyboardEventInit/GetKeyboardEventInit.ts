@@ -1,6 +1,4 @@
 const numericCodeMap: Record<number, string> = {
-  8: 'Backspace',
-  9: 'Tab',
   13: 'Enter',
   27: 'Escape',
   32: 'Space',
@@ -8,6 +6,8 @@ const numericCodeMap: Record<number, string> = {
   38: 'ArrowUp',
   39: 'ArrowRight',
   40: 'ArrowDown',
+  8: 'Backspace',
+  9: 'Tab',
 }
 
 const invalidCodeValues = new Set(['code', 'event.code', 'e.code', 'key', 'event.key', 'e.key'])

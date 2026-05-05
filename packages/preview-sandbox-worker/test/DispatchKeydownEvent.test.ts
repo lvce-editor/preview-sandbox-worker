@@ -22,8 +22,8 @@ test('dispatchKeydownEvent normalizes numeric space codes for window listeners',
     }
   })
 
-  DispatchKeydownEvent.dispatchKeydownEvent(document, window, 'a', 65 as any)
-  DispatchKeydownEvent.dispatchKeydownEvent(document, window, ' ', 32 as any)
+  DispatchKeydownEvent.dispatchKeydownEvent(document, window, 'a', 65)
+  DispatchKeydownEvent.dispatchKeydownEvent(document, window, ' ', 32)
 
   expect(started).toBe(true)
   expect(jumps).toBe(1)
@@ -38,7 +38,7 @@ test('dispatchKeydownEvent keeps legacy numeric fields for compatibility', () =>
     receivedEvent = event
   })
 
-  DispatchKeydownEvent.dispatchKeydownEvent(document, window, ' ', 32 as any)
+  DispatchKeydownEvent.dispatchKeydownEvent(document, window, ' ', 32)
 
   expect(receivedEvent.key).toBe(' ')
   expect(receivedEvent.code).toBe('Space')
