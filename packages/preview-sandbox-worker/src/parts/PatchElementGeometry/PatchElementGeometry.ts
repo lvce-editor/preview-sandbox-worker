@@ -72,7 +72,7 @@ const patchElement = (uid: number, hdId: string, element: any): void => {
   }
 }
 
-export const patchElementGeometry = (uid: number, elementMap: Record<string, any>): void => {
+export const patchElementGeometry = (uid: number, elementMap: Readonly<Record<string, any>>): void => {
   for (const [hdId, element] of Object.entries(elementMap)) {
     patchElement(uid, hdId, element)
   }

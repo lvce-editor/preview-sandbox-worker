@@ -46,6 +46,7 @@ export const createGeometryBuffer = (elementCount: number): ArrayBuffer | Shared
   return new ArrayBuffer(size)
 }
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export const setGeometryBuffer = (uid: number, geometryBuffer: ArrayBuffer | SharedArrayBuffer): void => {
   states.set(uid, new Float64Array(geometryBuffer))
 }

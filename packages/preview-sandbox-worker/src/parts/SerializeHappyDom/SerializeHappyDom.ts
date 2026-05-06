@@ -24,6 +24,7 @@ interface SerializeContext {
   nextId: number
 }
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 const getOrCreateHdId = (node: any, context: SerializeContext): string => {
   const existingHdId = node.getAttribute?.('data-id')
   if (existingHdId) {

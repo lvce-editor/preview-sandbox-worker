@@ -3,8 +3,8 @@ import { afterEach, beforeAll, expect, test } from '@jest/globals'
 import { PreviewWorker } from '@lvce-editor/rpc-registry'
 import * as CanvasState from '../src/parts/CanvasState/CanvasState.ts'
 import * as GeometryState from '../src/parts/GeometryState/GeometryState.ts'
-import * as HappyDomState from '../src/parts/HappyDomState/HappyDomState.ts'
 import { executeCallback } from '../src/parts/GetOffscreenCanvas/GetOffscreenCanvas.ts'
+import * as HappyDomState from '../src/parts/HappyDomState/HappyDomState.ts'
 import * as UpdateContent from '../src/parts/UpdateContent/UpdateContent.ts'
 
 class MockOffscreenCanvas {
