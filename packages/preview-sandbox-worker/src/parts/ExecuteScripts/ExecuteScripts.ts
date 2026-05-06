@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-implied-eval */
 import type { Document, Window } from 'happy-dom-without-node'
 import { exposeCanvasGlobals } from '../ExposeCanvasGlobals/ExposeCanvasGlobals.ts'
+import { exposeGetComputedStyle } from '../ExposeGetComputedStyle/ExposeGetComputedStyle.ts'
 import { getErrorCodeFrame } from '../GetErrorCodeFrame/GetErrorCodeFrame.ts'
 import { getGlobals } from '../GetGlobals/GetGlobals.ts'
 import { getTopLevelFunctionNames } from '../GetTopLevelFunctionNames/GetTopLevelFunctionNames.ts'
@@ -23,6 +24,7 @@ export const executeScripts = (
   exposeCanvasGlobals(window, document)
   const { globalGlobals, windowGlobals } = getGlobals(width, height, devicePixelRatio)
   setGlobals(window, globalGlobals, windowGlobals)
+  exposeGetComputedStyle(window)
   let firstError: Error | null = null
   let firstCodeFrame = ''
   // Execute each script with the happy-dom window and document as context
