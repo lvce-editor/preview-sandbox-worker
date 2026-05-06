@@ -102,6 +102,9 @@ const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly 
       uid: node.__canvasId,
     }
     applyAllowedAttributes(refNode, node)
+    if (typeof node.id === 'string' && node.id) {
+      refNode.id = node.id
+    }
     if (context.elementMap) {
       context.elementMap[node.__canvasId + ''] = node
     }

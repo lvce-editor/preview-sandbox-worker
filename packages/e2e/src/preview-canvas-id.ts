@@ -23,3 +23,4 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await expect(canvas).toBeVisible()
   await expect(canvas).toHaveAttribute('id', 'gameCanvas')
 }
+

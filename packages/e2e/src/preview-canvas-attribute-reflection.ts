@@ -38,7 +38,7 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, W
 
   const previewArea = Locator('.Viewlet.Preview')
   const heading = previewArea.locator('h2')
-  const canvas = previewArea.locator('canvas')
+  const canvas = previewArea.locator('#gameCanvas')
   const propertyWidth = previewArea.locator('#propertyWidth')
   const propertyHeight = previewArea.locator('#propertyHeight')
   const attributeWidth = previewArea.locator('#attributeWidth')
@@ -51,6 +51,7 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, W
   await expect(propertyHeight).toHaveText('300')
   await expect(attributeWidth).toHaveText('400')
   await expect(attributeHeight).toHaveText('300')
+  await expect(canvas).toHaveAttribute('id', 'gameCanvas')
   await expect(canvas).toHaveAttribute('width', '400')
   await expect(canvas).toHaveAttribute('height', '300')
 }
