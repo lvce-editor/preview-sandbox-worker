@@ -109,3 +109,48 @@ test('updateContent should expose geometry snapshot rects during script executio
     }),
   )
 })
+
+test('updateContent should let direct canvas parents reuse canvas fallback rects', async () => {
+  const uid = 2
+
+  using _mockRpc = PreviewWorker.registerMockRpc({
+    'Preview.createOffscreenCanvas': (_previewUid: number, id: number) => {
+      executeCallback(id, new MockOffscreenCanvas(320, 180), 7)
+    },
+  })
+
+  const content = '<body><div id="wrap"><canvas id="game" width="320" height="180"></canvas></div></body>'
+  const scripts = [
+    `
+    const wrap = document.getElementById('game').parentElement.getBoundingClientRect()
+    window.__rect = JSON.stringify({
+      bottom: wrap.bottom,
+      height: wrap.height,
+      left: wrap.left,
+      right: wrap.right,
+      top: wrap.top,
+      width: wrap.width,
+      x: wrap.x,
+      y: wrap.y,
+    })
+    `,
+  ]
+
+  const result = await UpdateContent.updateContent(uid, 320, 180, content, scripts)
+  expect(result.errorMessage).toBe('')
+
+  const state = HappyDomState.get(uid)
+  expect(state).toBeDefined()
+  expect((state?.window as any).__rect).toBe(
+    JSON.stringify({
+      bottom: 180,
+      height: 180,
+      left: 0,
+      right: 320,
+      top: 0,
+      width: 320,
+      x: 0,
+      y: 0,
+    }),
+  )
+})

@@ -34,6 +34,21 @@ const getCanvasDimension = (element: any, name: 'width' | 'height'): number => {
   return 0
 }
 
+const getDirectCanvasChildRect = (element: any): GeometryRectWithJson | undefined => {
+  const { children } = element
+  if (!children) {
+    return undefined
+  }
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i]
+    const tagName = (child?.tagName || '').toLowerCase()
+    if (tagName === 'canvas' && typeof child.getBoundingClientRect === 'function') {
+      return toRect(child.getBoundingClientRect())
+    }
+  }
+  return undefined
+}
+
 const getFallbackRect = (element: any): GeometryRectWithJson => {
   const tagName = (element.tagName || '').toLowerCase()
   if (tagName === 'canvas') {
@@ -49,6 +64,10 @@ const getFallbackRect = (element: any): GeometryRectWithJson => {
       x: 0,
       y: 0,
     })
+  }
+  const directCanvasChildRect = getDirectCanvasChildRect(element)
+  if (directCanvasChildRect) {
+    return directCanvasChildRect
   }
   return toRect({
     bottom: 0,
