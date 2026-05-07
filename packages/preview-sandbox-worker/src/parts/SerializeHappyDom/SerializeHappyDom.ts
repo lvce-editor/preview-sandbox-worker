@@ -24,6 +24,21 @@ interface SerializeContext {
   nextId: number
 }
 
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+const getOrCreateHdId = (node: any, context: SerializeContext): string => {
+  const existingHdId = node.getAttribute?.('data-id')
+  if (existingHdId) {
+    const numericValue = Number(existingHdId)
+    if (Number.isInteger(numericValue) && numericValue >= context.nextId) {
+      context.nextId = numericValue + 1
+    }
+    return existingHdId
+  }
+  const hdId = String(context.nextId++)
+  node.setAttribute?.('data-id', hdId)
+  return hdId
+}
+
 const serializeAttributeName = (attrName: string): string => {
   if (attrName === 'class') {
     return 'className'
@@ -118,7 +133,7 @@ const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly 
   applyAllowedAttributes(newNode, node)
 
   // Assign element tracking ID for interactivity
-  const hdId = String(context.nextId++)
+  const hdId = getOrCreateHdId(node, context)
   newNode['data-id'] = hdId
   context.elementMap[hdId] = node
 
