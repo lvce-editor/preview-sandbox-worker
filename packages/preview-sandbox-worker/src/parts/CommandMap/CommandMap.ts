@@ -1,4 +1,5 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
+import { setGeometryBuffer } from '../GeometryState/GeometryState.ts'
 import { executeCallback } from '../GetOffscreenCanvas/GetOffscreenCanvas.ts'
 import { getSerializedDom } from '../GetSerializedDom/GetSerializedDom.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
@@ -43,5 +44,6 @@ export const commandMap = {
   'SandBox.handlePointerup': HandlePointerup.handlePointerup,
   'SandBox.loadContent': LoadContent.loadContent,
   'SandBox.resize': resize,
+  'SandBox.setGeometryBuffer': setGeometryBuffer,
   'SandBox.terminate': terminate,
 }

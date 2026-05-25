@@ -3,6 +3,7 @@ import * as ExecuteScripts from '../ExecuteScripts/ExecuteScripts.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
 import { observe } from '../ObserveDom/ObserveDom.ts'
 import * as PatchCanvasElements from '../PatchCanvasElements/PatchCanvasElements.ts'
+import * as PatchElementGeometry from '../PatchElementGeometry/PatchElementGeometry.ts'
 import * as SerializeHappyDom from '../SerializeHappyDom/SerializeHappyDom.ts'
 
 export const updateContent = async (
@@ -19,9 +20,13 @@ export const updateContent = async (
   try {
     const { document: happyDomDocument, window: happyDomWindow } = createWindow(content)
     await PatchCanvasElements.patchCanvasElements(happyDomDocument, uid)
+    const initialElementMap = Object.create(null)
+    SerializeHappyDom.serialize(happyDomDocument, initialElementMap)
+    PatchElementGeometry.patchElementGeometry(uid, initialElementMap)
     const { codeFrame, error } = ExecuteScripts.executeScripts(happyDomWindow, happyDomDocument, scripts, width, height)
     const elementMap = Object.create(null)
     SerializeHappyDom.serialize(happyDomDocument, elementMap)
+    PatchElementGeometry.patchElementGeometry(uid, elementMap)
     HappyDomState.set(uid, {
       document: happyDomDocument,
       elementMap,

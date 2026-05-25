@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import type { Document } from 'happy-dom-without-node'
 import * as CanvasState from '../CanvasState/CanvasState.ts'
+import * as GeometryState from '../GeometryState/GeometryState.ts'
 import { getOffscreenCanvas } from '../GetOffscreenCanvas/GetOffscreenCanvas.ts'
 import { toNumber } from '../ToNumber/ToNumber.ts'
 
@@ -30,6 +31,13 @@ interface CanvasBoundingClientRectJson {
   readonly width: number
   readonly x: number
   readonly y: number
+}
+
+const toCanvasRect = (rect: CanvasBoundingClientRectJson): CanvasBoundingClientRect => {
+  return {
+    ...rect,
+    toJSON: (): CanvasBoundingClientRectJson => rect,
+  }
 }
 
 const reflectCanvasDimensionAttribute = (element: any, name: 'width' | 'height', value: number): void => {
@@ -128,28 +136,20 @@ export const patchCanvasElements = async (document: Document, uid: number): Prom
 
     // @ts-ignore
     element.getBoundingClientRect = (): CanvasBoundingClientRect => {
-      return {
+      const rect = GeometryState.getRect(uid, dataId)
+      if (rect) {
+        return toCanvasRect(rect)
+      }
+      return toCanvasRect({
         bottom: heightValue,
         height: heightValue,
         left: 0,
         right: widthValue,
-        toJSON: (): CanvasBoundingClientRectJson => {
-          return {
-            bottom: heightValue,
-            height: heightValue,
-            left: 0,
-            right: widthValue,
-            top: 0,
-            width: widthValue,
-            x: 0,
-            y: 0,
-          }
-        },
         top: 0,
         width: widthValue,
         x: 0,
         y: 0,
-      }
+      })
     }
 
     instances.push({ dataId, dimensions, element, offscreenCanvas })
