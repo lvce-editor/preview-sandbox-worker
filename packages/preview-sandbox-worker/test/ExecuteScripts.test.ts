@@ -310,3 +310,19 @@ test('executeScripts should expose CanvasRenderingContext2D for canvas scripts',
   expect(error).toBeNull()
   expect(document.querySelector('#result')?.textContent).toBe('true')
 })
+
+test('executeScripts should expose getComputedStyle on globalThis and window', () => {
+  const html = `<html><head><style>:root { --grid: rgba(255,255,255,0.07); }</style></head><body><div id="global-result"></div><div id="window-result"></div></body></html>`
+  const scripts = [
+    `
+    document.getElementById("global-result").textContent = getComputedStyle(document.documentElement).getPropertyValue("--grid").trim()
+    document.getElementById("window-result").textContent = window.getComputedStyle(document.documentElement).getPropertyValue("--grid").trim()
+    `,
+  ]
+
+  const { document: doc, error } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
+
+  expect(error).toBeNull()
+  expect(doc.querySelector('#global-result')?.textContent).toBe('rgba(255,255,255,0.07)')
+  expect(doc.querySelector('#window-result')?.textContent).toBe('rgba(255,255,255,0.07)')
+})
