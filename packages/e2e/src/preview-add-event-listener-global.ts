@@ -13,9 +13,10 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Preview
 </head>
 <body>
   <p id="status">no</p>
+  <button id="trigger">Trigger</button>
 
   <script>
-    addEventListener('keydown', function() {
+    addEventListener('click', function() {
       document.getElementById('status').textContent = 'yes';
     });
   </script>
@@ -30,7 +31,7 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Preview
   await expect(status).toBeVisible()
   await expect(status).toHaveText('no')
 
-  await Preview.handleKeyDown('0', 'a', '65')
+  await Preview.handleClick('2')
 
   await expect(status).toHaveText('yes')
 }
