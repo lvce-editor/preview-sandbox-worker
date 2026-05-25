@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import type { Window } from 'happy-dom-without-node'
 import * as Alert from '../Alert/Alert.ts'
 import { createLocalStorage } from '../LocalStorage/LocalStorage.ts'
