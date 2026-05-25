@@ -128,6 +128,26 @@ test('executeScripts should provide window object to scripts', () => {
   expect(doc.querySelector('#result').textContent).toBe('object')
 })
 
+test('executeScripts should bind bare addEventListener to window', () => {
+  const html = '<html><body><div id="result">no</div></body></html>'
+  const scripts = [
+    `
+    addEventListener('keydown', function() {
+      document.getElementById("result").textContent = 'yes'
+    })
+    `,
+  ]
+  const { document: doc, window } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
+  window.dispatchEvent(
+    new window.KeyboardEvent('keydown', {
+      bubbles: true,
+      code: 'KeyA',
+      key: 'a',
+    }),
+  )
+  expect(doc.querySelector('#result').textContent).toBe('yes')
+})
+
 test('executeScripts should handle script that changes styles', () => {
   const html = '<html><body><div id="styled"></div></body></html>'
   const scripts = ['document.getElementById("styled").style.color = "red"']
