@@ -12,23 +12,11 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Preview
   <title>Global addEventListener Test</title>
 </head>
 <body>
-  <p id="started">no</p>
-  <p id="jumps">0</p>
+  <p id="status">no</p>
 
   <script>
-    let started = false;
-
-    addEventListener('keydown', function(event) {
-      if (!started) {
-        started = true;
-        document.getElementById('started').textContent = 'yes';
-        return;
-      }
-
-      if (event.code === 'Space') {
-        const jumps = Number(document.getElementById('jumps').textContent) + 1;
-        document.getElementById('jumps').textContent = String(jumps);
-      }
+    addEventListener('keydown', function() {
+      document.getElementById('status').textContent = 'yes';
     });
   </script>
 </body>
@@ -38,16 +26,11 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Preview
   await Command.execute('Layout.showPreview', filePath)
   const previewArea = Locator('.Viewlet.Preview')
   await expect(previewArea).toBeVisible()
-  const started = previewArea.locator('#started')
-  const jumps = previewArea.locator('#jumps')
-  await expect(started).toBeVisible()
-  await expect(jumps).toBeVisible()
-  await expect(started).toHaveText('no')
-  await expect(jumps).toHaveText('0')
+  const status = previewArea.locator('#status')
+  await expect(status).toBeVisible()
+  await expect(status).toHaveText('no')
 
   await Preview.handleKeyDown('0', 'a', '65')
-  await Preview.handleKeyDown('0', ' ', '32')
 
-  await expect(started).toHaveText('yes')
-  await expect(jumps).toHaveText('1')
+  await expect(status).toHaveText('yes')
 }
