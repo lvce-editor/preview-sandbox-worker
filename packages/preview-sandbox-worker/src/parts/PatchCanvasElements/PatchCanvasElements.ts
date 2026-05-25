@@ -67,7 +67,7 @@ export const patchCanvasElements = async (document: Document, uid: number): Prom
     // @ts-ignore
     element.__offscreenCanvas = offscreenCanvas
     element.dataset.id = dataId
-    if (id !== null) {
+    if (id) {
       element.setAttribute('id', id)
     }
     const context = offscreenCanvas.getContext('2d')
