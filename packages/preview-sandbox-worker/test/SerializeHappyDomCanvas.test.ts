@@ -32,6 +32,20 @@ test('serialize should emit Reference node for canvas element with __canvasId', 
   expect((refNode as any).id).toBe('game')
 })
 
+test('serialize should preserve id on Reference node when canvas also has data-id', () => {
+  const window = new Window({ url: 'https://localhost:3000' })
+  const { document } = window
+  document.documentElement.innerHTML = '<body><canvas id="game" width="320" height="480" data-id="42"></canvas></body>'
+  const canvas = document.querySelector('canvas') as any
+  canvas.__canvasId = 42
+  const elementMap = Object.create(null)
+  const result = SerializeHappyDom.serialize(document, elementMap)
+  const refNode = result.dom.find((node: any) => node.type === VirtualDomElements.Reference)
+  expect(refNode).toBeDefined()
+  expect((refNode as any).id).toBe('game')
+  expect((refNode as any)['data-id']).toBe('42')
+})
+
 test('serialize should not emit Canvas node when __canvasId is set', () => {
   const window = new Window({ url: 'https://localhost:3000' })
   const { document } = window

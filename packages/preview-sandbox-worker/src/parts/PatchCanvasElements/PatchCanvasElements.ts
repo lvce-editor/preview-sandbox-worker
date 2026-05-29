@@ -53,6 +53,7 @@ export const patchCanvasElements = async (document: Document, uid: number): Prom
 
   for (let i = 0; i < canvasElements.length; i++) {
     const element = canvasElements[i]
+    const id = element.getAttribute('id')
     const width = toNumber(element.getAttribute('width') || 300)
     const height = toNumber(element.getAttribute('height') || 300)
     // @ts-ignore
@@ -66,6 +67,9 @@ export const patchCanvasElements = async (document: Document, uid: number): Prom
     // @ts-ignore
     element.__offscreenCanvas = offscreenCanvas
     element.dataset.id = dataId
+    if (id) {
+      element.setAttribute('id', id)
+    }
     const context = offscreenCanvas.getContext('2d')
     // @ts-ignore
     element.getContext = (contextType: string): any => {
