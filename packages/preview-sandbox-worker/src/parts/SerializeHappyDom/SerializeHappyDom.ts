@@ -1,7 +1,8 @@
 import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { Document } from 'happy-dom-without-node'
 import { VirtualDomElements } from '@lvce-editor/constants'
-import { text } from '@lvce-editor/virtual-dom-worker'
+import { mergeClassNames, text } from '@lvce-editor/virtual-dom-worker'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as GetVirtualDomTag from '../GetVirtualDomTag/GetVirtualDomTag.ts'
 import * as IsDefaultAllowedAttribute from '../IsDefaultAllowedAttribute/IsDefaultAllowedAttribute.ts'
 
@@ -168,6 +169,16 @@ export const serialize = (document: Document, elementMap: Record<string, any> = 
   for (let i = 0; i < childNodes.length; i++) {
     rootChildCount += serializeNode(childNodes[i], dom, css, context)
   }
+
+  const bodyNode: any = {
+    childCount: rootChildCount,
+    type: VirtualDomElements.Div,
+  }
+  if (document.body) {
+    applyAllowedAttributes(bodyNode, document.body)
+  }
+  bodyNode.className = bodyNode.className ? mergeClassNames(ClassNames.Body, bodyNode.className) : ClassNames.Body
+  dom.unshift(bodyNode)
 
   return { css, dom }
 }
