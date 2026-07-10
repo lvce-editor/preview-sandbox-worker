@@ -21,13 +21,18 @@ test('serialize should handle empty document', () => {
 test('serialize should serialize a single div', () => {
   const doc = createDocument('<body><div>hello</div></body>')
   const result = SerializeHappyDom.serialize(doc)
-  expect(result.dom).toEqual([{ childCount: 1, 'data-id': '0', type: VirtualDomElements.Div }, text('hello')])
+  expect(result.dom).toEqual([
+    { childCount: 1, className: 'Body', type: VirtualDomElements.Div },
+    { childCount: 1, 'data-id': '0', type: VirtualDomElements.Div },
+    text('hello'),
+  ])
 })
 
 test('serialize should serialize nested elements', () => {
   const doc = createDocument('<body><div><span>text</span></div></body>')
   const result = SerializeHappyDom.serialize(doc)
   expect(result.dom).toEqual([
+    { childCount: 1, className: 'Body', type: VirtualDomElements.Div },
     { childCount: 1, 'data-id': '0', type: VirtualDomElements.Div },
     { childCount: 1, 'data-id': '1', type: VirtualDomElements.Span },
     text('text'),
@@ -38,6 +43,7 @@ test('serialize should serialize multiple sibling elements', () => {
   const doc = createDocument('<body><div>first</div><div>second</div></body>')
   const result = SerializeHappyDom.serialize(doc)
   expect(result.dom).toEqual([
+    { childCount: 2, className: 'Body', type: VirtualDomElements.Div },
     { childCount: 1, 'data-id': '0', type: VirtualDomElements.Div },
     text('first'),
     { childCount: 1, 'data-id': '1', type: VirtualDomElements.Div },
@@ -48,44 +54,59 @@ test('serialize should serialize multiple sibling elements', () => {
 test('serialize should handle text nodes', () => {
   const doc = createDocument('<body>just text</body>')
   const result = SerializeHappyDom.serialize(doc)
-  expect(result.dom).toEqual([text('just text')])
+  expect(result.dom).toEqual([{ childCount: 1, className: 'Body', type: VirtualDomElements.Div }, text('just text')])
 })
 
 // Attribute handling
 test('serialize should convert class to className', () => {
   const doc = createDocument('<body><div class="container"></div></body>')
   const result = SerializeHappyDom.serialize(doc)
-  expect(result.dom).toEqual([{ childCount: 0, className: 'container', 'data-id': '0', type: VirtualDomElements.Div }])
+  expect(result.dom).toEqual([
+    { childCount: 1, className: 'Body', type: VirtualDomElements.Div },
+    { childCount: 0, className: 'container', 'data-id': '0', type: VirtualDomElements.Div },
+  ])
 })
 
 test('serialize should convert type to inputType', () => {
   const doc = createDocument('<body><input type="text"></body>')
   const result = SerializeHappyDom.serialize(doc)
-  expect(result.dom).toEqual([{ childCount: 0, 'data-id': '0', inputType: 'text', type: VirtualDomElements.Input }])
+  expect(result.dom).toEqual([
+    { childCount: 1, className: 'Body', type: VirtualDomElements.Div },
+    { childCount: 0, 'data-id': '0', inputType: 'text', type: VirtualDomElements.Input },
+  ])
 })
 
 test('serialize should include id attribute', () => {
   const doc = createDocument('<body><div id="main"></div></body>')
   const result = SerializeHappyDom.serialize(doc)
-  expect(result.dom).toEqual([{ childCount: 0, 'data-id': '0', id: 'main', type: VirtualDomElements.Div }])
+  expect(result.dom).toEqual([
+    { childCount: 1, className: 'Body', type: VirtualDomElements.Div },
+    { childCount: 0, 'data-id': '0', id: 'main', type: VirtualDomElements.Div },
+  ])
 })
 
 test('serialize should include data attributes', () => {
   const doc = createDocument('<body><div data-value="42"></div></body>')
   const result = SerializeHappyDom.serialize(doc)
-  expect(result.dom).toEqual([{ childCount: 0, 'data-id': '0', 'data-value': '42', type: VirtualDomElements.Div }])
+  expect(result.dom).toEqual([
+    { childCount: 1, className: 'Body', type: VirtualDomElements.Div },
+    { childCount: 0, 'data-id': '0', 'data-value': '42', type: VirtualDomElements.Div },
+  ])
 })
 
 test('serialize should include aria attributes', () => {
   const doc = createDocument('<body><div aria-label="Close"></div></body>')
   const result = SerializeHappyDom.serialize(doc)
-  expect(result.dom).toEqual([{ 'aria-label': 'Close', childCount: 0, 'data-id': '0', type: VirtualDomElements.Div }])
+  expect(result.dom).toEqual([
+    { childCount: 1, className: 'Body', type: VirtualDomElements.Div },
+    { 'aria-label': 'Close', childCount: 0, 'data-id': '0', type: VirtualDomElements.Div },
+  ])
 })
 
 test('serialize should include style attribute', () => {
   const doc = createDocument('<body><div style="color: red;"></div></body>')
   const result = SerializeHappyDom.serialize(doc)
-  const divNode = result.dom[0]
+  const divNode = result.dom[1]
   expect(divNode.style).toBeDefined()
 })
 
@@ -93,7 +114,11 @@ test('serialize should include style attribute', () => {
 test('serialize should skip script tags', () => {
   const doc = createDocument('<body><div>hello</div><script>var x = 1;</script></body>')
   const result = SerializeHappyDom.serialize(doc)
-  expect(result.dom).toEqual([{ childCount: 1, 'data-id': '0', type: VirtualDomElements.Div }, text('hello')])
+  expect(result.dom).toEqual([
+    { childCount: 1, className: 'Body', type: VirtualDomElements.Div },
+    { childCount: 1, 'data-id': '0', type: VirtualDomElements.Div },
+    text('hello'),
+  ])
 })
 
 test('serialize should skip meta tags', () => {
@@ -129,6 +154,7 @@ test('serialize should handle list structure', () => {
   const doc = createDocument('<body><ul><li>A</li><li>B</li></ul></body>')
   const result = SerializeHappyDom.serialize(doc)
   expect(result.dom).toEqual([
+    { childCount: 1, className: 'Body', type: VirtualDomElements.Div },
     { childCount: 2, 'data-id': '0', type: VirtualDomElements.Ul },
     { childCount: 1, 'data-id': '1', type: VirtualDomElements.Li },
     text('A'),
@@ -150,6 +176,7 @@ test('serialize should handle heading elements', () => {
   const doc = createDocument('<body><h1>Title</h1><h2>Subtitle</h2></body>')
   const result = SerializeHappyDom.serialize(doc)
   expect(result.dom).toEqual([
+    { childCount: 2, className: 'Body', type: VirtualDomElements.Div },
     { childCount: 1, 'data-id': '0', type: VirtualDomElements.H1 },
     text('Title'),
     { childCount: 1, 'data-id': '1', type: VirtualDomElements.H2 },
@@ -171,6 +198,7 @@ test('serialize should handle deeply nested structure', () => {
   const doc = createDocument('<body><div><div><div><span>deep</span></div></div></div></body>')
   const result = SerializeHappyDom.serialize(doc)
   expect(result.dom).toEqual([
+    { childCount: 1, className: 'Body', type: VirtualDomElements.Div },
     { childCount: 1, 'data-id': '0', type: VirtualDomElements.Div },
     { childCount: 1, 'data-id': '1', type: VirtualDomElements.Div },
     { childCount: 1, 'data-id': '2', type: VirtualDomElements.Div },
@@ -183,16 +211,25 @@ test('serialize should handle deeply nested structure', () => {
 test('serialize should set rootChildCount on dom array', () => {
   const doc = createDocument('<body><div>a</div><div>b</div><div>c</div></body>')
   const result = SerializeHappyDom.serialize(doc)
-  // Verify that we have 3 child elements
+  // Verify that we have the body wrapper and 3 child elements
   const divs = result.dom.filter((n) => (n as any).type === VirtualDomElements.Div)
-  expect(divs.length).toBe(3)
+  expect(divs.length).toBe(4)
 })
 
-test('serialize should handle body tag being skipped', () => {
+test('serialize should represent body as a virtual div', () => {
   const doc = createDocument('<body><p>hello</p></body>')
   const result = SerializeHappyDom.serialize(doc)
-  // body tag itself should be skipped, only children
-  expect(result.dom).toEqual([{ childCount: 1, 'data-id': '0', type: VirtualDomElements.P }, text('hello')])
+  expect(result.dom).toEqual([
+    { childCount: 1, className: 'Body', type: VirtualDomElements.Div },
+    { childCount: 1, 'data-id': '0', type: VirtualDomElements.P },
+    text('hello'),
+  ])
+})
+
+test('serialize should preserve user-provided body classes', () => {
+  const doc = createDocument('<body class="page"><p>hello</p></body>')
+  const result = SerializeHappyDom.serialize(doc)
+  expect(result.dom[0].className).toBe('Body page')
 })
 
 test('serialize should handle navigation structure', () => {
