@@ -7,7 +7,7 @@ export const overrideRequestAnimationFrame = (window: any, uid: number): void =>
   const callbacks: Map<number, (timestamp: number) => void> = new Map()
 
   const tick = (): void => {
-    const currentCallbacks = [...callbacks.entries()]
+    const currentCallbacks = [...callbacks]
     callbacks.clear()
     const timestamp = performance.now()
     for (const [, callback] of currentCallbacks) {

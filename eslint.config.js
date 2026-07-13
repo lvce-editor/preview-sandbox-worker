@@ -5,6 +5,27 @@ export default [
   ...config.default,
   ...actions.default,
   {
+    files: ['**/*.ts'],
+    rules: {
+      'sonarjs/no-trivial-assertions': 'off',
+      'sonarjs/prefer-specific-assertions': 'off',
+      'unicorn/better-dom-traversing': 'off',
+      'unicorn/no-break-in-nested-loop': 'off',
+      'unicorn/no-declarations-before-early-exit': 'off',
+      'unicorn/no-duplicate-if-branches': 'off',
+      'unicorn/no-error-property-assignment': 'off',
+      'unicorn/no-global-object-property-assignment': 'off',
+      'unicorn/no-top-level-assignment-in-function': 'off',
+      'unicorn/no-useless-coercion': 'off',
+      'unicorn/prefer-includes-over-repeated-comparisons': 'off',
+      'unicorn/prefer-iterator-to-array': 'off',
+      'unicorn/prefer-number-coercion': 'off',
+      'unicorn/prefer-number-is-safe-integer': 'off',
+      'unicorn/prefer-object-define-properties': 'off',
+      'unicorn/prefer-scoped-selector': 'off',
+    },
+  },
+  {
     files: ['packages/preview-sandbox-worker/src/parts/DispatchEvent/DispatchEvent.ts'],
     rules: {
       'sonarjs/code-eval': 'off',
