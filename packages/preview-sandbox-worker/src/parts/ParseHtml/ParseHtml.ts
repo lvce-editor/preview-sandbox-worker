@@ -1,5 +1,5 @@
 import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
-import { text } from '@lvce-editor/virtual-dom-worker'
+import { text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import * as Assert from '../Assert/Assert.ts'
 import * as GetVirtualDomTag from '../GetVirtualDomTag/GetVirtualDomTag.ts'
 import * as HtmlTokenType from '../HtmlTokenType/HtmlTokenType.ts'
@@ -40,7 +40,7 @@ export const parseHtml = (html: string, allowedAttributes: readonly string[] = [
   const scripts: string[] = []
   const root: VirtualDomNode = {
     childCount: 0,
-    type: 0,
+    type: VirtualDomElements.Root,
   }
   let current: any = root
   const stack: VirtualDomNode[] = [root]
