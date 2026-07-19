@@ -1,10 +1,10 @@
-import { VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 
 export const getEmptyPreviewDom = (): readonly any[] => {
   return [
     {
       childCount: 1,
-      className: 'Viewlet Preview',
+      className: mergeClassNames('Viewlet', 'Preview'),
       type: VirtualDomElements.Div,
     },
     {

@@ -3,6 +3,7 @@ import * as actions from '@lvce-editor/eslint-plugin-github-actions'
 
 export default [
   ...config.default,
+  ...config.recommendedVirtualDom,
   ...actions.default,
   {
     files: ['**/*.ts'],
@@ -65,6 +66,15 @@ export default [
     files: ['packages/preview-sandbox-worker/test/PatchCanvasElements.test.ts'],
     rules: {
       'jest/no-disabled-tests': 'off',
+    },
+  },
+  {
+    files: ['packages/preview-sandbox-worker/test/**/*.ts'],
+    rules: {
+      'virtual-dom/no-inline-style': 'off',
+      'virtual-dom/prefer-merge-class-names': 'off',
+      'virtual-dom/prefer-state-destructuring': 'off',
+      'virtual-dom/valid-child-count': 'off',
     },
   },
 ]
