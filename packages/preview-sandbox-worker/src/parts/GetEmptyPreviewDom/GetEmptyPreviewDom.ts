@@ -1,19 +1,21 @@
-import { mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { mergeClassNames, type VirtualDomNode, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 
-export const getEmptyPreviewDom = (): readonly any[] => {
-  return [
-    {
-      childCount: 1,
-      className: mergeClassNames('Viewlet', 'Preview'),
-      type: VirtualDomElements.Div,
-    },
-    {
-      childCount: 1,
-      type: VirtualDomElements.H1,
-    },
-    {
-      text: 'No URI has been specified',
-      type: VirtualDomElements.Text,
-    },
-  ]
+const emptyPreviewDom: readonly VirtualDomNode[] = [
+  {
+    childCount: 1,
+    className: mergeClassNames('Viewlet', 'Preview'),
+    type: VirtualDomElements.Div,
+  },
+  {
+    childCount: 1,
+    type: VirtualDomElements.H1,
+  },
+  {
+    text: 'No URI has been specified',
+    type: VirtualDomElements.Text,
+  },
+]
+
+export const getEmptyPreviewDom = (): readonly VirtualDomNode[] => {
+  return emptyPreviewDom
 }

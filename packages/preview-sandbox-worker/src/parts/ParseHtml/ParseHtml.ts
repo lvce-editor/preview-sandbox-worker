@@ -20,6 +20,11 @@ const TAGS_TO_CAPTURE_AS_CSS = new Set(['style'])
 // Tags where we capture content as JavaScript
 const TAGS_TO_CAPTURE_AS_JS = new Set(['script'])
 
+const rootTemplate: VirtualDomNode = {
+  childCount: 0,
+  type: VirtualDomElements.Root,
+}
+
 export interface ParseResult {
   readonly css: readonly string[]
   readonly dom: readonly VirtualDomNode[]
@@ -38,10 +43,7 @@ export const parseHtml = (html: string, allowedAttributes: readonly string[] = [
   const dom: VirtualDomNode[] = []
   const css: string[] = []
   const scripts: string[] = []
-  const root: VirtualDomNode = {
-    childCount: 0,
-    type: VirtualDomElements.Root,
-  }
+  const root: VirtualDomNode = { ...rootTemplate }
   let current: any = root
   const stack: VirtualDomNode[] = [root]
   const tagStack: string[] = [] // Track tag names to match closing tags
