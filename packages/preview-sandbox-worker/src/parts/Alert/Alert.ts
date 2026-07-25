@@ -1,5 +1,5 @@
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { DialogWorker } from '@lvce-editor/rpc-registry'
 
 export const alert = (message: string): void => {
-  void RendererWorker.invoke('ConfirmPrompt.prompt', message)
+  void DialogWorker.invoke('ConfirmPrompt.prompt', message)
 }
