@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
-interface CanvasInstance {
+export interface CanvasInstance {
   readonly dataId: string
   readonly element: any
   readonly offscreenCanvas: OffscreenCanvas
@@ -18,6 +18,18 @@ export const get = (uid: number): CanvasStateEntry | undefined => {
 
 export const set = (uid: number, entry: CanvasStateEntry): void => {
   states.set(uid, entry)
+}
+
+export const addInstance = (uid: number, instance: CanvasInstance): void => {
+  const entry = states.get(uid)
+  if (entry) {
+    entry.instances.push(instance)
+    return
+  }
+  states.set(uid, {
+    animationFrameHandles: [],
+    instances: [instance],
+  })
 }
 
 export const remove = (uid: number): void => {
