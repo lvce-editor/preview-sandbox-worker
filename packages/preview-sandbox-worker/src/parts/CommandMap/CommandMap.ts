@@ -2,6 +2,7 @@ import { terminate } from '@lvce-editor/viewlet-registry'
 import { setGeometryBuffer } from '../GeometryState/GeometryState.ts'
 import { executeCallback } from '../GetOffscreenCanvas/GetOffscreenCanvas.ts'
 import { getSerializedDom } from '../GetSerializedDom/GetSerializedDom.ts'
+import * as HandleChange from '../HandleChange/HandleChange.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleContextmenu from '../HandleContextmenu/HandleContextmenu.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
@@ -25,6 +26,7 @@ import { resize } from '../Resize/Resize.ts'
 export const commandMap = {
   'SandBox.executeCallback': executeCallback,
   'SandBox.getSerializedDom': getSerializedDom,
+  'SandBox.handleChange': HandleChange.handleChange,
   'SandBox.handleClick': HandleClick.handleClick,
   'SandBox.handleContextMenu': HandleContextmenu.handleContextmenu,
   'SandBox.handleInput': HandleInput.handleInput,
