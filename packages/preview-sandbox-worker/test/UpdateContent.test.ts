@@ -5,6 +5,7 @@ import * as CanvasState from '../src/parts/CanvasState/CanvasState.ts'
 import * as GeometryState from '../src/parts/GeometryState/GeometryState.ts'
 import { executeCallback } from '../src/parts/GetOffscreenCanvas/GetOffscreenCanvas.ts'
 import * as HappyDomState from '../src/parts/HappyDomState/HappyDomState.ts'
+import * as SerializeHappyDom from '../src/parts/SerializeHappyDom/SerializeHappyDom.ts'
 import * as UpdateContent from '../src/parts/UpdateContent/UpdateContent.ts'
 
 class MockOffscreenCanvas {
@@ -153,4 +154,63 @@ test('updateContent should let direct canvas parents reuse canvas fallback rects
       y: 0,
     }),
   )
+})
+
+test('updateContent should provide a synchronous context for a script-created canvas', async () => {
+  const uid = 3
+  const offscreenCanvas = new MockOffscreenCanvas(300, 300)
+
+  using _mockRpc = PreviewWorker.registerMockRpc({
+    'Preview.createOffscreenCanvas': (_previewUid: number, id: number) => {
+      executeCallback(id, offscreenCanvas, 17)
+    },
+  })
+
+  const content = '<body><div id="game"></div></body>'
+  const scripts = [
+    `
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
+    canvas.width = 640
+    canvas.height = 360
+    document.getElementById('game').appendChild(canvas)
+    window.__hasContext = typeof context.fillRect === 'function'
+    `,
+  ]
+
+  const result = await UpdateContent.updateContent(uid, 640, 360, content, scripts)
+
+  expect(result.error).toBeNull()
+  expect(result.errorMessage).toBe('')
+  const state = HappyDomState.get(uid)
+  const canvas = state?.document.querySelector('canvas') as any
+  expect((state?.window as any).__hasContext).toBe(true)
+  expect(canvas.__canvasId).toBe(17)
+  expect(canvas.dataset.id).toBe('17')
+  expect(canvas.width).toBe(640)
+  expect(canvas.height).toBe(360)
+  expect(offscreenCanvas.width).toBe(640)
+  expect(offscreenCanvas.height).toBe(360)
+  expect(CanvasState.get(uid)?.instances).toHaveLength(1)
+
+  const serialized = SerializeHappyDom.serialize(state!.document)
+  expect(serialized.dom.some((node: any) => node.uid === 17)).toBe(true)
+})
+
+test('updateContent should preserve normal createElement behavior', async () => {
+  const uid = 4
+  const content = '<body><div id="game"></div></body>'
+  const scripts = [
+    `
+    const span = document.createElement('span')
+    span.textContent = 'created'
+    document.getElementById('game').appendChild(span)
+    `,
+  ]
+
+  const result = await UpdateContent.updateContent(uid, 640, 360, content, scripts)
+
+  expect(result.error).toBeNull()
+  expect(HappyDomState.get(uid)?.document.querySelector('span')?.textContent).toBe('created')
+  expect(CanvasState.get(uid)?.instances).toHaveLength(0)
 })

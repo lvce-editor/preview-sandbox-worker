@@ -1,5 +1,6 @@
 import { createWindow } from '../CreateWindow/CreateWindow.ts'
 import * as ExecuteScripts from '../ExecuteScripts/ExecuteScripts.ts'
+import { getCanvasCreationCount } from '../GetCanvasCreationCount/GetCanvasCreationCount.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
 import { observe } from '../ObserveDom/ObserveDom.ts'
 import * as PatchCanvasElements from '../PatchCanvasElements/PatchCanvasElements.ts'
@@ -19,7 +20,8 @@ export const updateContent = async (
 }> => {
   try {
     const { document: happyDomDocument, window: happyDomWindow } = createWindow(content)
-    await PatchCanvasElements.patchCanvasElements(happyDomDocument, uid)
+    const dynamicCanvasCount = getCanvasCreationCount(scripts)
+    await PatchCanvasElements.patchCanvasElements(happyDomDocument, uid, dynamicCanvasCount)
     const initialElementMap = Object.create(null)
     SerializeHappyDom.serialize(happyDomDocument, initialElementMap)
     PatchElementGeometry.patchElementGeometry(uid, initialElementMap)
