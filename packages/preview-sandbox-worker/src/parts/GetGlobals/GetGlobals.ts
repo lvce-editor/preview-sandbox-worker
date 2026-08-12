@@ -6,11 +6,17 @@ import { createLocalStorage } from '../LocalStorage/LocalStorage.ts'
 export interface Globals {
   globalGlobals: {
     alert: typeof Alert.alert
+    cancelAnimationFrame: Window['cancelAnimationFrame']
+    clearInterval: Window['clearInterval']
+    clearTimeout: Window['clearTimeout']
     devicePixelRatio: number
     getComputedStyle: Window['getComputedStyle']
     innerHeight: number
     innerWidth: number
     localStorage: ReturnType<typeof createLocalStorage>
+    requestAnimationFrame: Window['requestAnimationFrame']
+    setInterval: Window['setInterval']
+    setTimeout: Window['setTimeout']
   }
   windowGlobals: {
     alert: typeof Alert.alert
@@ -27,11 +33,17 @@ export const getGlobals = (window: Window, width: number, height: number, device
   return {
     globalGlobals: {
       alert: Alert.alert,
+      cancelAnimationFrame: window.cancelAnimationFrame.bind(window),
+      clearInterval: window.clearInterval.bind(window),
+      clearTimeout: window.clearTimeout.bind(window),
       devicePixelRatio,
       getComputedStyle,
       innerHeight: height,
       innerWidth: width,
       localStorage,
+      requestAnimationFrame: window.requestAnimationFrame.bind(window),
+      setInterval: window.setInterval.bind(window),
+      setTimeout: window.setTimeout.bind(window),
     },
     windowGlobals: {
       alert: Alert.alert,

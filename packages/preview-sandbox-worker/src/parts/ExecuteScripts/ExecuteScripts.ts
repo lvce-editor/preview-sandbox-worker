@@ -5,6 +5,7 @@ import { exposeCanvasGlobals } from '../ExposeCanvasGlobals/ExposeCanvasGlobals.
 import { getErrorCodeFrame } from '../GetErrorCodeFrame/GetErrorCodeFrame.ts'
 import { getGlobals } from '../GetGlobals/GetGlobals.ts'
 import { getTopLevelFunctionNames } from '../GetTopLevelFunctionNames/GetTopLevelFunctionNames.ts'
+import * as RuntimeDiagnostics from '../RuntimeDiagnostics/RuntimeDiagnostics.ts'
 import { setGlobals } from '../SetGlobals/SetGlobals.ts'
 
 export interface ScriptExecutionResult {
@@ -19,10 +20,12 @@ export const executeScripts = (
   width: number = 0,
   height: number = 0,
   devicePixelRatio: number = 1,
+  uid: number = 0,
 ): ScriptExecutionResult => {
   exposeCanvasGlobals(window, document)
   const { globalGlobals, windowGlobals } = getGlobals(window, width, height, devicePixelRatio)
   setGlobals(window, globalGlobals, windowGlobals)
+  const runtimeConsole = RuntimeDiagnostics.install(uid, window)
   let firstError: Error | null = null
   let firstCodeFrame = ''
   // Execute each script with the happy-dom window and document as context
@@ -34,12 +37,13 @@ export const executeScripts = (
       const functionNames = getTopLevelFunctionNames(scriptContent)
       const suffix = functionNames.map((name) => `\nwindow['${name}'] = ${name};`).join('')
       const fn = new Function('window', 'document', 'console', scriptContent + suffix)
-      fn(window, document, console)
+      fn(window, document, runtimeConsole)
     } catch (error) {
       // Record the first error but continue executing remaining scripts
       if (firstError === null) {
         firstCodeFrame = getErrorCodeFrame(scriptContent, error)
         firstError = error as Error
+        RuntimeDiagnostics.addException(uid, error, firstCodeFrame)
       }
     }
   }

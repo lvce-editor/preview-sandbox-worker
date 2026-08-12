@@ -22,9 +22,11 @@ import * as HandlePointerover from '../HandlePointerover/HandlePointerover.ts'
 import * as HandlePointerup from '../HandlePointerup/HandlePointerup.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
 import { resize } from '../Resize/Resize.ts'
+import { getRuntimeDiagnostics } from '../RuntimeDiagnostics/RuntimeDiagnostics.ts'
 
 export const commandMap = {
   'SandBox.executeCallback': executeCallback,
+  'SandBox.getRuntimeDiagnostics': getRuntimeDiagnostics,
   'SandBox.getSerializedDom': getSerializedDom,
   'SandBox.handleChange': HandleChange.handleChange,
   'SandBox.handleClick': HandleClick.handleClick,
