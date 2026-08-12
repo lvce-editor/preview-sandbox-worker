@@ -5,6 +5,7 @@ import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
 import { observe } from '../ObserveDom/ObserveDom.ts'
 import * as PatchCanvasElements from '../PatchCanvasElements/PatchCanvasElements.ts'
 import * as PatchElementGeometry from '../PatchElementGeometry/PatchElementGeometry.ts'
+import * as RuntimeDiagnostics from '../RuntimeDiagnostics/RuntimeDiagnostics.ts'
 import * as SerializeHappyDom from '../SerializeHappyDom/SerializeHappyDom.ts'
 
 export const updateContent = async (
@@ -18,6 +19,7 @@ export const updateContent = async (
   codeFrame: any
   error: any
 }> => {
+  RuntimeDiagnostics.clear(uid)
   try {
     const { document: happyDomDocument, window: happyDomWindow } = createWindow(content)
     const dynamicCanvasCount = getCanvasCreationCount(scripts)
@@ -25,7 +27,7 @@ export const updateContent = async (
     const initialElementMap = Object.create(null)
     SerializeHappyDom.serialize(happyDomDocument, initialElementMap)
     PatchElementGeometry.patchElementGeometry(uid, initialElementMap)
-    const { codeFrame, error } = ExecuteScripts.executeScripts(happyDomWindow, happyDomDocument, scripts, width, height)
+    const { codeFrame, error } = ExecuteScripts.executeScripts(happyDomWindow, happyDomDocument, scripts, width, height, 1, uid)
     const elementMap = Object.create(null)
     SerializeHappyDom.serialize(happyDomDocument, elementMap)
     PatchElementGeometry.patchElementGeometry(uid, elementMap)
@@ -44,6 +46,7 @@ export const updateContent = async (
   } catch (error) {
     // If file reading or parsing fails, return empty content and parsedDom with error message
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    RuntimeDiagnostics.addException(uid, error)
     return {
       codeFrame: '',
       error,

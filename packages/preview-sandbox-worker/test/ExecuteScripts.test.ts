@@ -3,6 +3,7 @@ import { createWindow } from '../src/parts/CreateWindow/CreateWindow.ts'
 import * as ExecuteScripts from '../src/parts/CreateWindowAndExecuteScripts/CreateWindowAndExecuteScripts.ts'
 import * as DispatchClickEvent from '../src/parts/DispatchClickEvent/DispatchClickEvent.ts'
 import { executeScripts } from '../src/parts/ExecuteScripts/ExecuteScripts.ts'
+import * as RuntimeDiagnostics from '../src/parts/RuntimeDiagnostics/RuntimeDiagnostics.ts'
 
 test('executeScripts should return a document and window', () => {
   const result = ExecuteScripts.createWindowAndExecuteScripts('<html><body><div>hello</div></body></html>', [])
@@ -113,6 +114,44 @@ test('executeScripts should survive script errors gracefully', () => {
   const { document: doc } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
   // Second script should still run despite first throwing
   expect(doc.querySelector('#ok').textContent).toBe('still works')
+})
+
+test('executeScripts should capture script errors with a code frame', () => {
+  const { document, window } = ExecuteScripts.createWindowAndExecuteScripts('<html></html>', [])
+
+  executeScripts(window, document, ['addPipe()'], 0, 0, 1, 42)
+
+  expect(RuntimeDiagnostics.getRuntimeDiagnostics(42)).toMatchObject({
+    entries: [
+      {
+        codeFrame: expect.stringContaining('addPipe()'),
+        level: 'error',
+        message: 'addPipe is not defined',
+        type: 'exception',
+      },
+    ],
+    errorCount: 1,
+  })
+})
+
+test('executeScripts should capture asynchronous animation frame errors', async () => {
+  const { document, window } = ExecuteScripts.createWindowAndExecuteScripts('<html></html>', [])
+
+  executeScripts(window, document, ['requestAnimationFrame(() => addPipe())'], 0, 0, 1, 43)
+  await new Promise((resolve) => {
+    setTimeout(resolve, 50)
+  })
+
+  expect(RuntimeDiagnostics.getRuntimeDiagnostics(43)).toMatchObject({
+    entries: [
+      {
+        level: 'error',
+        message: 'addPipe is not defined',
+        type: 'exception',
+      },
+    ],
+    errorCount: 1,
+  })
 })
 
 test('executeScripts should handle empty scripts array', () => {
