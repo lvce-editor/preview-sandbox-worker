@@ -1,4 +1,5 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
+import type { Dimensions } from '../Resize/Resize.ts'
 import { setGeometryBuffer } from '../GeometryState/GeometryState.ts'
 import { executeCallback } from '../GetOffscreenCanvas/GetOffscreenCanvas.ts'
 import { getSerializedDom } from '../GetSerializedDom/GetSerializedDom.ts'
@@ -24,6 +25,9 @@ import * as LoadContent from '../LoadContent/LoadContent.ts'
 import { resize } from '../Resize/Resize.ts'
 import { getRuntimeDiagnostics } from '../RuntimeDiagnostics/RuntimeDiagnostics.ts'
 
+type Resize = (uid: number, dimensions: Dimensions) => void
+const resizeCommand: Resize = resize
+
 export const commandMap = {
   'SandBox.executeCallback': executeCallback,
   'SandBox.getRuntimeDiagnostics': getRuntimeDiagnostics,
@@ -47,7 +51,7 @@ export const commandMap = {
   'SandBox.handlePointerover': HandlePointerover.handlePointerover,
   'SandBox.handlePointerup': HandlePointerup.handlePointerup,
   'SandBox.loadContent': LoadContent.loadContent,
-  'SandBox.resize': resize,
+  'SandBox.resize': resizeCommand,
   'SandBox.setGeometryBuffer': setGeometryBuffer,
   'SandBox.terminate': terminate,
 }
