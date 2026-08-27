@@ -6,20 +6,12 @@ const handleMouseupLocal = (uid: number, hdId: string, clientX: number, clientY:
   if (!happyDomInstance) {
     return
   }
-  const element = happyDomInstance.elementMap.get(hdId)
+  const element = happyDomInstance.elementMap[hdId]
   if (!element) {
     return
   }
 
   DispatchMouseupEvent.dispatchMouseupEvent(element, happyDomInstance.window, clientX, clientY)
-
-  const elementMap = Object.create(null)
-
-  HappyDomState.set(uid, {
-    document: happyDomInstance.document,
-    elementMap,
-    window: happyDomInstance.window,
-  })
 }
 
 export const handleMouseup = (uid: number, hdId: string, clientX: number, clientY: number): any => {

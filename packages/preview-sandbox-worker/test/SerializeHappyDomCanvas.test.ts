@@ -29,6 +29,7 @@ test('serialize should emit Reference node for canvas element with __canvasId', 
   expect(refNode).toBeDefined()
   expect((refNode as any).uid).toBe(42)
   expect((refNode as any).childCount).toBe(0)
+  expect((refNode as any).id).toBe('game')
 })
 
 test('serialize should not emit Canvas node when __canvasId is set', () => {

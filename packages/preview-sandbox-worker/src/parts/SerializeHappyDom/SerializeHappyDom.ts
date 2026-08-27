@@ -1,7 +1,8 @@
 import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
 import type { Document } from 'happy-dom-without-node'
 import { VirtualDomElements } from '@lvce-editor/constants'
-import { text } from '@lvce-editor/virtual-dom-worker'
+import { mergeClassNames, text } from '@lvce-editor/virtual-dom-worker'
+import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as GetVirtualDomTag from '../GetVirtualDomTag/GetVirtualDomTag.ts'
 import * as IsDefaultAllowedAttribute from '../IsDefaultAllowedAttribute/IsDefaultAllowedAttribute.ts'
 
@@ -22,6 +23,46 @@ export interface SerializeResult {
 interface SerializeContext {
   readonly elementMap: Record<string, any>
   nextId: number
+}
+
+// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
+const getOrCreateHdId = (node: any, context: SerializeContext): string => {
+  const existingHdId = node.getAttribute?.('data-id')
+  if (existingHdId) {
+    const numericValue = Number(existingHdId)
+    if (Number.isInteger(numericValue) && numericValue >= context.nextId) {
+      context.nextId = numericValue + 1
+    }
+    return existingHdId
+  }
+  const hdId = String(context.nextId++)
+  node.setAttribute?.('data-id', hdId)
+  return hdId
+}
+
+const serializeAttributeName = (attrName: string): string => {
+  if (attrName === 'class') {
+    return 'className'
+  }
+  if (attrName === 'type') {
+    return 'inputType'
+  }
+  return attrName
+}
+
+const applyAllowedAttributes = (targetNode: any, sourceNode: any): void => {
+  const { attributes } = sourceNode
+  if (!attributes) {
+    return
+  }
+  for (let i = 0; i < attributes.length; i++) {
+    const attr = attributes[i]
+    const attrName = attr.name
+    if (IsDefaultAllowedAttribute.isDefaultAllowedAttribute(attrName, [])) {
+      const finalName = serializeAttributeName(attrName)
+      targetNode[finalName] = attr.value
+    }
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
@@ -76,6 +117,7 @@ const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly 
       type: VirtualDomElements.Reference,
       uid: node.__canvasId,
     }
+    applyAllowedAttributes(refNode, node)
     if (context.elementMap) {
       context.elementMap[node.__canvasId + ''] = node
     }
@@ -89,26 +131,10 @@ const serializeNode = (node: any, dom: readonly VirtualDomNode[], css: readonly 
     type: GetVirtualDomTag.getVirtualDomTag(tagName),
   }
 
-  // Copy allowed attributes
-  const { attributes } = node
-  if (attributes) {
-    for (let i = 0; i < attributes.length; i++) {
-      const attr = attributes[i]
-      const attrName = attr.name
-      if (IsDefaultAllowedAttribute.isDefaultAllowedAttribute(attrName, [])) {
-        let finalName = attrName
-        if (attrName === 'class') {
-          finalName = 'className'
-        } else if (attrName === 'type') {
-          finalName = 'inputType'
-        }
-        newNode[finalName] = attr.value
-      }
-    }
-  }
+  applyAllowedAttributes(newNode, node)
 
   // Assign element tracking ID for interactivity
-  const hdId = String(context.nextId++)
+  const hdId = getOrCreateHdId(node, context)
   newNode['data-id'] = hdId
   context.elementMap[hdId] = node
 
@@ -143,6 +169,16 @@ export const serialize = (document: Document, elementMap: Record<string, any> = 
   for (let i = 0; i < childNodes.length; i++) {
     rootChildCount += serializeNode(childNodes[i], dom, css, context)
   }
+
+  const bodyNode: any = {
+    childCount: rootChildCount,
+    type: VirtualDomElements.Div,
+  }
+  if (document.body) {
+    applyAllowedAttributes(bodyNode, document.body)
+  }
+  bodyNode.className = bodyNode.className ? mergeClassNames(ClassNames.Body, bodyNode.className) : ClassNames.Body
+  dom.unshift(bodyNode)
 
   return { css, dom }
 }

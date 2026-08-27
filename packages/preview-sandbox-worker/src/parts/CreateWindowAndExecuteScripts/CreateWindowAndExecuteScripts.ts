@@ -7,8 +7,9 @@ export const createWindowAndExecuteScripts = (
   scripts: readonly string[],
   width: number = 0,
   height: number = 0,
+  devicePixelRatio: number = 1,
 ): ExecuteScriptsResult => {
   const { document, window } = createWindow(rawHtml)
-  const { codeFrame, error } = executeScripts(window, document, scripts, width, height)
+  const { codeFrame, error } = executeScripts(window, document, scripts, width, height, devicePixelRatio)
   return { codeFrame, document, error, window }
 }

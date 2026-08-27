@@ -333,8 +333,17 @@ test('parseHtml should handle text with tabs', () => {
 
 // Element-specific tests
 test('parseHtml should parse anchor tag', () => {
-  const expectedArray = [{ childCount: 1, href: 'https://example.com', type: VirtualDomElements.A }, text('Link')]
-  const result = parseHtmlDom('<a href="https://example.com">Link</a>', ['href'])
+  const expectedArray = [
+    {
+      childCount: 1,
+      href: 'https://example.com',
+      rel: 'noopener noreferrer',
+      target: '_blank',
+      type: VirtualDomElements.A,
+    },
+    text('Link'),
+  ]
+  const result = parseHtmlDom('<a href="https://example.com" rel="noopener noreferrer" target="_blank">Link</a>', ['href', 'rel', 'target'])
   expect(result).toEqual(expectedArray)
 })
 
@@ -512,21 +521,21 @@ test('parseHtml should parse full card structure', () => {
 
 test('parseHtml should parse navigation menu', () => {
   const html =
-    '<nav class="navbar"><ul class="nav-list"><li><a href="/">Home</a></li><li><a href="/about">About</a></li><li><a href="/contact">Contact</a></li></ul></nav>'
+    '<nav class="navbar"><ul class="nav-list"><li><a href="/" rel="noopener noreferrer" target="_blank">Home</a></li><li><a href="/about" rel="noopener noreferrer" target="_blank">About</a></li><li><a href="/contact" rel="noopener noreferrer" target="_blank">Contact</a></li></ul></nav>'
   const expectedArray = [
     { childCount: 1, className: 'navbar', type: VirtualDomElements.Nav },
     { childCount: 3, className: 'nav-list', type: VirtualDomElements.Ul },
     { childCount: 1, type: VirtualDomElements.Li },
-    { childCount: 1, href: '/', type: VirtualDomElements.A },
+    { childCount: 1, href: '/', rel: 'noopener noreferrer', target: '_blank', type: VirtualDomElements.A },
     { childCount: 0, text: 'Home', type: VirtualDomElements.Text },
     { childCount: 1, type: VirtualDomElements.Li },
-    { childCount: 1, href: '/about', type: VirtualDomElements.A },
+    { childCount: 1, href: '/about', rel: 'noopener noreferrer', target: '_blank', type: VirtualDomElements.A },
     { childCount: 0, text: 'About', type: VirtualDomElements.Text },
     { childCount: 1, type: VirtualDomElements.Li },
-    { childCount: 1, href: '/contact', type: VirtualDomElements.A },
+    { childCount: 1, href: '/contact', rel: 'noopener noreferrer', target: '_blank', type: VirtualDomElements.A },
     { childCount: 0, text: 'Contact', type: VirtualDomElements.Text },
   ]
-  const result = parseHtmlDom(html, ['class', 'href'])
+  const result = parseHtmlDom(html, ['class', 'href', 'rel', 'target'])
   expect(result).toEqual(expectedArray)
 })
 

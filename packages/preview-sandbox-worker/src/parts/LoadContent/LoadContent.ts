@@ -1,3 +1,4 @@
+import * as ClearConsoleOnErrorResolved from '../ClearConsoleOnErrorResolved/ClearConsoleOnErrorResolved.ts'
 import { updateContent } from '../UpdateContent/UpdateContent.ts'
 
 export const loadContent = async (
@@ -18,6 +19,7 @@ export const loadContent = async (
   if (error) {
     console.warn(`preview error: ${error} ${codeFrame}`)
   }
+  await ClearConsoleOnErrorResolved.handle(uid, error)
 
   return {
     errorMessage,

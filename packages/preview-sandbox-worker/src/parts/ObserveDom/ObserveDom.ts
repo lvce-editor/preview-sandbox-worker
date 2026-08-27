@@ -8,6 +8,10 @@ import * as SerializeHappyDom from '../SerializeHappyDom/SerializeHappyDom.ts'
 
 const observers: Map<number, MutationObserver> = new Map()
 
+const isInternalMutation = (records: readonly any[]): boolean => {
+  return records.length > 0 && records.every((record) => record.type === 'attributes' && record.attributeName === 'data-id')
+}
+
 const handleMutations = async (uid: number): Promise<void> => {
   const happyDomInstance = HappyDomState.get(uid)
   if (!happyDomInstance) {
@@ -23,16 +27,12 @@ const handleMutations = async (uid: number): Promise<void> => {
     window: happyDomInstance.window,
   })
 
-  const parsedDom = serialized.dom
-  // @ts-ignore
-  const { css } = serialized
-  // @ts-ignore
-  const parsedNodesChildNodeCount = GetParsedNodesChildNodeCount.getParsedNodesChildNodeCount(parsedDom)
+  GetParsedNodesChildNodeCount.getParsedNodesChildNodeCount(serialized.dom)
 
-  // TODO notify
   try {
-    await PreviewWorker.invoke('Preview.triggerRerender', uid)
-  } catch {
+    await PreviewWorker.invoke('Preview.handleMutation', uid)
+  } catch (error) {
+    console.error(error)
     // ignore
   }
 }
@@ -43,7 +43,10 @@ export const observe = (uid: number, document: Document, window: Window): void =
     existingObserver.disconnect()
   }
 
-  const observer = new window.MutationObserver(() => {
+  const observer = new window.MutationObserver((records) => {
+    if (isInternalMutation(records)) {
+      return
+    }
     handleMutations(uid)
   })
 

@@ -1,6 +1,9 @@
 import { expect, test } from '@jest/globals'
+import { createWindow } from '../src/parts/CreateWindow/CreateWindow.ts'
 import * as ExecuteScripts from '../src/parts/CreateWindowAndExecuteScripts/CreateWindowAndExecuteScripts.ts'
 import * as DispatchClickEvent from '../src/parts/DispatchClickEvent/DispatchClickEvent.ts'
+import { executeScripts } from '../src/parts/ExecuteScripts/ExecuteScripts.ts'
+import * as RuntimeDiagnostics from '../src/parts/RuntimeDiagnostics/RuntimeDiagnostics.ts'
 
 test('executeScripts should return a document and window', () => {
   const result = ExecuteScripts.createWindowAndExecuteScripts('<html><body><div>hello</div></body></html>', [])
@@ -113,6 +116,44 @@ test('executeScripts should survive script errors gracefully', () => {
   expect(doc.querySelector('#ok').textContent).toBe('still works')
 })
 
+test('executeScripts should capture script errors with a code frame', () => {
+  const { document, window } = ExecuteScripts.createWindowAndExecuteScripts('<html></html>', [])
+
+  executeScripts(window, document, ['addPipe()'], 0, 0, 1, 42)
+
+  expect(RuntimeDiagnostics.getRuntimeDiagnostics(42)).toMatchObject({
+    entries: [
+      {
+        codeFrame: expect.stringContaining('addPipe()'),
+        level: 'error',
+        message: 'addPipe is not defined',
+        type: 'exception',
+      },
+    ],
+    errorCount: 1,
+  })
+})
+
+test('executeScripts should capture asynchronous animation frame errors', async () => {
+  const { document, window } = ExecuteScripts.createWindowAndExecuteScripts('<html></html>', [])
+
+  executeScripts(window, document, ['requestAnimationFrame(() => addPipe())'], 0, 0, 1, 43)
+  await new Promise((resolve) => {
+    setTimeout(resolve, 50)
+  })
+
+  expect(RuntimeDiagnostics.getRuntimeDiagnostics(43)).toMatchObject({
+    entries: [
+      {
+        level: 'error',
+        message: 'addPipe is not defined',
+        type: 'exception',
+      },
+    ],
+    errorCount: 1,
+  })
+})
+
 test('executeScripts should handle empty scripts array', () => {
   const html = '<html><body><div>unchanged</div></body></html>'
   const { document: doc } = ExecuteScripts.createWindowAndExecuteScripts(html, [])
@@ -124,6 +165,26 @@ test('executeScripts should provide window object to scripts', () => {
   const scripts = ['document.getElementById("result").textContent = typeof window']
   const { document: doc } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
   expect(doc.querySelector('#result').textContent).toBe('object')
+})
+
+test('executeScripts should bind bare addEventListener to window', () => {
+  const html = '<html><body><div id="result">no</div></body></html>'
+  const scripts = [
+    `
+    addEventListener('keydown', function() {
+      document.getElementById("result").textContent = 'yes'
+    })
+    `,
+  ]
+  const { document: doc, window } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
+  window.dispatchEvent(
+    new window.KeyboardEvent('keydown', {
+      bubbles: true,
+      code: 'KeyA',
+      key: 'a',
+    }),
+  )
+  expect(doc.querySelector('#result').textContent).toBe('yes')
 })
 
 test('executeScripts should handle script that changes styles', () => {
@@ -252,4 +313,55 @@ test('executeScripts should have default innerWidth and innerHeight of 0', () =>
   const scripts = ['document.getElementById("result").textContent = window.innerWidth + "x" + window.innerHeight']
   const { document: doc } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
   expect(doc.querySelector('#result').textContent).toBe('0x0')
+})
+
+test('executeScripts should expose devicePixelRatio on window and globalThis', () => {
+  const html = '<html><body><div id="window-result"></div><div id="global-result"></div></body></html>'
+  const scripts = [
+    'document.getElementById("window-result").textContent = String(window.devicePixelRatio)',
+    'document.getElementById("global-result").textContent = String(globalThis.devicePixelRatio)',
+  ]
+  const { document: doc } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
+  expect(doc.querySelector('#window-result').textContent).toBe('1')
+  expect(doc.querySelector('#global-result').textContent).toBe('1')
+})
+
+test('executeScripts should expose CanvasRenderingContext2D for canvas scripts', () => {
+  class MockCanvasRenderingContext2D {
+    fillRect(): void {
+      return
+    }
+  }
+
+  const html = '<html><body><canvas id="canvas"></canvas><div id="result"></div></body></html>'
+  const { document, window } = createWindow(html)
+  const canvas = document.querySelector('#canvas') as any
+  const context = new MockCanvasRenderingContext2D()
+  canvas.getContext = (): MockCanvasRenderingContext2D => context
+
+  const { error } = executeScripts(window, document, [
+    `
+    const context = document.getElementById("canvas").getContext("2d")
+    document.getElementById("result").textContent = String(context instanceof CanvasRenderingContext2D)
+    `,
+  ])
+
+  expect(error).toBeNull()
+  expect(document.querySelector('#result')?.textContent).toBe('true')
+})
+
+test('executeScripts should expose getComputedStyle on globalThis and window', () => {
+  const html = `<html><head><style>:root { --grid: rgba(255,255,255,0.07); }</style></head><body><div id="global-result"></div><div id="window-result"></div></body></html>`
+  const scripts = [
+    `
+    document.getElementById("global-result").textContent = getComputedStyle(document.documentElement).getPropertyValue("--grid").trim()
+    document.getElementById("window-result").textContent = window.getComputedStyle(document.documentElement).getPropertyValue("--grid").trim()
+    `,
+  ]
+
+  const { document: doc, error } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
+
+  expect(error).toBeNull()
+  expect(doc.querySelector('#global-result')?.textContent).toBe('rgba(255,255,255,0.07)')
+  expect(doc.querySelector('#window-result')?.textContent).toBe('rgba(255,255,255,0.07)')
 })

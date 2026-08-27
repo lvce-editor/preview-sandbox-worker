@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import { afterEach, beforeAll, expect, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { PreviewWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import { Window } from 'happy-dom-without-node'
 import * as CanvasState from '../src/parts/CanvasState/CanvasState.ts'
+import * as GeometryState from '../src/parts/GeometryState/GeometryState.ts'
 import { executeCallback } from '../src/parts/GetOffscreenCanvas/GetOffscreenCanvas.ts'
 import * as PatchCanvasElements from '../src/parts/PatchCanvasElements/PatchCanvasElements.ts'
 
@@ -55,7 +56,7 @@ class MockOffscreenCanvas {
 }
 
 beforeAll(() => {
-  if (globalThis.OffscreenCanvas === undefined) {
+  if (!('OffscreenCanvas' in globalThis)) {
     // @ts-ignore
     globalThis.OffscreenCanvas = MockOffscreenCanvas
   }
@@ -63,6 +64,7 @@ beforeAll(() => {
 
 afterEach(() => {
   CanvasState.clear()
+  GeometryState.clear()
 })
 
 test.skip('patchCanvasElements should do nothing when no canvas elements exist', async () => {
@@ -283,4 +285,65 @@ test.skip('patchCanvasElements callback should include cssRule parameter on dime
   expect(lastChange?.cssRule).toBeDefined()
   expect(lastChange?.cssRule).toContain(`[data-id="${dataUid}"]`)
   expect(lastChange?.cssRule).toContain('width: 200px')
+})
+
+test('patchCanvasElements should provide getBoundingClientRect based on canvas dimensions', async () => {
+  const window = new Window({ url: 'https://localhost:3000' })
+  const { document } = window
+  document.documentElement.innerHTML = '<body><canvas id="game" width="320" height="180"></canvas></body>'
+  const mockOffscreenCanvas = new MockOffscreenCanvas(320, 180)
+
+  using _mockRpc = PreviewWorker.registerMockRpc({
+    'Preview.createOffscreenCanvas': (_uid: number, id: number) => {
+      executeCallback(id, mockOffscreenCanvas, 1)
+    },
+  })
+
+  await PatchCanvasElements.patchCanvasElements(document, 1)
+  const canvas = document.querySelector('#game') as any
+  const rect = canvas.getBoundingClientRect()
+
+  expect(rect.left).toBe(0)
+  expect(rect.top).toBe(0)
+  expect(rect.width).toBe(320)
+  expect(rect.height).toBe(180)
+  expect(rect.right).toBe(320)
+  expect(rect.bottom).toBe(180)
+})
+
+test('patchCanvasElements should prefer geometry snapshot values when available', async () => {
+  const uid = 1
+  const window = new Window({ url: 'https://localhost:3000' })
+  const { document } = window
+  document.documentElement.innerHTML = '<body><canvas id="game" width="320" height="180"></canvas></body>'
+  const mockOffscreenCanvas = new MockOffscreenCanvas(320, 180)
+
+  GeometryState.setGeometryBuffer(uid, GeometryState.createGeometryBuffer(16))
+  GeometryState.setRect(uid, '7', {
+    bottom: 127,
+    height: 80,
+    left: 11,
+    right: 111,
+    top: 47,
+    width: 100,
+    x: 11,
+    y: 47,
+  })
+
+  using _mockRpc = PreviewWorker.registerMockRpc({
+    'Preview.createOffscreenCanvas': (_previewUid: number, id: number) => {
+      executeCallback(id, mockOffscreenCanvas, 7)
+    },
+  })
+
+  await PatchCanvasElements.patchCanvasElements(document, uid)
+  const canvas = document.querySelector('#game') as any
+  const rect = canvas.getBoundingClientRect()
+
+  expect(rect.left).toBe(11)
+  expect(rect.top).toBe(47)
+  expect(rect.width).toBe(100)
+  expect(rect.height).toBe(80)
+  expect(rect.right).toBe(111)
+  expect(rect.bottom).toBe(127)
 })

@@ -7,7 +7,7 @@ const handleKeyupLocal = (uid: number, hdId: string, key: string, code: string):
   if (!happyDomInstance) {
     return
   }
-  const element = hdId ? happyDomInstance.elementMap.get(hdId) : happyDomInstance.document
+  const element = hdId ? happyDomInstance.elementMap[hdId] : happyDomInstance.document
   if (!element) {
     return
   }

@@ -7,20 +7,12 @@ const handleMousedownLocal = (uid: number, hdId: string, clientX: number, client
   if (!happyDomInstance) {
     return
   }
-  const element = happyDomInstance.elementMap.get(hdId)
+  const element = happyDomInstance.elementMap[hdId]
   if (!element) {
     return
   }
 
   DispatchMousedownEvent.dispatchMousedownEvent(element, happyDomInstance.window, clientX, clientY)
-
-  const elementMap = Object.create(null)
-
-  HappyDomState.set(uid, {
-    document: happyDomInstance.document,
-    elementMap,
-    window: happyDomInstance.window,
-  })
 }
 
 export const handleMousedown = (uid: number, hdId: string, clientX: number, clientY: number): PreviewState | Promise<PreviewState> => {

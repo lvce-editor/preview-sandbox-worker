@@ -7,7 +7,7 @@ export const overrideRequestAnimationFrame = (window: any, uid: number): void =>
   const callbacks: Map<number, (timestamp: number) => void> = new Map()
 
   const tick = (): void => {
-    const currentCallbacks = [...callbacks.entries()]
+    const currentCallbacks = [...callbacks]
     callbacks.clear()
     const timestamp = performance.now()
     for (const [, callback] of currentCallbacks) {
@@ -22,7 +22,7 @@ export const overrideRequestAnimationFrame = (window: any, uid: number): void =>
   window.requestAnimationFrame = (callback: (timestamp: number) => void): number => {
     const id = nextId++
     callbacks.set(id, callback)
-    const handle = setTimeout(tick, FRAME_INTERVAL) as unknown as number
+    const handle = setTimeout(tick, FRAME_INTERVAL)
     CanvasState.addAnimationFrameHandle(uid, handle)
     return id
   }

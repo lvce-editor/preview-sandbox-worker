@@ -1,0 +1,122 @@
+const numericCodeMap: Record<number, string> = {
+  13: 'Enter',
+  27: 'Escape',
+  32: 'Space',
+  37: 'ArrowLeft',
+  38: 'ArrowUp',
+  39: 'ArrowRight',
+  40: 'ArrowDown',
+  8: 'Backspace',
+  9: 'Tab',
+}
+
+// cspell:ignore Spacebar
+
+const invalidCodeValues = new Set(['code', 'event.code', 'e.code', 'key', 'event.key', 'e.key'])
+
+const getNumericCode = (code: string | number): number | undefined => {
+  if (typeof code === 'number' && Number.isFinite(code)) {
+    return code
+  }
+  if (typeof code === 'string' && /^\d+$/.test(code)) {
+    return Number(code)
+  }
+  return undefined
+}
+
+const getCodeFromNumericCode = (numericCode: number): string => {
+  if (numericCodeMap[numericCode]) {
+    return numericCodeMap[numericCode]
+  }
+  if (numericCode >= 48 && numericCode <= 57) {
+    return `Digit${String.fromCodePoint(numericCode)}`
+  }
+  if (numericCode >= 65 && numericCode <= 90) {
+    return `Key${String.fromCodePoint(numericCode)}`
+  }
+  return String(numericCode)
+}
+
+const getCodeFromKey = (key: string): string => {
+  if (key === ' ' || key === 'Space' || key === 'Spacebar') {
+    return 'Space'
+  }
+  if (key === 'Enter' || key.startsWith('Arrow')) {
+    return key
+  }
+  if (/^[a-z]$/i.test(key)) {
+    return `Key${key.toUpperCase()}`
+  }
+  if (/^\d$/.test(key)) {
+    return `Digit${key}`
+  }
+  return key
+}
+
+const isInvalidCodeString = (code: string): boolean => {
+  const trimmedCode = code.trim()
+  if (!trimmedCode) {
+    return true
+  }
+  return invalidCodeValues.has(trimmedCode)
+}
+
+const getNormalizedCode = (key: string, code: string | number): string => {
+  const numericCode = getNumericCode(code)
+  if (numericCode !== undefined) {
+    return getCodeFromNumericCode(numericCode)
+  }
+  if (typeof code === 'string' && !isInvalidCodeString(code)) {
+    return code.trim()
+  }
+  return getCodeFromKey(key)
+}
+
+const getNormalizedKey = (key: string, normalizedCode: string): string => {
+  if (key === 'Space' || key === 'Spacebar') {
+    return ' '
+  }
+  if (key) {
+    return key
+  }
+  if (normalizedCode === 'Space') {
+    return ' '
+  }
+  if (/^Key[A-Z]$/.test(normalizedCode)) {
+    return normalizedCode.slice(3).toLowerCase()
+  }
+  if (/^Digit\d$/.test(normalizedCode)) {
+    return normalizedCode.slice(5)
+  }
+  return normalizedCode
+}
+
+const getLegacyKeyCode = (normalizedCode: string, code: string | number): number => {
+  const numericCode = getNumericCode(code)
+  if (numericCode !== undefined) {
+    return numericCode
+  }
+  for (const [key, value] of Object.entries(numericCodeMap)) {
+    if (value === normalizedCode) {
+      return Number(key)
+    }
+  }
+  if (/^Key[A-Z]$/.test(normalizedCode)) {
+    return normalizedCode.codePointAt(3) ?? 0
+  }
+  if (/^Digit\d$/.test(normalizedCode)) {
+    return normalizedCode.codePointAt(5) ?? 0
+  }
+  return 0
+}
+
+export const getKeyboardEventInit = (key: string, code: string | number): any => {
+  const normalizedCode = getNormalizedCode(key, code)
+  const normalizedKey = getNormalizedKey(key, normalizedCode)
+  const keyCode = getLegacyKeyCode(normalizedCode, code)
+  return {
+    code: normalizedCode,
+    key: normalizedKey,
+    keyCode,
+  }
+}
