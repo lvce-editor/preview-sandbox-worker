@@ -15,14 +15,6 @@ const handleKeydownLocal = (uid: number, hdId: string, key: string, code: string
   }
 
   DispatchKeydownEvent.dispatchKeydownEvent(element, window, key, code)
-
-  const newElementMap = Object.create(null)
-
-  HappyDomState.set(uid, {
-    document,
-    elementMap: newElementMap,
-    window,
-  })
 }
 
 export const handleKeydown = (uid: number, hdId: string, key: string, code: string): PreviewState | Promise<PreviewState> => {
