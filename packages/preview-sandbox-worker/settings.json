@@ -4,7 +4,7 @@
     "description": "Controls whether the developer console is cleared after a preview syntax or reference error is resolved.",
     "heading": "Clear Console On Error Resolved",
     "id": "preview.clearConsoleOnErrorResolved",
-    "type": 3,
+    "type": "boolean",
     "value": false
   }
 ]
