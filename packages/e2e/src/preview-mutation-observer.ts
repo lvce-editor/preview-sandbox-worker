@@ -38,7 +38,6 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Preview
 
   // act
   await Preview.handleClick('1')
-  await new Promise((resolve) => setTimeout(resolve, 100))
 
   // assert
   await expect(contentDiv).toHaveText('Updated content')
