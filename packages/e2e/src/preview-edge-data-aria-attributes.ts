@@ -17,5 +17,6 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   const button = preview.locator('#menu')
   await expect(button).toHaveAttribute('data-state', 'expanded')
   await expect(button).toHaveAttribute('data-index', '0')
-  await expect(preview.locator('#result')).toHaveText('expanded|0|true|Open menu')
+  const result = preview.locator('#result')
+  await expect(result).toHaveText('expanded|0|true|Open menu')
 }

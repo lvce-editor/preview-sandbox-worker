@@ -13,7 +13,10 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await Command.execute('Layout.showPreview', filePath)
   const preview = Locator('.Viewlet.Preview')
   await expect(preview).toBeVisible()
-  await expect(preview.locator('#remove')).toHaveCount(0)
-  await expect(preview.locator('#keep')).toHaveText('keep')
-  await expect(preview.locator('#container span')).toHaveCount(1)
+  const remove = preview.locator('#remove')
+  await expect(remove).toHaveCount(0)
+  const keep = preview.locator('#keep')
+  await expect(keep).toHaveText('keep')
+  const remainingSpans = preview.locator('#container span')
+  await expect(remainingSpans).toHaveCount(1)
 }

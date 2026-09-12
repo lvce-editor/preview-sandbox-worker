@@ -12,5 +12,6 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await Command.execute('Layout.showPreview', filePath)
   const preview = Locator('.Viewlet.Preview')
   await expect(preview).toBeVisible()
-  await expect(preview.locator('#unicode')).toHaveText('Zażółć gęślą jaźń · 你好 · مرحبا · 👩🏽‍💻')
+  const unicode = preview.locator('#unicode')
+  await expect(unicode).toHaveText('Zażółć gęślą jaźń · 你好 · مرحبا · 👩🏽‍💻')
 }

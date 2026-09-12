@@ -16,7 +16,10 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await Command.execute('Layout.showPreview', filePath)
   const preview = Locator('.Viewlet.Preview')
   await expect(preview).toBeVisible()
-  await expect(preview.locator('#matrix tbody tr')).toHaveCount(2)
-  await expect(preview.locator('#matrix td')).toHaveCount(3)
-  await expect(preview.locator('#result')).toHaveText('2|colgroup|2')
+  const rows = preview.locator('#matrix tbody tr')
+  await expect(rows).toHaveCount(2)
+  const cells = preview.locator('#matrix td')
+  await expect(cells).toHaveCount(3)
+  const result = preview.locator('#result')
+  await expect(result).toHaveText('2|colgroup|2')
 }

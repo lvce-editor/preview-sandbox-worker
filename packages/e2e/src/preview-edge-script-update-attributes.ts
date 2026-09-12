@@ -19,5 +19,6 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await expect(preview).toBeVisible()
   const target = preview.locator('#target')
   await expect(target).toHaveText('content')
-  await expect(preview.locator('#result')).toHaveText('after ready|done|polite')
+  const result = preview.locator('#result')
+  await expect(result).toHaveText('after ready|done|polite')
 }

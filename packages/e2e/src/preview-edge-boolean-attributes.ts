@@ -14,6 +14,8 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await Command.execute('Layout.showPreview', filePath)
   const preview = Locator('.Viewlet.Preview')
   await expect(preview).toBeVisible()
-  await expect(preview.locator('#choice')).toHaveCount(1)
-  await expect(preview.locator('#result')).toHaveText('true,true,true')
+  const choice = preview.locator('#choice')
+  await expect(choice).toHaveCount(1)
+  const result = preview.locator('#result')
+  await expect(result).toHaveText('true,true,true')
 }

@@ -11,5 +11,6 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await Command.execute('Layout.showPreview', filePath)
   const preview = Locator('.Viewlet.Preview')
   await expect(preview).toBeVisible()
-  await expect(preview.locator('#sample')).toHaveText('first\n  second\n\tthird')
+  const sample = preview.locator('#sample')
+  await expect(sample).toHaveText('first\n  second\n\tthird')
 }

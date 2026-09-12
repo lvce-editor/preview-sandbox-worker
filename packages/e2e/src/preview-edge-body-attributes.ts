@@ -16,5 +16,6 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await expect(preview).toBeVisible()
   const body = preview.locator('.Body')
   await expect(body).toHaveCount(1)
-  await expect(preview.locator('#result')).toHaveText('page compact|de|rtl')
+  const result = preview.locator('#result')
+  await expect(result).toHaveText('page compact|de|rtl')
 }
