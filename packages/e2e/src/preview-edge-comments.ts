@@ -25,5 +25,6 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await expect(items).toHaveCount(2)
   await expect(firstItem).toHaveText('before')
   await expect(secondItem).toHaveText('after')
-  await expect(preview.locator('#items button')).toHaveCount(0)
+  const buttons = preview.locator('#items button')
+  await expect(buttons).toHaveCount(0)
 }

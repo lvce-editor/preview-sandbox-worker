@@ -13,6 +13,8 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await expect(preview).toBeVisible()
   const sentence = preview.locator('#sentence')
   await expect(sentence).toHaveText('before inside after end')
-  await expect(sentence.locator('span')).toHaveText('inside')
-  await expect(sentence.locator('code')).toHaveText('end')
+  const span = sentence.locator('span')
+  await expect(span).toHaveText('inside')
+  const code = sentence.locator('code')
+  await expect(code).toHaveText('end')
 }

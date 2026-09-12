@@ -13,5 +13,6 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await Command.execute('Layout.showPreview', filePath)
   const preview = Locator('.Viewlet.Preview')
   await expect(preview).toBeVisible()
-  await expect(preview.locator('#result')).toHaveText(`<tag> & "quoted" 'single' ©`)
+  const result = preview.locator('#result')
+  await expect(result).toHaveText(`<tag> & "quoted" 'single' ©`)
 }

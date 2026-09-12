@@ -20,6 +20,8 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
   await expect(input).toHaveAttribute('min', '-5')
   await expect(input).toHaveAttribute('max', '10')
   await expect(input).toHaveAttribute('step', '0.5')
-  await expect(preview.locator('#note')).toHaveCount(1)
-  await expect(preview.locator('#result')).toHaveText('2,20,3,12')
+  const note = preview.locator('#note')
+  await expect(note).toHaveCount(1)
+  const result = preview.locator('#result')
+  await expect(result).toHaveText('2,20,3,12')
 }
