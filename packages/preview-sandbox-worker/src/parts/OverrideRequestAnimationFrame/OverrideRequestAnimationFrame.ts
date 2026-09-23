@@ -1,4 +1,5 @@
 import * as CanvasState from '../CanvasState/CanvasState.ts'
+import * as Logger from '../Logger/Logger.ts'
 
 const FRAME_INTERVAL = 16
 
@@ -14,7 +15,7 @@ export const overrideRequestAnimationFrame = (window: any, uid: number): void =>
       try {
         callback(timestamp)
       } catch (error) {
-        console.warn('[preview-sandbox-worker] requestAnimationFrame callback error:', error)
+        Logger.warn(`[preview-sandbox-worker] requestAnimationFrame callback error: ${error}`)
       }
     }
   }

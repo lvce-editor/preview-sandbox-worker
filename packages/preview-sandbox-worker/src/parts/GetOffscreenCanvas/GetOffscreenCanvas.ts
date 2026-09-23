@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 
 import { PreviewWorker } from '@lvce-editor/rpc-registry'
+import * as Logger from '../Logger/Logger.ts'
 
 const callBacks = Object.create(null)
 
@@ -24,7 +25,7 @@ export const executeCallback = (id: number, ...args: OffscreenCanvasResultRaw): 
     callback(args)
     delete callBacks[id]
   } else {
-    console.warn(`[preview-sandbox-worker] No callback found for id ${id}`)
+    Logger.warn(`[preview-sandbox-worker] No callback found for id ${id}`)
   }
 }
 

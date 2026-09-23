@@ -1,4 +1,5 @@
 import { afterEach, expect, jest, test } from '@jest/globals'
+import { PreviewWorker } from '@lvce-editor/rpc-registry'
 import { Window } from 'happy-dom-without-node'
 import * as RuntimeDiagnostics from '../src/parts/RuntimeDiagnostics/RuntimeDiagnostics.ts'
 
@@ -26,6 +27,27 @@ test('captures console messages for a preview', () => {
     ],
     errorCount: 0,
   })
+})
+
+test('forwards console warnings to the preview sandbox output channel', async () => {
+  jest.spyOn(console, 'warn').mockImplementation(() => {})
+  using _mockRpc = PreviewWorker.registerMockRpc({
+    'Preview.logWarning': () => undefined,
+  })
+  const window = new Window()
+  const runtimeConsole = RuntimeDiagnostics.install(8, window)
+
+  runtimeConsole.warn('canvas is unavailable')
+  await Promise.resolve()
+
+  expect(_mockRpc.invocations).toEqual([['Preview.logWarning', 'canvas is unavailable']])
+  expect(RuntimeDiagnostics.getRuntimeDiagnostics(8).entries).toEqual([
+    {
+      level: 'warn',
+      message: 'canvas is unavailable',
+      type: 'console',
+    },
+  ])
 })
 
 test('captures uncaught event listener exceptions', () => {

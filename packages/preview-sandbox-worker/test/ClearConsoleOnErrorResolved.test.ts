@@ -1,5 +1,5 @@
 import { afterEach, expect, jest, test } from '@jest/globals'
-import { RendererWorker } from '@lvce-editor/rpc-registry'
+import { PreviewWorker, RendererWorker } from '@lvce-editor/rpc-registry'
 import * as ClearConsoleOnErrorResolved from '../src/parts/ClearConsoleOnErrorResolved/ClearConsoleOnErrorResolved.ts'
 import * as HappyDomState from '../src/parts/HappyDomState/HappyDomState.ts'
 import { loadContent } from '../src/parts/LoadContent/LoadContent.ts'
@@ -15,14 +15,22 @@ afterEach(() => {
 test('clears the console through the preview content update lifecycle', async () => {
   const clearSpy = jest.spyOn(console, 'clear').mockImplementation(() => {})
   jest.spyOn(console, 'warn').mockImplementation(() => {})
+  using previewMock = PreviewWorker.registerMockRpc({
+    'Preview.clearOutput': () => undefined,
+    'Preview.logWarning': () => undefined,
+  })
   using _mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': () => true,
   })
 
-  await loadContent(1, 320, 240, '<body></body>', ['const value ='])
+  await loadContent(1, 320, 240, '<body></body>', ['const value = dist'])
   await loadContent(1, 320, 240, '<body></body>', ['const value = 1'])
 
   expect(clearSpy).toHaveBeenCalledTimes(1)
+  expect(previewMock.invocations[0][0]).toBe('Preview.logWarning')
+  expect(previewMock.invocations[0][1]).toContain('preview error:')
+  expect(previewMock.invocations[0][1]).toContain('const value = dist')
+  expect(previewMock.invocations.at(-1)).toEqual(['Preview.clearOutput'])
 })
 
 test.each([new ReferenceError('missing is not defined'), new SyntaxError('Unexpected token')])(
@@ -53,6 +61,23 @@ test('does not clear the console when the setting is disabled', async () => {
   await ClearConsoleOnErrorResolved.handle(1, null)
 
   expect(clearSpy).not.toHaveBeenCalled()
+})
+
+test('clears preview sandbox output when a clearable error resolves and the setting is enabled', async () => {
+  const clearSpy = jest.spyOn(console, 'clear').mockImplementation(() => {})
+  using _rendererMock = RendererWorker.registerMockRpc({
+    'Preferences.get': () => true,
+  })
+  using previewMock = PreviewWorker.registerMockRpc({
+    'Preview.clearOutput': () => undefined,
+  })
+
+  await ClearConsoleOnErrorResolved.handle(2, new ReferenceError('missing is not defined'))
+  await ClearConsoleOnErrorResolved.handle(2, null)
+  await Promise.resolve()
+
+  expect(clearSpy).toHaveBeenCalledTimes(1)
+  expect(previewMock.invocations).toEqual([['Preview.clearOutput']])
 })
 
 test('does not clear the console when another error type is resolved', async () => {
