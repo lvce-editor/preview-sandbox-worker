@@ -1,4 +1,5 @@
 import * as Preferences from '../Preferences/Preferences.ts'
+import * as Logger from '../Logger/Logger.ts'
 
 const errorUids = new Set<number>()
 const workerConsole: Console = globalThis.console
@@ -21,6 +22,7 @@ export const handle = async (uid: number, error: Error | null): Promise<void> =>
   const enabled = await Preferences.get('preview.clearConsoleOnErrorResolved')
   if (enabled === true) {
     workerConsole.clear()
+    await Logger.clear()
   }
 }
 

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import type { Window } from 'happy-dom-without-node'
+import * as Logger from '../Logger/Logger.ts'
 
 export interface RuntimeDiagnostic {
   readonly codeFrame?: string
@@ -81,13 +82,18 @@ const createConsole = (uid: number): Console => {
   const runtimeConsole = Object.create(console) as Console
   for (const level of consoleLevels) {
     runtimeConsole[level] = (...values: readonly unknown[]): void => {
+      const message = getMessage(values)
       add(uid, {
         level,
-        message: getMessage(values),
+        message,
         type: 'console',
       })
       if (level === 'error' && values.length === 1 && values[0] instanceof Error) {
         pendingConsoleErrors.set(uid, values[0])
+      }
+      if (level === 'warn') {
+        Logger.warn(message)
+        return
       }
       workerConsole[level](...values)
     }
