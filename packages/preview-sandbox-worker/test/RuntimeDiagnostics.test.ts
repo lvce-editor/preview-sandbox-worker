@@ -1,6 +1,6 @@
 import { afterEach, expect, jest, test } from '@jest/globals'
-import { Window } from 'happy-dom-without-node'
 import { PreviewWorker } from '@lvce-editor/rpc-registry'
+import { Window } from 'happy-dom-without-node'
 import * as RuntimeDiagnostics from '../src/parts/RuntimeDiagnostics/RuntimeDiagnostics.ts'
 
 afterEach(() => {

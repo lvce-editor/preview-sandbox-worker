@@ -1,5 +1,5 @@
-import * as Preferences from '../Preferences/Preferences.ts'
 import * as Logger from '../Logger/Logger.ts'
+import * as Preferences from '../Preferences/Preferences.ts'
 
 const errorUids = new Set<number>()
 const workerConsole: Console = globalThis.console

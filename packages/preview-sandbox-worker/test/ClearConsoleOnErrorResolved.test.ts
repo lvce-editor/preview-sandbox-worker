@@ -16,8 +16,8 @@ test('clears the console through the preview content update lifecycle', async ()
   const clearSpy = jest.spyOn(console, 'clear').mockImplementation(() => {})
   jest.spyOn(console, 'warn').mockImplementation(() => {})
   using previewMock = PreviewWorker.registerMockRpc({
-    'Preview.logWarning': () => undefined,
     'Preview.clearOutput': () => undefined,
+    'Preview.logWarning': () => undefined,
   })
   using _mockRpc = RendererWorker.registerMockRpc({
     'Preferences.get': () => true,

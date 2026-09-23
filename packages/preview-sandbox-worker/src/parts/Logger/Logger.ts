@@ -1,14 +1,10 @@
 import { PreviewWorker } from '@lvce-editor/rpc-registry'
 
-const send = (command: string, ...args: readonly unknown[]): Promise<void> => {
+const send = async (command: string, ...args: readonly unknown[]): Promise<void> => {
   try {
-    return Promise.resolve(PreviewWorker.invoke(command, ...args)).then(
-      () => undefined,
-      () => undefined,
-    )
+    await PreviewWorker.invoke(command, ...args)
   } catch {
     // Logging must not break preview rendering when its output transport is unavailable.
-    return Promise.resolve()
   }
 }
 

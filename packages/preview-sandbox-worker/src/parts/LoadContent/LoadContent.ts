@@ -18,7 +18,8 @@ export const loadContent = async (
   // Read and parse file contents if we have a URI
   const { codeFrame, error, errorMessage } = await updateContent(uid, width, height, content, scripts)
   if (error) {
-    Logger.warn(`preview error: ${error}${codeFrame ? `\n${codeFrame}` : ''}`)
+    const formattedCodeFrame = codeFrame ? `\n${codeFrame}` : ''
+    Logger.warn(`preview error: ${error}${formattedCodeFrame}`)
   }
   await ClearConsoleOnErrorResolved.handle(uid, error)
 
