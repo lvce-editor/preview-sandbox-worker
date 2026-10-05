@@ -5,6 +5,7 @@ import { exposeCanvasGlobals } from '../ExposeCanvasGlobals/ExposeCanvasGlobals.
 import { getErrorCodeFrame } from '../GetErrorCodeFrame/GetErrorCodeFrame.ts'
 import { getGlobals } from '../GetGlobals/GetGlobals.ts'
 import { getTopLevelFunctionNames } from '../GetTopLevelFunctionNames/GetTopLevelFunctionNames.ts'
+import { getTopLevelVariableNames } from '../GetTopLevelVariableNames/GetTopLevelVariableNames.ts'
 import * as RuntimeDiagnostics from '../RuntimeDiagnostics/RuntimeDiagnostics.ts'
 import { setGlobals } from '../SetGlobals/SetGlobals.ts'
 
@@ -26,6 +27,13 @@ export const executeScripts = (
   const { globalGlobals, windowGlobals } = getGlobals(window, width, height, devicePixelRatio)
   setGlobals(window, globalGlobals, windowGlobals)
   const runtimeConsole = RuntimeDiagnostics.install(uid, window)
+  const windowWithEval = window as Window & { eval?: (source: string) => unknown }
+  if (typeof windowWithEval.eval !== 'function') {
+    windowWithEval.eval = (source: string): unknown => {
+      const fn = new Function('window', 'document', 'console', `with (window) { ${source} }`)
+      return fn.call(window, window, document, runtimeConsole)
+    }
+  }
   let firstError: Error | null = null
   let firstCodeFrame = ''
   // Execute each script with the happy-dom window and document as context
@@ -33,11 +41,13 @@ export const executeScripts = (
     try {
       // In a browser, top-level function declarations in <script> tags become
       // properties on window. Since new Function() creates a local scope, we
-      // extract function names and explicitly assign them to window after execution.
+      // extract function and var names and explicitly assign them to window.
       const functionNames = getTopLevelFunctionNames(scriptContent)
-      const suffix = functionNames.map((name) => `\nwindow['${name}'] = ${name};`).join('')
-      const fn = new Function('window', 'document', 'console', scriptContent + suffix)
-      fn(window, document, runtimeConsole)
+      const variableNames = getTopLevelVariableNames(scriptContent)
+      const names = [...functionNames, ...variableNames]
+      const suffix = names.map((name) => `\nwindow[${JSON.stringify(name)}] = ${name};`).join('')
+      const fn = new Function('window', 'document', 'console', `with (window) { ${scriptContent}${suffix} }`)
+      fn.call(window, window, document, runtimeConsole)
     } catch (error) {
       // Record the first error but continue executing remaining scripts
       if (firstError === null) {
