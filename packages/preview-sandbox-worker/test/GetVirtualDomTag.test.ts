@@ -208,3 +208,13 @@ test('getVirtualDomTag should return different values for different valid tags',
   expect(divResult).not.toBe(spanResult)
   expect(h1Result).not.toBe(spanResult)
 })
+
+test.each([
+  [ElementTags.Svg, VirtualDomElements.Svg],
+  [ElementTags.Rect, VirtualDomElements.Rect],
+  [ElementTags.Polygon, VirtualDomElements.Polygon],
+  [ElementTags.Path, VirtualDomElements.Path],
+  [ElementTags.Circle, VirtualDomElements.Circle],
+])('getVirtualDomTag should map SVG tag %s', (tag, expected) => {
+  expect(getVirtualDomTag(tag)).toBe(expected)
+})

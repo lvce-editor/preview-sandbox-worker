@@ -92,6 +92,40 @@ const commonAllowedAttributes = new Set([
   'label',
 ])
 
+const svgAllowedAttributes = new Set([
+  'cx',
+  'cy',
+  'd',
+  'fill',
+  'fill-opacity',
+  'fill-rule',
+  'offset',
+  'opacity',
+  'points',
+  'preserveAspectRatio',
+  'r',
+  'rx',
+  'ry',
+  'stop-color',
+  'stop-opacity',
+  'stroke',
+  'stroke-dasharray',
+  'stroke-dashoffset',
+  'stroke-linecap',
+  'stroke-linejoin',
+  'stroke-opacity',
+  'stroke-width',
+  'transform',
+  'vector-effect',
+  'viewBox',
+  'x',
+  'x1',
+  'x2',
+  'y',
+  'y1',
+  'y2',
+])
+
 export const isDefaultAllowedAttribute = (attributeName: string, defaultAllowedAttributes: readonly string[]): boolean => {
   // Allow data-* attributes
   if (attributeName.startsWith('data-')) {
@@ -103,6 +137,9 @@ export const isDefaultAllowedAttribute = (attributeName: string, defaultAllowedA
   }
   // Check if it's a common HTML attribute
   if (commonAllowedAttributes.has(attributeName)) {
+    return true
+  }
+  if (svgAllowedAttributes.has(attributeName)) {
     return true
   }
   // Check if in default list

@@ -294,6 +294,34 @@ test('executeScripts with dispatchClickEvent should execute onclick handler and 
   expect(button.textContent).toBe('2')
 })
 
+test('executeScripts shares top-level var bindings between scripts and inline handlers', () => {
+  const html =
+    '<html><body><button id="walk" onclick="blueRobot.walk()">Walk</button><button id="stop" onclick="blueRobot.stop()">Stop</button></body></html>'
+  const scripts = [
+    'var Landscape = function () { this.name = "landscape" }',
+    'var BlueRobot = function () { this.mode = "idle"; this.walk = function () { this.mode = "walk" }; this.stop = function () { this.mode = "idle" } }',
+    'var landscape = new Landscape(); var blueRobot = new BlueRobot()',
+  ]
+  const { document, window } = ExecuteScripts.createWindowAndExecuteScripts(html, scripts)
+  const { blueRobot, landscape } = window
+
+  expect(landscape.name).toBe('landscape')
+  DispatchClickEvent.dispatchClickEvent(document.querySelector('#walk'), window)
+  expect(blueRobot.mode).toBe('walk')
+  DispatchClickEvent.dispatchClickEvent(document.querySelector('#stop'), window)
+  expect(blueRobot.mode).toBe('idle')
+})
+
+test('executeScripts keeps top-level var bindings isolated between windows', () => {
+  const first = ExecuteScripts.createWindowAndExecuteScripts('<html></html>', ['var Landscape = function () {}'])
+  const second = ExecuteScripts.createWindowAndExecuteScripts('<html><body><p id="result"></p></body></html>', [
+    "document.querySelector('#result').textContent = typeof Landscape",
+  ])
+
+  expect(first.window.Landscape).toBeDefined()
+  expect(second.document.querySelector('#result').textContent).toBe('undefined')
+})
+
 test('executeScripts should set window.innerWidth and window.innerHeight', () => {
   const html = '<html><body><div id="result"></div></body></html>'
   const scripts = ['document.getElementById("result").textContent = window.innerWidth + "x" + window.innerHeight']

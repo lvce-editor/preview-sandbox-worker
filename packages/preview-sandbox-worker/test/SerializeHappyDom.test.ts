@@ -39,6 +39,22 @@ test('serialize should serialize nested elements', () => {
   ])
 })
 
+test('serialize should preserve inline SVG elements and attributes', () => {
+  const doc = createDocument(
+    '<body><svg viewBox="0 0 100 100"><rect x="1" y="2" width="30" height="40"></rect><polygon points="0,0 10,0 5,10"></polygon><path d="M0 0 L10 10"></path><circle cx="5" cy="5" r="4"></circle></svg></body>',
+  )
+  const result = SerializeHappyDom.serialize(doc)
+
+  expect(result.dom).toEqual([
+    { childCount: 1, className: 'Body', type: VirtualDomElements.Div },
+    { childCount: 4, 'data-id': '0', type: VirtualDomElements.Svg, viewBox: '0 0 100 100' },
+    { childCount: 0, 'data-id': '1', height: '40', type: VirtualDomElements.Rect, width: '30', x: '1', y: '2' },
+    { childCount: 0, 'data-id': '2', points: '0,0 10,0 5,10', type: VirtualDomElements.Polygon },
+    { childCount: 0, d: 'M0 0 L10 10', 'data-id': '3', type: VirtualDomElements.Path },
+    { childCount: 0, cx: '5', cy: '5', 'data-id': '4', r: '4', type: VirtualDomElements.Circle },
+  ])
+})
+
 test('serialize should serialize multiple sibling elements', () => {
   const doc = createDocument('<body><div>first</div><div>second</div></body>')
   const result = SerializeHappyDom.serialize(doc)

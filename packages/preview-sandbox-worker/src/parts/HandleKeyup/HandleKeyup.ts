@@ -13,14 +13,6 @@ const handleKeyupLocal = (uid: number, hdId: string, key: string, code: string):
   }
 
   DispatchKeyupEvent.dispatchKeyupEvent(element, happyDomInstance.window, key, code)
-
-  const elementMap = Object.create(null)
-
-  HappyDomState.set(uid, {
-    document: happyDomInstance.document,
-    elementMap,
-    window: happyDomInstance.window,
-  })
 }
 
 export const handleKeyup = (uid: number, hdId: string, key: string, code: string): PreviewState | Promise<PreviewState> => {

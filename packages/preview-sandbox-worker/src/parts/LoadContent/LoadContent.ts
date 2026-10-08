@@ -1,3 +1,5 @@
+import * as ClearConsoleOnErrorResolved from '../ClearConsoleOnErrorResolved/ClearConsoleOnErrorResolved.ts'
+import * as Logger from '../Logger/Logger.ts'
 import { updateContent } from '../UpdateContent/UpdateContent.ts'
 
 export const loadContent = async (
@@ -16,8 +18,10 @@ export const loadContent = async (
   // Read and parse file contents if we have a URI
   const { codeFrame, error, errorMessage } = await updateContent(uid, width, height, content, scripts)
   if (error) {
-    console.warn(`preview error: ${error} ${codeFrame}`)
+    const formattedCodeFrame = codeFrame ? `\n${codeFrame}` : ''
+    Logger.warn(`preview error: ${error}${formattedCodeFrame}`)
   }
+  await ClearConsoleOnErrorResolved.handle(uid, error)
 
   return {
     errorMessage,

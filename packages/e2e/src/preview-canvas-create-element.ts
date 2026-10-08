@@ -42,11 +42,13 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Workspa
 
   const previewArea = Locator('.Viewlet.Preview')
   await expect(previewArea).toBeVisible()
-  await expect(previewArea.locator('h2')).toContainText('Dynamic Canvas Test')
+  const heading = previewArea.locator('h2')
+  await expect(heading).toContainText('Dynamic Canvas Test')
 
   const canvas = previewArea.locator('canvas')
   await expect(canvas).toBeVisible()
   await expect(canvas).toHaveAttribute('width', '200')
   await expect(canvas).toHaveAttribute('height', '200')
-  await expect(previewArea.locator('#pixel')).toHaveText('0,0,255,255')
+  const pixel = previewArea.locator('#pixel')
+  await expect(pixel).toHaveText('0,0,255,255')
 }
