@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 export interface CanvasInstance {
   readonly dataId: string
+  readonly dispose?: () => void
   readonly element: any
   readonly offscreenCanvas: OffscreenCanvas
 }
@@ -38,17 +39,17 @@ export const remove = (uid: number): void => {
     for (const handle of entry.animationFrameHandles) {
       clearTimeout(handle)
     }
+    for (const instance of entry.instances) {
+      instance.dispose?.()
+    }
   }
   states.delete(uid)
 }
 
 export const clear = (): void => {
-  for (const [, entry] of states) {
-    for (const handle of entry.animationFrameHandles) {
-      clearTimeout(handle)
-    }
+  for (const uid of states.keys()) {
+    remove(uid)
   }
-  states.clear()
 }
 
 export const addAnimationFrameHandle = (uid: number, handle: number): void => {

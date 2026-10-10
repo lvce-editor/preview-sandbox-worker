@@ -1,4 +1,4 @@
-import { cp, readFile, writeFile } from 'node:fs/promises'
+import { cp } from 'node:fs/promises'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { root } from './root.js'
@@ -16,25 +16,15 @@ const { commitHash } = await sharedProcess.exportStatic({
   testPath: 'packages/e2e',
 })
 
-// @ts-ignore
-const rendererWorkerPath = join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js')
+// Ship the candidate at the configured runtime URL, including on static sites.
+await cp(join(root, '.tmp', 'dist', 'dist'), join(root, 'dist', commitHash, 'packages', 'preview-sandbox-worker', 'dist'), {
+  recursive: true,
+})
 
-export const getRemoteUrl = (path: string): string => {
-  const url = pathToFileURL(path).toString().slice(8)
-  return `/remote/${url}`
-}
-
-const content = await readFile(rendererWorkerPath, 'utf8')
-const workerPath = join(root, '.tmp/dist/dist/previewSandBoxWorkerMain.js')
-const remoteUrl = getRemoteUrl(workerPath)
-
-const workerUrlAssignment = content.match(
-  /previewSandBoxWorkerUrl\s*=\s*getRuntimeWorkerUrl\(\s*"develop\.previewSandboxWorkerPath",\s*`[^`]*previewSandBoxWorkerMain\.js`\s*\)/,
+await cp(
+  new URL('./', import.meta.resolve('@lvce-editor/renderer-process')),
+  join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist'),
+  { recursive: true },
 )
-if (!workerUrlAssignment) {
-  throw new Error('occurrence not found')
-}
-const newContent = content.replace(workerUrlAssignment[0], `previewSandBoxWorkerUrl = ${JSON.stringify(remoteUrl)}`)
-await writeFile(rendererWorkerPath, newContent)
 
 await cp(join(root, 'dist'), join(root, '.tmp', 'static'), { recursive: true })
