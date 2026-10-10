@@ -1,5 +1,5 @@
 import { execa } from 'execa'
-import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { bundleJs } from './bundleJs.js'
 import { root } from './root.js'
@@ -73,3 +73,16 @@ await writeJson(join(dist, 'package.json'), packageJson)
 await cp(join(root, 'README.md'), join(dist, 'README.md'))
 await cp(join(root, 'LICENSE'), join(dist, 'LICENSE'))
 await cp(join(root, 'packages', 'preview-sandbox-worker', 'settings.json'), join(dist, 'settings.json'))
+
+// The runtime's configured worker URL takes precedence over the renderer's
+// fallback URL. Install the candidate at that URL for server-based tests.
+const staticRoot = join(root, 'node_modules', '@lvce-editor', 'static-server', 'static')
+const runtimeHash = (await readdir(staticRoot)).find((name) => /^[a-f0-9]{7,40}$/.test(name))
+if (!runtimeHash) {
+  throw new Error('Static runtime commit directory not found')
+}
+await cp(join(dist, 'dist'), join(staticRoot, runtimeHash, 'packages', 'preview-sandbox-worker', 'dist'), { recursive: true })
+
+await cp(new URL('./', import.meta.resolve('@lvce-editor/renderer-process')), join(staticRoot, runtimeHash, 'packages', 'renderer-process', 'dist'), {
+  recursive: true,
+})
