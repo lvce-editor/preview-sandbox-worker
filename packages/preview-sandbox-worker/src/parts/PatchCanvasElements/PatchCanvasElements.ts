@@ -65,12 +65,17 @@ export const patchCanvasElement = (element: any, uid: number, reservation: Canva
   element.__canvasId = canvasId
   element.__offscreenCanvas = offscreenCanvas
   element.dataset.id = dataId
-  const context = offscreenCanvas.getContext('2d')
-  element.getContext = (contextType: string): any => {
-    if (contextType === '2d') {
-      return context
+  let webglContext: WebGLRenderingContext | WebGL2RenderingContext | null = null
+  element.getContext = (contextType: string, options?: any): any => {
+    const context = offscreenCanvas.getContext(contextType as '2d', options)
+    if (context && (contextType === 'webgl' || contextType === 'webgl2')) {
+      webglContext = context as unknown as WebGLRenderingContext | WebGL2RenderingContext | null
     }
-    return undefined
+    return context
+  }
+  const dispose = (): void => {
+    webglContext?.getExtension('WEBGL_lose_context')?.loseContext()
+    webglContext = null
   }
 
   let widthValue = width
@@ -138,7 +143,7 @@ export const patchCanvasElement = (element: any, uid: number, reservation: Canva
     })
   }
 
-  CanvasState.addInstance(uid, { dataId, element, offscreenCanvas })
+  CanvasState.addInstance(uid, { dataId, dispose, element, offscreenCanvas })
 }
 
 const installCanvasCreationHooks = (document: Document, uid: number, reservations: CanvasReservation[]): void => {

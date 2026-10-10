@@ -58,3 +58,24 @@ test('cancelAnimationFrame should prevent callback from firing', async () => {
   })
   expect(callback).not.toHaveBeenCalled()
 })
+
+test('completed animation frames do not accumulate handles', async () => {
+  const window = new Window({ url: 'https://localhost:3000' }) as any
+  CanvasState.set(1, { animationFrameHandles: [], instances: [] })
+  OverrideRequestAnimationFrame.overrideRequestAnimationFrame(window, 1)
+  window.requestAnimationFrame(() => {})
+  await new Promise((resolve) => setTimeout(resolve, 50))
+  expect(CanvasState.get(1)?.animationFrameHandles).toEqual([])
+})
+
+test('replacing canvas state stops an old animation loop', async () => {
+  const window = new Window({ url: 'https://localhost:3000' }) as any
+  CanvasState.set(1, { animationFrameHandles: [], instances: [] })
+  OverrideRequestAnimationFrame.overrideRequestAnimationFrame(window, 1)
+  const callback = jest.fn(() => window.requestAnimationFrame(callback))
+  window.requestAnimationFrame(callback)
+  CanvasState.remove(1)
+  CanvasState.set(1, { animationFrameHandles: [], instances: [] })
+  await new Promise((resolve) => setTimeout(resolve, 50))
+  expect(callback).not.toHaveBeenCalled()
+})
