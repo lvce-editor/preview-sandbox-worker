@@ -1,7 +1,7 @@
 import * as DispatchPointerdownEvent from '../DispatchPointerdownEvent/DispatchPointerdownEvent.ts'
 import * as HappyDomState from '../HappyDomState/HappyDomState.ts'
 
-const handlePointerdownLocal = (uid: number, hdId: string, clientX: number, clientY: number, x: number, y: number): any => {
+const handlePointerdownLocal = (uid: number, hdId: string, clientX: number, clientY: number, x: number, y: number, button: number): any => {
   const happyDomInstance = HappyDomState.get(uid)
   if (!happyDomInstance) {
     return
@@ -11,9 +11,17 @@ const handlePointerdownLocal = (uid: number, hdId: string, clientX: number, clie
     return
   }
 
-  DispatchPointerdownEvent.dispatchPointerdownEvent(element, happyDomInstance.window, clientX - x, clientY - y)
+  DispatchPointerdownEvent.dispatchPointerdownEvent(element, happyDomInstance.window, clientX - x, clientY - y, button)
 }
 
-export const handlePointerdown = (uid: number, hdId: string, clientX: number = 0, clientY: number = 0, x: number = 0, y: number = 0): any => {
-  return handlePointerdownLocal(uid, hdId, clientX, clientY, x, y)
+export const handlePointerdown = (
+  uid: number,
+  hdId: string,
+  clientX: number = 0,
+  clientY: number = 0,
+  x: number = 0,
+  y: number = 0,
+  button: number = 0,
+): any => {
+  return handlePointerdownLocal(uid, hdId, clientX, clientY, x, y, button)
 }

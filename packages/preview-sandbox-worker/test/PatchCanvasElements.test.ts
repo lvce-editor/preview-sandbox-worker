@@ -311,6 +311,20 @@ test('patchCanvasElements should provide getBoundingClientRect based on canvas d
   expect(rect.bottom).toBe(180)
 })
 
+test('patchCanvasElement should support pointer capture on offscreen canvases', () => {
+  const window = new Window({ url: 'https://localhost:3000' })
+  const canvas = window.document.createElement('canvas')
+  const offscreenCanvas = new MockOffscreenCanvas(100, 100) as unknown as OffscreenCanvas
+  PatchCanvasElements.patchCanvasElement(canvas, 1, { canvasId: 1, offscreenCanvas })
+  const patchedCanvas = canvas as unknown as {
+    releasePointerCapture: (pointerId: number) => void
+    setPointerCapture: (pointerId: number) => void
+  }
+
+  expect(() => patchedCanvas.setPointerCapture(1)).not.toThrow()
+  expect(() => patchedCanvas.releasePointerCapture(1)).not.toThrow()
+})
+
 test('patchCanvasElements should prefer geometry snapshot values when available', async () => {
   const uid = 1
   const window = new Window({ url: 'https://localhost:3000' })

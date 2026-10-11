@@ -92,17 +92,25 @@ test('handlePointerdown dispatches pointerdown listeners', async () => {
   let pointerType = ''
   let clientX = -1
   let clientY = -1
+  let button = -1
   // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
   target.addEventListener('pointerdown', (event) => {
-    const { clientX: nextClientX, clientY: nextClientY, pointerType: nextPointerType } = event as unknown as PointerCoordinatesEvent
+    const {
+      button: nextButton,
+      clientX: nextClientX,
+      clientY: nextClientY,
+      pointerType: nextPointerType,
+    } = event as unknown as PointerCoordinatesEvent & { button: number }
     pointerType = nextPointerType || 'mouse'
     clientX = nextClientX
     clientY = nextClientY
+    button = nextButton
   })
 
-  await HandlePointerdown.handlePointerdown(uid, hdId, 28, 19, 8, 9)
+  await HandlePointerdown.handlePointerdown(uid, hdId, 28, 19, 8, 9, 2)
 
   expect(pointerType).toBe('mouse')
   expect(clientX).toBe(20)
   expect(clientY).toBe(10)
+  expect(button).toBe(2)
 })
