@@ -1,5 +1,6 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
 import type { Dimensions } from '../Resize/Resize.ts'
+import { dispose } from '../Dispose/Dispose.ts'
 import { setGeometryBuffer } from '../GeometryState/GeometryState.ts'
 import { executeCallback } from '../GetOffscreenCanvas/GetOffscreenCanvas.ts'
 import { getSerializedDom } from '../GetSerializedDom/GetSerializedDom.ts'
@@ -29,6 +30,7 @@ type Resize = (uid: number, dimensions: Dimensions) => void
 const resizeCommand: Resize = resize
 
 export const commandMap = {
+  'SandBox.dispose': dispose,
   'SandBox.executeCallback': executeCallback,
   'SandBox.getRuntimeDiagnostics': getRuntimeDiagnostics,
   'SandBox.getSerializedDom': getSerializedDom,
