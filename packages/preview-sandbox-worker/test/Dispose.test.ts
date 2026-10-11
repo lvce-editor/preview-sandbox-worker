@@ -10,32 +10,36 @@ afterEach(() => {
   CanvasState.clear()
   HappyDomState.clear()
   RuntimeDiagnostics.clearAll()
-  jest.useRealTimers()
+  jest.restoreAllMocks()
 })
 
 test('closing one preview releases its context and animation without stopping other previews', () => {
-  jest.useFakeTimers()
+  const clearTimeout = jest.spyOn(globalThis, 'clearTimeout')
   const loseContext = jest.fn()
-  const animate = jest.fn()
   for (const uid of [1, 2]) {
     const window = new Window()
     const canvas = window.document.createElement('canvas') as any
     const offscreenCanvas = {
-      getContext: () => ({ getExtension: () => ({ loseContext: () => loseContext(uid) }) }),
+      getContext: (): unknown => ({
+        getExtension: (): unknown => ({
+          loseContext: (): void => {
+            loseContext(uid)
+          },
+        }),
+      }),
       height: 300,
       width: 300,
     } as unknown as OffscreenCanvas
     patchCanvasElement(canvas, uid, { canvasId: uid, offscreenCanvas })
     canvas.getContext('webgl2')
-    CanvasState.addAnimationFrameHandle(uid, setTimeout(() => animate(uid), 16) as unknown as number)
+    CanvasState.addAnimationFrameHandle(uid, uid)
     HappyDomState.set(uid, { document: window.document, elementMap: {}, window })
     RuntimeDiagnostics.addException(uid, new Error('preview error'))
   }
   dispose(1)
   dispose(1)
-  jest.advanceTimersByTime(16)
   expect(loseContext.mock.calls).toEqual([[1]])
-  expect(animate.mock.calls).toEqual([[2]])
+  expect(clearTimeout.mock.calls).toEqual([[1]])
   expect(CanvasState.get(1)).toBeUndefined()
   expect(HappyDomState.get(1)).toBeUndefined()
   expect(RuntimeDiagnostics.getRuntimeDiagnostics(1).entries).toEqual([])

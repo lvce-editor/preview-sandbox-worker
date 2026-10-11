@@ -1,6 +1,6 @@
 import { terminate } from '@lvce-editor/viewlet-registry'
-import { dispose } from '../Dispose/Dispose.ts'
 import type { Dimensions } from '../Resize/Resize.ts'
+import { dispose } from '../Dispose/Dispose.ts'
 import { setGeometryBuffer } from '../GeometryState/GeometryState.ts'
 import { executeCallback } from '../GetOffscreenCanvas/GetOffscreenCanvas.ts'
 import { getSerializedDom } from '../GetSerializedDom/GetSerializedDom.ts'
