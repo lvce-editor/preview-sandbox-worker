@@ -73,6 +73,9 @@ export const patchCanvasElement = (element: any, uid: number, reservation: Canva
     }
     return context
   }
+  element.setPointerCapture = (): void => {}
+  element.releasePointerCapture = (): void => {}
+  element.hasPointerCapture = (): boolean => false
   const dispose = (): void => {
     webglContext?.getExtension('WEBGL_lose_context')?.loseContext()
     webglContext = null

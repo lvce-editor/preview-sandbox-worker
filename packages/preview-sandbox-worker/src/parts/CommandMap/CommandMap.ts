@@ -21,6 +21,7 @@ import * as HandlePointermove from '../HandlePointermove/HandlePointermove.ts'
 import * as HandlePointerout from '../HandlePointerout/HandlePointerout.ts'
 import * as HandlePointerover from '../HandlePointerover/HandlePointerover.ts'
 import * as HandlePointerup from '../HandlePointerup/HandlePointerup.ts'
+import * as HandleWheel from '../HandleWheel/HandleWheel.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
 import { resize } from '../Resize/Resize.ts'
 import { getRuntimeDiagnostics } from '../RuntimeDiagnostics/RuntimeDiagnostics.ts'
@@ -50,6 +51,7 @@ export const commandMap = {
   'SandBox.handlePointerout': HandlePointerout.handlePointerout,
   'SandBox.handlePointerover': HandlePointerover.handlePointerover,
   'SandBox.handlePointerup': HandlePointerup.handlePointerup,
+  'SandBox.handleWheel': HandleWheel.handleWheel,
   'SandBox.loadContent': LoadContent.loadContent,
   'SandBox.resize': resizeCommand,
   'SandBox.setGeometryBuffer': setGeometryBuffer,
