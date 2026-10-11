@@ -1,4 +1,5 @@
 import { parse } from '@babel/parser'
+import { cacheScriptAnalysis } from '../CacheScriptAnalysis/CacheScriptAnalysis.ts'
 
 const getPatternNames = (pattern: any): readonly string[] => {
   if (pattern.type === 'Identifier') {
@@ -29,7 +30,7 @@ const getPatternNames = (pattern: any): readonly string[] => {
   return []
 }
 
-export const getTopLevelVariableNames = (script: string): readonly string[] => {
+export const getTopLevelVariableNames = cacheScriptAnalysis((script: string): readonly string[] => {
   try {
     const ast = parse(script, {
       allowAwaitOutsideFunction: true,
@@ -50,4 +51,4 @@ export const getTopLevelVariableNames = (script: string): readonly string[] => {
   } catch {
     return []
   }
-}
+})
