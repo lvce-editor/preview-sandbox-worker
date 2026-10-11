@@ -7,7 +7,7 @@ const callBacks = Object.create(null)
 
 let id = 0
 
-type OffscreenCanvasResultRaw = [OffscreenCanvas, number]
+type OffscreenCanvasResultRaw = [OffscreenCanvas, number, MessagePort?]
 
 const registerCallback = (): any => {
   const nextId = id++
@@ -32,12 +32,13 @@ export const executeCallback = (id: number, ...args: OffscreenCanvasResultRaw): 
 interface OffscreenCanvasResult {
   readonly canvasId: number
   readonly offscreenCanvas: OffscreenCanvas
+  readonly presentationPort?: MessagePort
 }
 
 export const getOffscreenCanvas = async (uid: number, width: number, height: number): Promise<OffscreenCanvasResult> => {
   // TODO ask preview worker
   const { id, promise } = registerCallback()
   await PreviewWorker.invoke('Preview.createOffscreenCanvas', uid, id, width, height)
-  const [offscreenCanvas, canvasId] = await promise
-  return { canvasId, offscreenCanvas }
+  const [offscreenCanvas, canvasId, presentationPort] = await promise
+  return { canvasId, offscreenCanvas, presentationPort }
 }

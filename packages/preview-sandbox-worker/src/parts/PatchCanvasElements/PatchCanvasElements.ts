@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-readonly-parameter-types */
 import type { Document } from 'happy-dom-without-node'
 import * as CanvasState from '../CanvasState/CanvasState.ts'
+import { createCanvasFrameSink } from '../CreateCanvasFrameSink/CreateCanvasFrameSink.ts'
 import * as GeometryState from '../GeometryState/GeometryState.ts'
 import { getOffscreenCanvas } from '../GetOffscreenCanvas/GetOffscreenCanvas.ts'
 import { toNumber } from '../ToNumber/ToNumber.ts'
@@ -13,6 +14,7 @@ interface CanvasCanvasDimensions {
 interface CanvasReservation {
   readonly canvasId: number
   readonly offscreenCanvas: OffscreenCanvas
+  readonly presentationPort?: MessagePort
 }
 
 interface CanvasBoundingClientRect {
@@ -58,7 +60,8 @@ const getCanvasDimensions = (element: any): CanvasCanvasDimensions => {
 
 export const patchCanvasElement = (element: any, uid: number, reservation: CanvasReservation): void => {
   const { height, width } = getCanvasDimensions(element)
-  const { canvasId, offscreenCanvas } = reservation
+  const { canvasId, offscreenCanvas, presentationPort } = reservation
+  const frameSink = presentationPort ? createCanvasFrameSink(offscreenCanvas, presentationPort) : undefined
   element.width = width
   element.height = height
   const dataId = String(canvasId)
@@ -68,6 +71,7 @@ export const patchCanvasElement = (element: any, uid: number, reservation: Canva
   let webglContext: WebGLRenderingContext | WebGL2RenderingContext | null = null
   element.getContext = (contextType: string, options?: any): any => {
     const context = offscreenCanvas.getContext(contextType as '2d', options)
+    frameSink?.observeContext(context, contextType)
     if (context && (contextType === 'webgl' || contextType === 'webgl2')) {
       webglContext = context as unknown as WebGLRenderingContext | WebGL2RenderingContext | null
     }
@@ -77,6 +81,7 @@ export const patchCanvasElement = (element: any, uid: number, reservation: Canva
   element.releasePointerCapture = (): void => {}
   element.hasPointerCapture = (): boolean => false
   const dispose = (): void => {
+    frameSink?.dispose()
     webglContext?.getExtension('WEBGL_lose_context')?.loseContext()
     webglContext = null
   }
