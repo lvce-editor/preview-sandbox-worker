@@ -1,4 +1,5 @@
 import { parse } from '@babel/parser'
+import { cacheScriptAnalysis } from '../CacheScriptAnalysis/CacheScriptAnalysis.ts'
 
 const isCanvasLiteral = (node: any): boolean => {
   return node?.type === 'StringLiteral' && node.value.toLowerCase() === 'canvas'
@@ -44,7 +45,7 @@ const visit = (value: any): number => {
   return count
 }
 
-const getScriptCanvasCreationCount = (script: string): number => {
+const getScriptCanvasCreationCount = cacheScriptAnalysis((script: string): number => {
   try {
     const ast = parse(script, {
       allowAwaitOutsideFunction: true,
@@ -56,7 +57,7 @@ const getScriptCanvasCreationCount = (script: string): number => {
   } catch {
     return 0
   }
-}
+})
 
 export const getCanvasCreationCount = (scripts: readonly string[]): number => {
   let count = 0
