@@ -8,7 +8,10 @@ test('dispatchWheelEvent forwards the wheel delta and modifier state', () => {
   let deltaY = 0
   let ctrlKey = false
   element.addEventListener('wheel', (event: Readonly<unknown>) => {
-    const { ctrlKey: nextCtrlKey, deltaY: nextDeltaY } = event as Readonly<WheelEvent>
+    const { ctrlKey: nextCtrlKey, deltaY: nextDeltaY } = event as Readonly<{
+      ctrlKey: boolean
+      deltaY: number
+    }>
     deltaY = nextDeltaY
     ctrlKey = nextCtrlKey
   })
