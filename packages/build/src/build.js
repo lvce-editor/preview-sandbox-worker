@@ -82,7 +82,3 @@ if (!runtimeHash) {
   throw new Error('Static runtime commit directory not found')
 }
 await cp(join(dist, 'dist'), join(staticRoot, runtimeHash, 'packages', 'preview-sandbox-worker', 'dist'), { recursive: true })
-
-await cp(new URL('./', import.meta.resolve('@lvce-editor/renderer-process')), join(staticRoot, runtimeHash, 'packages', 'renderer-process', 'dist'), {
-  recursive: true,
-})
