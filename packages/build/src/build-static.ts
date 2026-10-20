@@ -21,10 +21,4 @@ await cp(join(root, '.tmp', 'dist', 'dist'), join(root, 'dist', commitHash, 'pac
   recursive: true,
 })
 
-await cp(
-  new URL('./', import.meta.resolve('@lvce-editor/renderer-process')),
-  join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist'),
-  { recursive: true },
-)
-
 await cp(join(root, 'dist'), join(root, '.tmp', 'static'), { recursive: true })

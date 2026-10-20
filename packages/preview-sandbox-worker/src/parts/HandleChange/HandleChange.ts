@@ -14,13 +14,6 @@ const handleChangeLocal = (uid: number, hdId: string, value: string): any => {
 
   element.value = value
   DispatchChangeEvent.dispatchChangeEvent(element, happyDomInstance.window)
-
-  const elementMap = Object.create(null)
-  HappyDomState.set(uid, {
-    document: happyDomInstance.document,
-    elementMap,
-    window: happyDomInstance.window,
-  })
 }
 
 export const handleChange = (uid: number, hdId: string, value: string): PreviewState | Promise<PreviewState> => {
